@@ -62,7 +62,15 @@ public class WorldOfTrees extends World {
     	}
     	
 		for (int i=0; i<99; i++)	{
-			uniqueDynamicObjects.add(new Agent((int)(Math.random()*__dxCA),(int)(Math.random()*__dyCA),this));
+			int posx = (int)(Math.random()*__dxCA);
+			int posy = (int)(Math.random()*__dyCA);
+
+			while (this.getCellHeight(posx,posy) < 0)	{	//si l'emplacement est sur l'eau il faudra en trouver un autre.  Est-ce qu'il y a un moyen moins couteux?  Avec des ArrayList?
+				posx = (int)(Math.random()*__dxCA);
+				posy = (int)(Math.random()*__dyCA);
+			}
+
+			uniqueDynamicObjects.add(new Agent(posx,posy,this));
 		}
     	uniqueDynamicObjects.add(new Agent(64,64,this));
     	

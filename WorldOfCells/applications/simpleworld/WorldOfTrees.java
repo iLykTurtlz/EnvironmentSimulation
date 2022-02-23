@@ -61,6 +61,9 @@ public class WorldOfTrees extends World {
     			uniqueObjects.add(new BridgeBlock(110,110+i,this));
     	}
     	
+		for (int i=0; i<99; i++)	{
+			uniqueDynamicObjects.add(new Agent((int)(Math.random()*__dxCA),(int)(Math.random()*__dyCA),this));
+		}
     	uniqueDynamicObjects.add(new Agent(64,64,this));
     	
     }

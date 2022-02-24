@@ -90,7 +90,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 		
 		private float rotateX = 0.0f;
 		
-		private float rotationVelocity = 0.6f; // 0.2f
+		private float rotationVelocity = 0.2f; // 0.2f
 
         int it = 0;
         int movingIt = 0;
@@ -187,7 +187,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
     		
     		final GLCanvas canvas = new GLCanvas(caps); // original
     		
-            final Frame frame = new Frame("World Of Cells");
+            final Frame frame = new Frame("WE SHOULD PUT A COOL TITLE RIGHT? - World Of Cells");
             animator = new Animator(canvas);
             //Landscape myLandscape = new Landscape(dx,dy,myWorld);
             canvas.addGLEventListener(__landscape);

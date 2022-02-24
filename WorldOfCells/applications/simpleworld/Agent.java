@@ -11,10 +11,16 @@ import objects.UniqueDynamicObject;
 import worlds.World;
 
 public class Agent extends UniqueDynamicObject{
+
+    protected boolean directions[];
 	
 	public Agent ( int __x , int __y, World __world )
 	{
 		super(__x,__y,__world);
+        directions = new boolean[4];    // above, right, below, left; in that order
+        for (int i=0; i<directions.length; i++) {
+            directions[i] = true;
+        }
 	}
 	
 	public void step() 
@@ -23,24 +29,90 @@ public class Agent extends UniqueDynamicObject{
 		{
 			double dice = Math.random();
 
-            /*
+            /* Indices of squares in four directions relative to the agent */
             int right = (this.x + 1 + this.world.getWidth()) % this.world.getWidth();
             int left = (this.x - 1 + this.world.getWidth()) % this.world.getWidth();
             int above = (this.y + 1 + this.world.getHeight()) % this.world.getHeight();
             int below = (this.y - 1 + this.world.getHeight()) % this.world.getHeight();
 
-            if (this.world.getCellHeight(this.x, above) < 0)    {
-                if (this.world.getCellHeight(right, this.y) < 0)    {
-                    if (this.world.getCellHeight(this.x, below < 0) {
-                        if (this.world.getCellHeight(left, this.y) < 0) {
-                            
-                        }
+            int accessible = 4;
+            
+            /* Block off directions that are impassable or dangerous */
+            /* And determine the number of remaining accessible directions */
+            if ( (this.world.getCellHeight(this.x, above) < 0) )    {
+                directions[0] = false;
+                accessible--;
+            }
+            if ( (this.world.getCellHeight(right, this.y) < 0) )   {
+                directions[1] = false;
+                accessible--;
+            }
+            if ( (this.world.getCellHeight(this.x, below) < 0) )    {
+                directions[2] = false;
+                accessible--;
+            }
+            if ( (this.world.getCellHeight(left, this.y) < 0) ) {
+                directions[3] = false;
+                accessible--;
+            }
+            
+
+            /* If no direction is accessible, the agent does not move. */
+            if (accessible == 0)    {
+                return;
+            }
+
+
+            int move=-1, j=0;
+
+            double partition_size = ((double)1)/((double)accessible);
+
+            System.out.println("partitionSize = "+ partition_size);
+
+            for (int i=0; i<directions.length; i++)    {
+                System.out.println(directions[i]);
+                System.out.println(j*partition_size);
+                if ( directions[i] )    {
+                    j++;
+                    if ( dice < (j*partition_size) )  {    
+                        move = i;
+                        break;
                     }
                 }
             }
-            */
+
+            /* set the agent's new position */
+            switch (move)   {
+                case 0:
+                    this.y = above;
+                    break;
+                case 1:
+                    this.x = right;
+                    break;
+                case 2:
+                    this.y = below;
+                    break;
+                case 3:
+                    this.x = left;
+                    break;
+                default:
+                    System.out.println("Erreur de déplacement : move = " + move);
+            }
+
+            /* Reinitialize the four directions to true*/
+            for (int i=0; i<directions.length; i++)    {
+                directions[i] = true;
+            }
+        }
+    }
 
 
+
+
+
+
+            
+/*          //OLD MOVEMENT - Agents move randomly, including on water
             this.world.getCellHeight(this.x + 1, this.y);
 			if ( dice < 0.25 )
 				this.x = ( this.x + 1 ) % this.world.getWidth() ;
@@ -54,6 +126,7 @@ public class Agent extends UniqueDynamicObject{
 						this.y = ( this.y - 1 +  this.world.getHeight() ) % this.world.getHeight() ;
 		}
 	}
+*/    
 
     public void displayUniqueObject(World myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)
     {

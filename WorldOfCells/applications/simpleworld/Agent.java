@@ -13,14 +13,16 @@ import worlds.World;
 public class Agent extends UniqueDynamicObject{
 
     protected boolean directions[];
+    private float[] headColor;
 	
-	public Agent ( int __x , int __y, World __world )
+	public Agent ( int __x , int __y, World __world, float[] headColor )
 	{
 		super(__x,__y,__world);
         directions = new boolean[4];    // above, right, below, left; in that order
         for (int i=0; i<directions.length; i++) {
             directions[i] = true;
         }
+        this.headColor = headColor;
 	}
 	
 	public void step() 
@@ -66,8 +68,6 @@ public class Agent extends UniqueDynamicObject{
             int move=-1, j=0;
 
             double partition_size = ((double)1)/((double)accessible);
-
-            System.out.println("partitionSize = "+ partition_size);
 
             for (int i=0; i<directions.length; i++)    {
                 System.out.println(directions[i]);
@@ -128,6 +128,7 @@ public class Agent extends UniqueDynamicObject{
 	}
 */    
 
+
     public void displayUniqueObject(World myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)
     {
 
@@ -166,7 +167,7 @@ public class Agent extends UniqueDynamicObject{
         gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight + 4.f);
         gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight);
 
-        gl.glColor3f(1.f,0.f,0.f);
+        gl.glColor3f(headColor[0],headColor[1],headColor[2]);
         gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight + 5.f);
         gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, height*normalizeHeight + 5.f);
         gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, height*normalizeHeight + 5.f);

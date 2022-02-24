@@ -61,7 +61,7 @@ public class WorldOfTrees extends World {
     			uniqueObjects.add(new BridgeBlock(110,110+i,this));
     	}
     	
-		for (int i=0; i<99; i++)	{
+		for (int i=0; i<40; i++)	{
 			int posx = (int)(Math.random()*__dxCA);
 			int posy = (int)(Math.random()*__dyCA);
 
@@ -70,9 +70,20 @@ public class WorldOfTrees extends World {
 				posy = (int)(Math.random()*__dyCA);
 			}
 
-			uniqueDynamicObjects.add(new Agent(posx,posy,this));
+			uniqueDynamicObjects.add(new Prey(posx,posy,this));
 		}
-    	uniqueDynamicObjects.add(new Agent(64,64,this));
+		for (int i=0; i<40; i++)	{
+			int posx = (int)(Math.random()*__dxCA);
+			int posy = (int)(Math.random()*__dyCA);
+
+			while (this.getCellHeight(posx,posy) < 0)	{	//si l'emplacement est sur l'eau il faudra en trouver un autre.  Est-ce qu'il y a un moyen moins couteux?  Avec des ArrayList?
+				posx = (int)(Math.random()*__dxCA);
+				posy = (int)(Math.random()*__dyCA);
+			}
+
+			uniqueDynamicObjects.add(new Predator(posx,posy,this));
+		}
+    	//uniqueDynamicObjects.add(new Agent(64,64,this));
     	
     }
     

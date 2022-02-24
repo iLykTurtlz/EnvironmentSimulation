@@ -14,7 +14,7 @@ public class PerlinNoiseLandscapeGenerator {
 
     	for (int x = 0; x < dxView; x++) {
     		for (int y = 0; y < dyView; y++) {
-    			landscape[x][y] = perlinNoise2D(x, y, 1f, 8);
+    			landscape[x][y] = perlinNoise2D(x, y, 0.25d, perlinLayerCount);
             }
         }
 
@@ -30,21 +30,21 @@ public class PerlinNoiseLandscapeGenerator {
     * L'interpolation cosinusoidale permet l'obtention d'une courbe plus lisse comparée à une courbe
     * obtenue par interpolation linéaire, de plus elle est moins consommante que l'interpolation cubique
     ***/
-    private static float cosInterpolate(float a, float b, float x) {
-        float ft = (float) (x * Math.PI);
-        float f = (float) ((1 - Math.cos(ft)) * 0.5);
-        return a*(1-f) + b*f;
+    private static double cosInterpolate(double a, double b, double x) {
+        double ft = x * Math.PI;
+        double f = (1 - Math.cos(ft)) / 2;
+        return a + (b-a) * f;
     }
 
     /***
-    * Retourne une valeur flottante aléatoire au dépend des valeurs x et y
+    * Retourne une valeur décimale aléatoire au dépend des valeurs x et y
     * c'est une fonction de N*N dans R donc pour des memes x et y la valeur générée sera la meme.
     * Cela permet la génération aléatoire des valeurs (amplitudes) des points de controle
     * de la fonction du bruit de perlin.
     ***/
-    private static float noise(int x, int y) {
+    private static double noise(int x, int y) {
         int n = x + y * 57;
-        n = (int) Math.pow(n<<13, n);
+        n = (n<<13) ^ n;
         return (1f - ((n * (n * n * 15731 + 789221) + 1376312589) & Integer.MAX_VALUE) / 1073741824f); //retourne une valeur flottante aléatoire basée sur une formule avec des nombres premiers
     }
 
@@ -53,10 +53,10 @@ public class PerlinNoiseLandscapeGenerator {
     * moyenne selon les voisins moyennés également, permet d'avoir une courbe de fonction du bruit de perlin
     * plus uniforme pour la génération de terrain.
     ***/
-    private static float smoothedNoise(int x, int y) {
-        float corners = (noise(x-1, y-1) + noise(x+1, y-1) + noise(x-1, y+1) + noise(x+1, y+1) ) / 16;
-        float sides = (noise(x-1, y) + noise(x+1, y) + noise(x, y-1) + noise(x, y+1) ) / 8;
-        float center = noise(x, y) / 4;
+    private static double smoothedNoise(int x, int y) {
+        double corners = (noise(x-1, y-1) + noise(x+1, y-1) + noise(x-1, y+1) + noise(x+1, y+1) ) / 16;
+        double sides = (noise(x-1, y) + noise(x+1, y) + noise(x, y-1) + noise(x, y+1) ) / 8;
+        double center = noise(x, y) / 4;
         return corners + sides + center;
     }
 
@@ -64,30 +64,30 @@ public class PerlinNoiseLandscapeGenerator {
     * Retourne une valeur interpolée au dépend de x
     * permet le lissage de la courbe de la fonction du bruit de perlin.
     ***/
-    private static float interpolatedNoise(float x, float y) {
+    private static double interpolatedNoise(double x, double y) {
         int int_x = (int) x;
         x = x - int_x;
         int int_y = (int) y;
         y = y - int_y;
 
-        float v1 = smoothedNoise(int_x, int_y);
-        float v2 = smoothedNoise(int_x + 1, int_y);
-        float v3 = smoothedNoise(int_x, int_y + 1);
-        float v4 = smoothedNoise(int_x + 1, int_y + 1);
+        double v1 = smoothedNoise(int_x, int_y);
+        double v2 = smoothedNoise(int_x + 1, int_y);
+        double v3 = smoothedNoise(int_x, int_y + 1);
+        double v4 = smoothedNoise(int_x + 1, int_y + 1);
 
-        float i1 = cosInterpolate(v1, v2, x);
-        float i2 = cosInterpolate(v3, v4, x);
+        double i1 = cosInterpolate(v1, v2, x);
+        double i2 = cosInterpolate(v3, v4, x);
 
-        return cosInterpolate(i1 , i2 , y);
+        return cosInterpolate(i1, i2, y);
     }
 
-    private static float perlinNoise2D(float x, float y, float persistence, int nb_octaves) {
-      float total = 0f;
+    private static double perlinNoise2D(double x, double y, double persistence, int nb_octaves) {
+      double total = 0d;
       int n = nb_octaves - 1;
 
       for (int i = 0; i <= n; i++) {
-          float frequency = (float) Math.pow(2, i);
-          float amplitude = (float) Math.pow(persistence, i);
+          double frequency = Math.pow(2, i);
+          double amplitude = Math.pow(persistence, i);
 
           total += interpolatedNoise(x * frequency, y * frequency) * amplitude;
       }

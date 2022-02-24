@@ -131,7 +131,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
         {
     		_myWorld = __myWorld;
 
-    		landscape = PerlinNoiseLandscapeGenerator.generatePerlinNoiseLandscape(__dx,__dy,scaling,landscapeAltitudeRatio,10); // 11
+    		landscape = PerlinNoiseLandscapeGenerator.generatePerlinNoiseLandscape(__dx,__dy,scaling,landscapeAltitudeRatio, 100); // 11
     		
     		initLandscape();
         }
@@ -602,10 +602,10 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 			case KeyEvent.VK_O:
 				DISPLAY_OBJECTS = !DISPLAY_OBJECTS;
 				break;
-			case KeyEvent.VK_2:
+			case KeyEvent.VK_A:
 				heightBooster++;
 				break;
-			case KeyEvent.VK_1:
+			case KeyEvent.VK_Z:
 				if ( heightBooster > 0 )
 					heightBooster--;
 				break;
@@ -627,17 +627,13 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 			case KeyEvent.VK_D:
 				rotationVelocity+=0.1;
 				break;
-			case KeyEvent.VK_Z:
-				break;
-			case KeyEvent.VK_S:
-				break; 
 			case KeyEvent.VK_H:
 				System.out.println(
 						"Help:\n" +
 						"           [v] change view\n" +
 						"           [o] objects display on/off\n" +
-						"           [1] decrease altitude booster\n" +
-						"           [2] increase altitude booster\n" +
+						"           [z] decrease altitude booster\n" +
+						"           [a] increase altitude booster\n" +
 						" [cursor keys] navigate in the landscape\n" +
 						"         [q/d] rotation wrt landscape\n" +
 						" [cursor keys] navigate\n"

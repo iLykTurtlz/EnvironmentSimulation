@@ -10,10 +10,10 @@ import objects.UniqueDynamicObject;
 
 import worlds.World;
 
-public class Agent extends UniqueDynamicObject{
+public abstract class Agent extends UniqueDynamicObject{
 
     protected boolean directions[];
-    private float[] headColor;
+    protected float[] headColor;
 	
 	public Agent ( int __x , int __y, World __world, float[] headColor )
 	{

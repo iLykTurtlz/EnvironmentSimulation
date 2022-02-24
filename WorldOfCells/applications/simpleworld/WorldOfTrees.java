@@ -70,7 +70,7 @@ public class WorldOfTrees extends World {
 				posy = (int)(Math.random()*__dyCA);
 			}
 
-			uniqueDynamicObjects.add(new Agent(posx,posy,this, new float[] {1.f,0.f,0.f}));
+			uniqueDynamicObjects.add(new Prey(posx,posy,this));
 		}
 		for (int i=0; i<40; i++)	{
 			int posx = (int)(Math.random()*__dxCA);
@@ -81,7 +81,7 @@ public class WorldOfTrees extends World {
 				posy = (int)(Math.random()*__dyCA);
 			}
 
-			uniqueDynamicObjects.add(new Agent(posx,posy,this, new float[] {0.f,0.f,1.f}));
+			uniqueDynamicObjects.add(new Predator(posx,posy,this));
 		}
     	//uniqueDynamicObjects.add(new Agent(64,64,this));
     	

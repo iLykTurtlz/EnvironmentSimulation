@@ -11,10 +11,10 @@ public class PerlinNoiseLandscapeGenerator {
     public static double[][] generatePerlinNoiseLandscape ( int dxView, int dyView, double scaling, double landscapeAltitudeRatio, int perlinLayerCount)
     {
     	double landscape[][] = new double[dxView][dyView];
-
+        double facteur_aleatoire = Math.random() * 101;
     	for (int x = 0; x < dxView; x++) {
     		for (int y = 0; y < dyView; y++) {
-    			landscape[x][y] = perlinNoise2D(x, y, 0.25d, perlinLayerCount);
+                landscape[x][y] = perlinNoise2D((double) x / dxView * facteur_aleatoire, (double) y / dyView * facteur_aleatoire, 0.4d, perlinLayerCount);
             }
         }
 
@@ -43,9 +43,9 @@ public class PerlinNoiseLandscapeGenerator {
     * de la fonction du bruit de perlin.
     ***/
     private static double noise(int x, int y) {
-        int n = x + y * 57;
-        n = (n<<13) ^ n;
-        return (1f - ((n * (n * n * 15731 + 789221) + 1376312589) & Integer.MAX_VALUE) / 1073741824f); //retourne une valeur flottante aléatoire basée sur une formule avec des nombres premiers
+        int n = x + y * 257;
+        n = (n << 13) ^ n;
+        return (1.0 - ((n * (n * n * 15731 + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0); //retourne une valeur flottante aléatoire basée sur une formule avec des nombres premiers
     }
 
     /***
@@ -60,6 +60,11 @@ public class PerlinNoiseLandscapeGenerator {
         return corners + sides + center;
     }
 
+    private static double sCurve(double t)
+    {
+        return t*t*(3-2*t);
+    }
+
     /***
     * Retourne une valeur interpolée au dépend de x
     * permet le lissage de la courbe de la fonction du bruit de perlin.
@@ -67,26 +72,29 @@ public class PerlinNoiseLandscapeGenerator {
     private static double interpolatedNoise(double x, double y) {
         int int_x = (int) x;
         x = x - int_x;
+        double xs = sCurve(x);
         int int_y = (int) y;
         y = y - int_y;
+        double ys = sCurve(y);
 
         double v1 = smoothedNoise(int_x, int_y);
         double v2 = smoothedNoise(int_x + 1, int_y);
         double v3 = smoothedNoise(int_x, int_y + 1);
         double v4 = smoothedNoise(int_x + 1, int_y + 1);
 
-        double i1 = cosInterpolate(v1, v2, x);
-        double i2 = cosInterpolate(v3, v4, x);
+        double i1 = cosInterpolate(v1, v2, xs);
+        double i2 = cosInterpolate(v3, v4, xs);
 
-        return cosInterpolate(i1, i2, y);
+        return cosInterpolate(i1, i2, ys);
     }
 
     private static double perlinNoise2D(double x, double y, double persistence, int nb_octaves) {
       double total = 0d;
       int n = nb_octaves - 1;
+      double totalAmplitude = 0;
 
       for (int i = 0; i <= n; i++) {
-          double frequency = Math.pow(2, i);
+          double frequency = 1/Math.pow(2, i);
           double amplitude = Math.pow(persistence, i);
 
           total += interpolatedNoise(x * frequency, y * frequency) * amplitude;

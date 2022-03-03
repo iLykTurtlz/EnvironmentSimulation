@@ -12,7 +12,4 @@ public class Predator extends Agent {
         super(__x,__y,__world, new float[] {1.f, 0.f, 0.f});
     }
 
-
-    
-
 }

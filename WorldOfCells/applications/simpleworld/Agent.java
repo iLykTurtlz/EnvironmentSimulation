@@ -70,8 +70,6 @@ public abstract class Agent extends UniqueDynamicObject{
             double partition_size = ((double)1)/((double)accessible);
 
             for (int i=0; i<directions.length; i++)    {
-                System.out.println(directions[i]);
-                System.out.println(j*partition_size);
                 if ( directions[i] )    {
                     j++;
                     if ( dice < (j*partition_size) )  {    
@@ -142,7 +140,7 @@ public abstract class Agent extends UniqueDynamicObject{
     	if ( y2 < 0) y2+=myWorld.getHeight();
 
     	float height = Math.max ( 0 , (float)myWorld.getCellHeight(x, y) );
-    	
+
         gl.glColor3f(1.f,1.f,1.f);
         gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight);
         gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight + 4.f);

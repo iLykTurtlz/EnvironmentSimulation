@@ -61,6 +61,8 @@ public class WorldOfTrees extends World {
     			uniqueObjects.add(new BridgeBlock(110,110+i,this));
     	}
     	
+
+		/*
 		for (int i=0; i<40; i++)	{
 			int posx = (int)(Math.random()*__dxCA);
 			int posy = (int)(Math.random()*__dyCA);
@@ -83,9 +85,12 @@ public class WorldOfTrees extends World {
 
 			uniqueDynamicObjects.add(new Predator(posx,posy,this));
 		}
+
+		*/
     	//uniqueDynamicObjects.add(new Agent(64,64,this));
     	
     }
+
     
     protected void initCellularAutomata(int __dxCA, int __dyCA, double[][] landscape)
     {
@@ -132,6 +137,14 @@ public class WorldOfTrees extends World {
 		default:
 			// nothing to display at this location.
 		}
+	}
+
+	public void addPredator(int posx, int posy)	{
+		uniqueDynamicObjects.add(new Predator(posx,posy,this));
+	}
+
+	public void addPrey(int posx, int posy)	{
+		uniqueDynamicObjects.add(new Prey(posx,posy,this));
 	}
 
 	//public void displayObject(World _myWorld, GL2 gl, float offset,float stepX, float stepY, float lenX, float lenY, float heightFactor, double heightBooster) { ... } 

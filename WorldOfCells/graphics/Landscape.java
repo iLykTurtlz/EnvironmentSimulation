@@ -133,7 +133,10 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 
     		landscape = PerlinNoiseLandscapeGenerator.generatePerlinNoiseLandscape(__dx,__dy,scaling,landscapeAltitudeRatio, 100); // 11
     		
+
     		initLandscape();
+
+			initAgents();
         }
 
         /**
@@ -488,6 +491,23 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
             	
 
         }
+
+		public void initAgents()	{
+			for (int x=0; x<_myWorld.getWidth(); x++)	{
+				for (int y=0; y<_myWorld.getHeight(); y++)	{
+					if (_myWorld.getCellHeight(x,y) > 0)	{
+						double dice = Math.random();
+						if (dice < 0.01)	{
+							if (dice < 0.005)	{
+								_myWorld.addPredator(x,y);
+							} else {
+								_myWorld.addPrey(x,y);
+							}
+						}
+					}
+				}
+			}
+		}
         
 
         

@@ -146,10 +146,15 @@ public abstract class World {
 	}
     
 	public int getWidth() { return dxCA; }
-	public int getHeight() { return dxCA; }
+	public int getHeight() { return dyCA; }
 
 	public double getMaxEverHeight() { return this.maxEverHeightValue; }
 	public double getMinEverHeight() { return this.minEverHeightValue; }
+
+
+	public abstract void addPredator(int posx, int posy);
+
+	public abstract void addPrey(int posx, int posy);
 	
 
 }

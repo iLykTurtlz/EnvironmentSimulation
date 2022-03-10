@@ -12,102 +12,79 @@ import worlds.World;
 
 public abstract class Agent extends UniqueDynamicObject{
 
-    protected boolean directions[];
+    protected boolean orientation[];         // (0,1,2,3) = (nord,est,sud,ouest)
+    protected boolean directions[];          // idem
+    protected int accessible;
     protected float[] headColor;
 	
-	public Agent ( int __x , int __y, World __world, float[] headColor )
+    public Agent ( int __x , int __y, World __world, float[] headColor )
 	{
 		super(__x,__y,__world);
         directions = new boolean[4];    // above, right, below, left; in that order
         for (int i=0; i<directions.length; i++) {
             directions[i] = true;
         }
+
+        this.orientation = new boolean[4];  
+        int index = (int)(Math.random()*4); //random orientation by default
+        orientation[index] = true;
+
+        this.headColor = headColor;
+	}
+
+	public Agent ( int __x , int __y, World __world, boolean orientation[], float[] headColor )
+	{
+		super(__x,__y,__world);
+        directions = new boolean[4];    // above, right, below, left; in that order
+        for (int i=0; i<directions.length; i++) {
+            directions[i] = true;
+        }
+        this.orientation = orientation;
         this.headColor = headColor;
 	}
 	
-	public void step() 
-	{
-		if ( world.getIteration() % 20 == 0 )
-		{
-			double dice = Math.random();
+	public void step() {
 
-            /* Indices of squares in four directions relative to the agent */
+        if ( world.getIteration() % 20 == 0 )   {
+
+            /* Indices of squares in four directions relative to the agent's orientation */
             int right = (this.x + 1 + this.world.getWidth()) % this.world.getWidth();
             int left = (this.x - 1 + this.world.getWidth()) % this.world.getWidth();
             int above = (this.y + 1 + this.world.getHeight()) % this.world.getHeight();
             int below = (this.y - 1 + this.world.getHeight()) % this.world.getHeight();
 
-            int accessible = 4;
+            this.accessible = 4;
             
             /* Block off directions that are impassable or dangerous */
             /* And determine the number of remaining accessible directions */
-            if ( (this.world.getCellHeight(this.x, above) < 0) )    {
+            double hAbove = this.world.getCellHeight(this.x, above), 
+                hRight = this.world.getCellHeight(right, this.y),
+                hBelow = this.world.getCellHeight(this.x, below), 
+                hLeft  = this.world.getCellHeight(left, this.y),
+                hThis  = this.world.getCellHeight(this.x,this.y);
+
+            /* Block off water and cliffs */       
+            if ( (hAbove < 0) || (Math.abs(hAbove - hThis)) > 0.5)    {
                 directions[0] = false;
                 accessible--;
             }
-            if ( (this.world.getCellHeight(right, this.y) < 0) )   {
+            if ( (hRight < 0) || (Math.abs(hRight - hThis) > 0.5) )   {
                 directions[1] = false;
                 accessible--;
             }
-            if ( (this.world.getCellHeight(this.x, below) < 0) )    {
+            if ( (hBelow < 0) || (Math.abs(hBelow - hThis) > 0.5) )    {
                 directions[2] = false;
                 accessible--;
             }
-            if ( (this.world.getCellHeight(left, this.y) < 0) ) {
+            if ( (hLeft < 0) || (Math.abs(hLeft - hThis) > 0.5) )      {
                 directions[3] = false;
                 accessible--;
             }
-            
-
-            /* If no direction is accessible, the agent does not move. */
-            if (accessible == 0)    {
-                return;
-            }
-
-
-            int move=-1, j=0;
-
-            double partition_size = ((double)1)/((double)accessible);
-
-            for (int i=0; i<directions.length; i++)    {
-                if ( directions[i] )    {
-                    j++;
-                    if ( dice < (j*partition_size) )  {    
-                        move = i;
-                        break;
-                    }
-                }
-            }
-
-            /* set the agent's new position */
-            switch (move)   {
-                case 0:
-                    this.y = above;
-                    break;
-                case 1:
-                    this.x = right;
-                    break;
-                case 2:
-                    this.y = below;
-                    break;
-                case 3:
-                    this.x = left;
-                    break;
-                default:
-                    System.out.println("Erreur de déplacement : move = " + move);
-            }
-
-            /* Reinitialize the four directions to true*/
-            for (int i=0; i<directions.length; i++)    {
-                directions[i] = true;
-            }
         }
+
+
     }
-
-
-
-
-
+	
 
             
 /*          //OLD MOVEMENT - Agents move randomly, including on water

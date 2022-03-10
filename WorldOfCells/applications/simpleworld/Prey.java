@@ -12,6 +12,64 @@ public class Prey extends Agent {
         super(__x,__y,__world, new float[] {0.f,0.f,1.f});
     }
 
+    public Prey( int __x , int __y, World __world, boolean[] orientation ) {
+        super(__x,__y,__world, orientation, new float[] {0.f,0.f,1.f});
+    }
+    
+
+    public void step() 
+	{
+        super.step();
+
+		if ( world.getIteration() % 20 == 0 )
+		{
+			double dice = Math.random();
+            
+
+            /* If no direction is accessible, the agent does not move. */
+            if (accessible == 0)    {
+                return;
+            }
+
+
+            int move=-1, j=0;
+
+            double partition_size = ((double)1)/((double)accessible);
+
+            for (int i=0; i<directions.length; i++)    {
+                if ( directions[i] )    {
+                    j++;
+                    if ( dice < (j*partition_size) )  {    
+                        move = i;
+                        break;
+                    }
+                }
+            }
+
+            /* set the agent's new position */
+            switch (move)   {
+                case 0:
+                    this.y = (this.y + 1 + this.world.getHeight()) % this.world.getHeight();
+                    break;
+                case 1:
+                    this.x = (this.x + 1 + this.world.getWidth()) % this.world.getWidth();
+                    break;
+                case 2:
+                    this.y = (this.y - 1 + this.world.getHeight()) % this.world.getHeight();
+                    break;
+                case 3:
+                    this.x = (this.x - 1 + this.world.getWidth()) % this.world.getWidth();
+                    break;
+                default:
+                    System.out.println("Erreur de déplacement : move = " + move);
+            }
+
+            /* Reinitialize the four directions to true*/
+            for (int i=0; i<directions.length; i++)    {
+                directions[i] = true;
+            }
+        }
+    }
 
     
 

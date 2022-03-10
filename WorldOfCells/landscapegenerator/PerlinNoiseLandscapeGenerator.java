@@ -11,10 +11,10 @@ public class PerlinNoiseLandscapeGenerator {
     public static double[][] generatePerlinNoiseLandscape ( int dxView, int dyView, double scaling, double landscapeAltitudeRatio, int perlinLayerCount)
     {
     	double landscape[][] = new double[dxView][dyView];
-        double facteur_aleatoire = Math.random() * 101;
+        double facteur_aleatoire = Math.random() * 20;
     	for (int x = 0; x < dxView; x++) {
     		for (int y = 0; y < dyView; y++) {
-                landscape[x][y] = perlinNoise2D((double) x / dxView * facteur_aleatoire, (double) y / dyView * facteur_aleatoire, 0.4d, perlinLayerCount);
+                landscape[x][y] = perlinNoise2D((double) x / dxView * facteur_aleatoire, (double) y / dyView * facteur_aleatoire, 0.2d, perlinLayerCount); //faible persistence pour un terrain plus lisse
             }
         }
 

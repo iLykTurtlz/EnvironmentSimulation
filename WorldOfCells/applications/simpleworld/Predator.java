@@ -45,6 +45,7 @@ public class Predator extends Agent {
                 }
             }
 
+
             /* set the agent's new position */
             switch (move)   {
                 case 0:

@@ -503,15 +503,14 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 							} else {
 								_myWorld.addPrey(x,y);
 							}
+							if (dice < 0.001)	{
+								_myWorld.addPlant(x,y);
+							}
 						}
 					}
 				}
 			}
 		}
-        
-
-        
- 
         
         /**
          * 

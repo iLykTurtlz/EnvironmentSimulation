@@ -147,6 +147,10 @@ public class WorldOfTrees extends World {
 		uniqueDynamicObjects.add(new Prey(posx,posy,this));
 	}
 
+	public void addPlant(int posx, int posy)	{
+		uniqueDynamicObjects.add(new Plant(posx,posy,this));
+	}
+
 	//public void displayObject(World _myWorld, GL2 gl, float offset,float stepX, float stepY, float lenX, float lenY, float heightFactor, double heightBooster) { ... } 
     
    

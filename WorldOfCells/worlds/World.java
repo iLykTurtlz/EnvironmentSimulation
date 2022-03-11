@@ -155,6 +155,8 @@ public abstract class World {
 	public abstract void addPredator(int posx, int posy);
 
 	public abstract void addPrey(int posx, int posy);
+
+	public abstract void addPlant(int posx, int posy);
 	
 
 }

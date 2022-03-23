@@ -7,7 +7,12 @@ package worlds;
 import java.util.ArrayList;
 import com.jogamp.opengl.GL2;
 
+import applications.simpleworld.Agent;
+import applications.simpleworld.Plant;
+import applications.simpleworld.Predator;
+import applications.simpleworld.Prey;
 import cellularautomata.*;
+import utils.*;
 
 import objects.*;
 
@@ -16,7 +21,13 @@ public abstract class World {
 	protected int iteration = 0;
 
 	protected ArrayList<UniqueObject> uniqueObjects = new ArrayList<UniqueObject>();
-	protected ArrayList<UniqueDynamicObject> uniqueDynamicObjects = new ArrayList<UniqueDynamicObject>();
+	protected ArrayList<Agent> uniqueDynamicObjects = new ArrayList<Agent>();
+	//protected ArrayList<Predator> predators = new ArrayList<Predator>();
+	//protected ArrayList<Prey> prey = new ArrayList<Prey>();
+	protected ArrayList<Plant> plants = new ArrayList<Plant>();
+	protected PoolPrey prey = new PoolPrey();
+	protected PoolPredator predators = new PoolPredator();
+
     
 	protected int dxCA;
 	protected int dyCA;
@@ -143,6 +154,9 @@ public abstract class World {
     		uniqueObjects.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
     	for ( int i = 0 ; i < uniqueDynamicObjects.size(); i++ )
     		uniqueDynamicObjects.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
+		for ( int i = 0 ; i < plants.size(); i++ )
+			plants.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
+
 	}
     
 	public int getWidth() { return dxCA; }

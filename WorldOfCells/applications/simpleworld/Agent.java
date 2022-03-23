@@ -13,7 +13,7 @@ import worlds.World;
 public abstract class Agent extends UniqueDynamicObject{
 
 
-    public static final int MAX_LIFESPAN = 100;
+    public static final int MAX_LIFESPAN = 1000;
     public static final float INITIAL_ENERGY = 100.f;
     protected float energy;
     protected int age;
@@ -169,6 +169,12 @@ public abstract class Agent extends UniqueDynamicObject{
     }
 
 
+    public void reinitialize()  {
+        this.age = 0;
+        this.energy = INITIAL_ENERGY;
+        this.state = State.ALIVE;
+    }
+
 
 
     /* GETTERS AND SETTERS */
@@ -187,6 +193,10 @@ public abstract class Agent extends UniqueDynamicObject{
 
     public void updateEnergy()  {
         this.energy -= 1.;
+    }
+
+    public State getState()  {
+        return this.state;
     }
  
 }

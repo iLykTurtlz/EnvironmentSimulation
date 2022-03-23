@@ -6,6 +6,7 @@ package applications.simpleworld;
 
 import com.jogamp.opengl.GL2;
 
+import applications.simpleworld.Agent.State;
 import objects.*;
 import worlds.World;
 
@@ -107,12 +108,41 @@ public class WorldOfTrees extends World {
     protected void stepAgents()
     {
     	// nothing to do.
+		/*
     	for ( int i = 0 ; i < this.uniqueDynamicObjects.size() ; i++ )
-    	{
-			
-    		this.uniqueDynamicObjects.get(i).step();
-			
+    	{ 
+			Agent a = this.uniqueDynamicObjects.get(i);
+    		a.step();
+			if (a.getState() == State.DEAD)	{
+				this.removeAgent(a);
+			}
+
     	}
+		*/
+
+		for ( int i = 0 ; i < this.predators.getSizeUsed() ; i++ )
+		{
+			Predator p = this.predators.get(i);
+			p.step();
+			if (p.getState() == State.DEAD)	{
+				this.predators.remove(p);
+			}
+		}
+
+		for ( int i = 0 ; i < this.prey.getSizeUsed() ; i++ )
+		{
+			Prey p = this.prey.get(i);
+			p.step();
+			if (p.getState() == State.DEAD)	{
+				this.prey.remove(p);
+			}
+		}
+
+		for ( int i = 0 ; i < this.plants.size() ; i++ )
+		{
+			Plant p = this.plants.get(i);
+			p.step();
+		}
     }
 
     public int getCellValue(int x, int y) // used by the visualization code to call specific object display.
@@ -141,8 +171,9 @@ public class WorldOfTrees extends World {
 		}
 	}
 
-	public void addPredator(int posx, int posy)	{
-		uniqueDynamicObjects.add(new Predator(posx,posy,this));
+	public void addPredator(int x, int y)	{
+		//uniqueDynamicObjects.add(new Predator(x,y,this));
+		predators.add(x,y,this);
 	}
 
 	public void addPredator(int posx, int posy, Predator pred)	{
@@ -150,8 +181,8 @@ public class WorldOfTrees extends World {
 		uniqueDynamicObjects.add(pred);
 	}
 
-	public void addPrey(int posx, int posy)	{
-		uniqueDynamicObjects.add(new Prey(posx,posy,this));
+	public void addPrey(int x, int y)	{
+		prey.add(x,y,this);
 	}
 
 	public void addPrey(int posx, int posy, Prey prey)	{
@@ -160,11 +191,15 @@ public class WorldOfTrees extends World {
 	}
 
 	public void addPlant(int posx, int posy)	{
-		uniqueDynamicObjects.add(new Plant(posx,posy,this));
+		plants.add(new Plant(posx,posy,this));
 	}
 
 	public void removeAgent(Agent a)	{
 		uniqueDynamicObjects.remove(a);
+	}
+
+	public void removePlant(Plant p)	{
+		plants.remove(p);
 	}
 
 	//public void displayObject(World _myWorld, GL2 gl, float offset,float stepX, float stepY, float lenX, float lenY, float heightFactor, double heightBooster) { ... } 

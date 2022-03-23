@@ -109,7 +109,9 @@ public class WorldOfTrees extends World {
     	// nothing to do.
     	for ( int i = 0 ; i < this.uniqueDynamicObjects.size() ; i++ )
     	{
+			
     		this.uniqueDynamicObjects.get(i).step();
+			
     	}
     }
 
@@ -143,12 +145,26 @@ public class WorldOfTrees extends World {
 		uniqueDynamicObjects.add(new Predator(posx,posy,this));
 	}
 
+	public void addPredator(int posx, int posy, Predator pred)	{
+		pred.setPosition(posx, posy);
+		uniqueDynamicObjects.add(pred);
+	}
+
 	public void addPrey(int posx, int posy)	{
 		uniqueDynamicObjects.add(new Prey(posx,posy,this));
 	}
 
+	public void addPrey(int posx, int posy, Prey prey)	{
+		prey.setPosition(posx, posy);
+		uniqueDynamicObjects.add(prey);
+	}
+
 	public void addPlant(int posx, int posy)	{
 		uniqueDynamicObjects.add(new Plant(posx,posy,this));
+	}
+
+	public void removeAgent(Agent a)	{
+		uniqueDynamicObjects.remove(a);
 	}
 
 	//public void displayObject(World _myWorld, GL2 gl, float offset,float stepX, float stepY, float lenX, float lenY, float heightFactor, double heightBooster) { ... } 

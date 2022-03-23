@@ -504,7 +504,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 								_myWorld.addPrey(x,y);
 							}
 						}
-						if (dice < 0.2 && dice > 0.15)	{
+						if (dice < 0.01)	{
 							_myWorld.addPlant(x,y);
 						}
 					}

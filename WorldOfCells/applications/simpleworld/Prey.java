@@ -8,6 +8,8 @@ import worlds.World;
 
 public class Prey extends Agent {
 
+    public static final double p_reproduce = 0.05;
+
     public Prey( int __x , int __y, World __world ) {
         super(__x,__y,__world, new float[] {0.f,0.f,1.f});
     }

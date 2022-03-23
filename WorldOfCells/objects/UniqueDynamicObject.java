@@ -21,6 +21,11 @@ abstract public class UniqueDynamicObject // UniqueObject are object defined wit
 	}
 	
 	abstract public void step();
+
+	public void setPosition(int x, int y)	{
+		this.x = x;
+		this.y = y;
+	}
 	
 	public int[] getCoordinate()
 	{

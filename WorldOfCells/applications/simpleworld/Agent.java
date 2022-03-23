@@ -12,6 +12,16 @@ import worlds.World;
 
 public abstract class Agent extends UniqueDynamicObject{
 
+
+    public static final int MAX_LIFESPAN = 100;
+    public static final float INITIAL_ENERGY = 100.f;
+    protected float energy;
+    protected int age;
+    protected enum State {ALIVE, DEAD};
+    protected State state;
+
+
+
     protected boolean orientation[];         // (0,1,2,3) = (nord,est,sud,ouest)
     protected boolean directions[];          // idem
     protected int accessible;
@@ -25,6 +35,9 @@ public abstract class Agent extends UniqueDynamicObject{
             directions[i] = true;
         }
 
+        this.age = 0;
+        this.state = State.ALIVE;
+        this.energy = INITIAL_ENERGY;
         this.orientation = new boolean[4];  
         int index = (int)(Math.random()*4); //random orientation by default
         orientation[index] = true;
@@ -42,10 +55,16 @@ public abstract class Agent extends UniqueDynamicObject{
         this.orientation = orientation;
         this.headColor = headColor;
 	}
+
 	
 	public void step() {
 
         if ( world.getIteration() % 20 == 0 )   {
+
+            this.updateAge();
+            if (this.age >= Agent.MAX_LIFESPAN)  {
+                this.state = State.DEAD;
+            }
 
             /* Indices of squares in four directions relative to the agent's orientation */
             int right = (this.x + 1 + this.world.getWidth()) % this.world.getWidth();
@@ -148,4 +167,26 @@ public abstract class Agent extends UniqueDynamicObject{
         gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, height*normalizeHeight + 5.f);
         gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, height*normalizeHeight + 5.f);
     }
+
+
+
+
+    /* GETTERS AND SETTERS */
+
+    public int getAge()    {
+        return this.age;
+    }
+    
+    public float getEnergy()    {
+        return this.energy;
+    }
+
+    public void updateAge()   {
+        this.age++;
+    }
+
+    public void updateEnergy()  {
+        this.energy -= 1.;
+    }
+ 
 }

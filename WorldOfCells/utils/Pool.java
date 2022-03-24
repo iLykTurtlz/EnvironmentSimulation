@@ -1,6 +1,16 @@
-import java.util.ArrayList;
+package utils;
+
+import com.jogamp.opengl.GL2;
+
+import objects.UniqueDynamicObject;
 
 import worlds.World;
+
+import applications.simpleworld.Prey;
+
+import java.util.ArrayList;
+
+import worlds.*;
 
 abstract class Pool<E> {
 	protected ArrayList<E> used;

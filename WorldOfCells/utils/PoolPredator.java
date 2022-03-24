@@ -1,4 +1,4 @@
-package applications.simpleworld;
+package utils;
 
 import com.jogamp.opengl.GL2;
 

@@ -9,10 +9,12 @@ import com.jogamp.opengl.GL2;
 
 import applications.simpleworld.Agent;
 import applications.simpleworld.Plant;
+import utils.PoolPrey;
+import utils.PoolPredator;
 import applications.simpleworld.Predator;
 import applications.simpleworld.Prey;
 import cellularautomata.*;
-import utils.*;
+
 
 import objects.*;
 

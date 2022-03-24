@@ -18,6 +18,23 @@ public class Predator extends Agent {
         super(__x,__y,__world, orientation, new float[] {1.f,0.f,0.f});
     }
 
+    public void eatAndHunt()    {
+        Prey target;
+        switch (orientation)    {
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            default:
+                System.out.println("Erreur : orientation d'un prédateur.");
+        }
+        
+    }
+
     public void step() 
 	{
         super.step();
@@ -72,7 +89,7 @@ public class Predator extends Agent {
             }
 
             /* Devour prey */
-            
+
 
         }
     }

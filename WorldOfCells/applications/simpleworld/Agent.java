@@ -17,7 +17,7 @@ public abstract class Agent extends UniqueDynamicObject{
     public static final float INITIAL_ENERGY = 100.f;
     protected float energy;
     protected int age;
-    protected enum State {ALIVE, DEAD};
+    protected enum State {ALIVE, DEAD, ONFIRE};
     protected State state;
 
 

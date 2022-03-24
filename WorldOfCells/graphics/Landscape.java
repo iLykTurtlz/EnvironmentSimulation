@@ -53,6 +53,10 @@ import landscapegenerator.PerlinNoiseLandscapeGenerator;
 public class Landscape implements GLEventListener, KeyListener, MouseListener{
 	
 		private World _myWorld; 
+
+		private static final double INITIAL_PREDATOR_DENSITY = 0.001;
+		private static final double INITIAL_PREY_DENSITY = 0.001;
+		private static final double INITIAL_PLANT_DENSITY = 0.001;
 	
 		private static GLCapabilities caps;  // GO FAST ???
 	
@@ -67,6 +71,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 		static boolean DISPLAY_OBJECTS = true; // useful to deactivate if view_from_above
 		
 		final static boolean DISPLAY_FPS = true; // on-screen display
+
 		
 		/*
 		 * benchmarking 
@@ -502,19 +507,15 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 				for (int y=0; y<_myWorld.getHeight(); y++)	{
 					if (_myWorld.getCellHeight(x,y) > 0)	{
 						double dice = Math.random();
-						if (dice < 0.001)	{
-							if (dice < 0.0005)	{
-								//_myWorld.addPredator(x,y);
-								predators.add(x,y,_myWorld);
-							} else {
-								prey.add(x,y,_myWorld);
-							}
-						} else {
-							if (dice < 0.0015)	{
-								plants.add(x,y,_myWorld);
-							}
+						if (dice < INITIAL_PLANT_DENSITY)	{
+							plants.add(x,y,_myWorld);
 						}
-						
+						else if (dice < INITIAL_PLANT_DENSITY + INITIAL_PREDATOR_DENSITY)	{
+							predators.add(x,y,_myWorld);
+						}
+						else if (dice < INITIAL_PLANT_DENSITY + INITIAL_PREDATOR_DENSITY + INITIAL_PREY_DENSITY)	{
+							prey.add(x,y,_myWorld);
+						}						
 					}
 				}
 			}

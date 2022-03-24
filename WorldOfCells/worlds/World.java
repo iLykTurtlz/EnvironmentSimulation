@@ -11,6 +11,7 @@ import applications.simpleworld.Agent;
 import applications.simpleworld.Plant;
 import utils.PoolPrey;
 import utils.PoolPredator;
+import utils.PoolPlant;
 import applications.simpleworld.Predator;
 import applications.simpleworld.Prey;
 import cellularautomata.*;
@@ -26,9 +27,10 @@ public abstract class World {
 	protected ArrayList<Agent> uniqueDynamicObjects = new ArrayList<Agent>();
 	//protected ArrayList<Predator> predators = new ArrayList<Predator>();
 	//protected ArrayList<Prey> prey = new ArrayList<Prey>();
-	protected ArrayList<Plant> plants = new ArrayList<Plant>();
+	//protected ArrayList<Plant> plants = new ArrayList<Plant>();
 	protected PoolPrey prey = new PoolPrey();
 	protected PoolPredator predators = new PoolPredator();
+	protected PoolPlant plants = new PoolPlant();
 
     
 	protected int dxCA;
@@ -156,8 +158,7 @@ public abstract class World {
     		uniqueObjects.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
     	for ( int i = 0 ; i < uniqueDynamicObjects.size(); i++ )
     		uniqueDynamicObjects.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
-		for ( int i = 0 ; i < plants.size(); i++ )
-			plants.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
+
 
 	}
     
@@ -173,6 +174,23 @@ public abstract class World {
 	public abstract void addPrey(int posx, int posy);
 
 	public abstract void addPlant(int posx, int posy);
+
+
+
+
+	/* GETTERS AND SETTERS*/
+	public PoolPredator getPredators()	{
+		return predators;
+	}
+
+	public PoolPrey getPrey()	{
+		return prey;
+	}
+
+	public PoolPlant getPlants()	{
+		return plants;
+	}
+
 	
 
 }

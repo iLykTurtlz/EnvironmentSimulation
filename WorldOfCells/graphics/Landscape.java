@@ -5,6 +5,7 @@
 package graphics;
 
 import worlds.*;
+import utils.*;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -493,20 +494,27 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
         }
 
 		public void initAgents()	{
+			PoolPredator predators = _myWorld.getPredators();
+			PoolPrey prey = _myWorld.getPrey();
+			PoolPlant plants = _myWorld.getPlants();
+			
 			for (int x=0; x<_myWorld.getWidth(); x++)	{
 				for (int y=0; y<_myWorld.getHeight(); y++)	{
 					if (_myWorld.getCellHeight(x,y) > 0)	{
 						double dice = Math.random();
-						if (dice < 0.01)	{
-							if (dice < 0.005)	{
-								_myWorld.addPredator(x,y);
+						if (dice < 0.001)	{
+							if (dice < 0.0005)	{
+								//_myWorld.addPredator(x,y);
+								predators.add(x,y,_myWorld);
 							} else {
-								_myWorld.addPrey(x,y);
+								prey.add(x,y,_myWorld);
+							}
+						} else {
+							if (dice < 0.0015)	{
+								plants.add(x,y,_myWorld);
 							}
 						}
-						if (dice < 0.01)	{
-							_myWorld.addPlant(x,y);
-						}
+						
 					}
 				}
 			}

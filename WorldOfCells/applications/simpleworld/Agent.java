@@ -24,8 +24,8 @@ public abstract class Agent extends UniqueDynamicObject{
 
     protected boolean orientation[];         // (0,1,2,3) = (nord,est,sud,ouest)
     protected boolean directions[];          // idem
-    protected int accessible;
-    protected float[] headColor;
+    protected int accessible;                // number of accessible directions
+    protected float[] headColor;             // to distinguish different types of agents
 	
     public Agent ( int __x , int __y, World __world, float[] headColor )
 	{

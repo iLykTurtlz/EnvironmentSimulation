@@ -40,5 +40,8 @@ public class Plant extends UniqueDynamicObject {
         gl.glVertex3f( offset+x2*stepX+lenY/2.f, offset+y2*stepY-lenY/16.f, altitude + 4.f );
     }
 
+    public void reinitialize()  {
+        return;
+    }
 
 }

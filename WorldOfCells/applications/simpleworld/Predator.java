@@ -70,6 +70,10 @@ public class Predator extends Agent {
             for (int i=0; i<directions.length; i++)    {
                 directions[i] = true;
             }
+
+            /* Devour prey */
+            
+
         }
     }
 

@@ -138,7 +138,7 @@ public class WorldOfTrees extends World {
 			}
 		}
 
-		for ( int i = 0 ; i < this.plants.size() ; i++ )
+		for ( int i = 0 ; i < this.plants.getSizeUsed() ; i++ )
 		{
 			Plant p = this.plants.get(i);
 			p.step();
@@ -171,6 +171,19 @@ public class WorldOfTrees extends World {
 		}
 	}
 
+	public void displayUniqueObjects(World _myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset,
+			float stepX, float stepY, float lenX, float lenY, float normalizeHeight)
+	{
+		super.displayUniqueObjects(_myWorld, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+		for ( int i = 0 ; i < plants.getSizeUsed(); i++ )
+			plants.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
+		for ( int i = 0 ; i < predators.getSizeUsed(); i++ )
+			predators.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);	
+		for ( int i = 0 ; i < prey.getSizeUsed(); i++ )
+			prey.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
+		
+	}
+
 	public void addPredator(int x, int y)	{
 		//uniqueDynamicObjects.add(new Predator(x,y,this));
 		predators.add(x,y,this);
@@ -190,8 +203,8 @@ public class WorldOfTrees extends World {
 		uniqueDynamicObjects.add(prey);
 	}
 
-	public void addPlant(int posx, int posy)	{
-		plants.add(new Plant(posx,posy,this));
+	public void addPlant(int x, int y)	{
+		plants.add(x,y,this);
 	}
 
 	public void removeAgent(Agent a)	{

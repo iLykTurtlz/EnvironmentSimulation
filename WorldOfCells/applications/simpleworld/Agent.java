@@ -15,15 +15,14 @@ public abstract class Agent extends UniqueDynamicObject{
 
     public static final int MAX_LIFESPAN = 1000;
     public static final float INITIAL_ENERGY = 100.f;
-    protected float energy;
+    protected int speed;
     protected int age;
     protected enum State {ALIVE, DEAD, ONFIRE};
     protected State state;
 
 
 
-    protected boolean orientation[];         // (0,1,2,3) = (nord,est,sud,ouest)
-    protected boolean directions[];          // idem
+    protected boolean directions[];          // true if the direction is accessible, false otherwise : indices (0,1,2,3) = (N,E,S,W)
     protected int accessible;                // number of accessible directions
     protected float[] headColor;             // to distinguish different types of agents
 	
@@ -37,10 +36,6 @@ public abstract class Agent extends UniqueDynamicObject{
 
         this.age = 0;
         this.state = State.ALIVE;
-        this.energy = INITIAL_ENERGY;
-        this.orientation = new boolean[4];  
-        int index = (int)(Math.random()*4); //random orientation by default
-        orientation[index] = true;
 
         this.headColor = headColor;
 	}
@@ -52,19 +47,20 @@ public abstract class Agent extends UniqueDynamicObject{
         for (int i=0; i<directions.length; i++) {
             directions[i] = true;
         }
-        this.orientation = orientation;
         this.headColor = headColor;
 	}
 
 	
 	public void step() {
 
-        if ( world.getIteration() % 20 == 0 )   {
+        if ( world.getIteration() % speed == 0 )   {
 
             this.updateAge();
             if (this.age >= Agent.MAX_LIFESPAN)  {
                 this.state = State.DEAD;
             }
+
+            this.accessible = 4;
 
             /* Indices of squares in four directions relative to the agent's orientation */
             int right = (this.x + 1 + this.world.getWidth()) % this.world.getWidth();
@@ -72,7 +68,6 @@ public abstract class Agent extends UniqueDynamicObject{
             int above = (this.y + 1 + this.world.getHeight()) % this.world.getHeight();
             int below = (this.y - 1 + this.world.getHeight()) % this.world.getHeight();
 
-            this.accessible = 4;
             
             /* Block off directions that are impassable or dangerous */
             /* And determine the number of remaining accessible directions */
@@ -171,7 +166,6 @@ public abstract class Agent extends UniqueDynamicObject{
 
     public void reinitialize()  {
         this.age = 0;
-        this.energy = INITIAL_ENERGY;
         this.state = State.ALIVE;
     }
 
@@ -183,17 +177,11 @@ public abstract class Agent extends UniqueDynamicObject{
         return this.age;
     }
     
-    public float getEnergy()    {
-        return this.energy;
-    }
 
     public void updateAge()   {
         this.age++;
     }
 
-    public void updateEnergy()  {
-        this.energy -= 1.;
-    }
 
     public State getState()  {
         return this.state;

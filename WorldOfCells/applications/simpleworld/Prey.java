@@ -6,12 +6,21 @@ import objects.UniqueDynamicObject;
 
 import worlds.World;
 
+import utils.PreyVision;
+
 public class Prey extends Agent {
 
     public static final double p_reproduce = 0.05;
 
+    private PreyVision vision;
+    private int rangeOfVision;
+    
+
     public Prey( int __x , int __y, World __world ) {
         super(__x,__y,__world, new float[] {0.f,0.f,1.f});
+        this.rangeOfVision = 5;
+        this.speed = 20;
+        this.vision = new PreyVision(__x,__y,rangeOfVision,__world);
     }
 
     public Prey( int __x , int __y, World __world, boolean[] orientation ) {
@@ -23,7 +32,7 @@ public class Prey extends Agent {
 	{
         super.step();
 
-		if ( world.getIteration() % 20 == 0 )
+		if ( world.getIteration() % speed == 0 )
 		{
 			double dice = Math.random();
             

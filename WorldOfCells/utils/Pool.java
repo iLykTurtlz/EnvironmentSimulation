@@ -54,7 +54,7 @@ abstract class Pool<E> {
 		return used.size();
 	}
 
-	public int getSizedQueue()	{
+	public int getSizeQueue()	{
 		return queue.size();
 	}
 }

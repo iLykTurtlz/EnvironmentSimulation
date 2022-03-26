@@ -83,7 +83,9 @@ public class PredatorVision extends VisionField {
         }
     }
 
-    public Prey search(PoolPrey prey)    {
+    public Prey search(PoolPrey prey)    {  
+    /* Finds the nearest prey in the field of vision and returns it.
+       Returns null if no prey is found. */          
         Prey p;
         for (int i=1; i<field.length; i++)  {               //If there's a prey at i=0, it has already been eaten.
             for (int j=0; j<prey.getSizeUsed(); j++)    {

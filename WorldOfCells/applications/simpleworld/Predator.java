@@ -20,7 +20,7 @@ public class Predator extends Agent {
         super(__x,__y,__world, new float[] {1.f, 0.f, 0.f});
         this.orientation = (int)(4*Math.random());      //random orientation by default
         this.rangeOfVision = 10;
-        this.speed = 10;
+        this.speed = 20;
         this.vision = new PredatorVision(__x,__y,rangeOfVision,orientation,__world);
     }
 
@@ -28,7 +28,7 @@ public class Predator extends Agent {
         super(__x,__y,__world, orientation, new float[] {1.f,0.f,0.f});
     }
 
-    public int eatAndHunt()    {            //returns the Predator's next move, based on the prey's location, -1 if no prey is seen.
+    private int eatAndHunt()    {            //returns the Predator's next move, based on the prey's location, -1 if no prey is seen.
         PoolPrey prey = world.getPrey();
 
         vision.setOrientation(orientation);
@@ -76,7 +76,7 @@ public class Predator extends Agent {
         }
 
         /* HUNT */
-        Prey target = vision.search(prey);
+        Prey target = vision.searchPrey(prey);
         if (target == null) {
             return -1;
         }
@@ -149,7 +149,7 @@ public class Predator extends Agent {
     public void step() 
 	{
         super.step();
-		if ( world.getIteration() % 20 == 0 )
+		if ( world.getIteration() % speed == 0 )
 		{
             
             double dice = Math.random();

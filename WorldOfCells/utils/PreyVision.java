@@ -59,7 +59,7 @@ public class PreyVision extends VisionField {
         }
     }
 
-    public Predator searchThreat(PoolPredator predators)  {
+    public Predator searchPredator(PoolPredator predators)  {
         /* Finds the nearest predator in the field and returns it.
            Returns null if no predator is found */
         Predator p;

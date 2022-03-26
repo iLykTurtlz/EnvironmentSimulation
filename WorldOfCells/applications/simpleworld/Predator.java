@@ -41,11 +41,11 @@ public class Predator extends Agent {
         for (int i=0; i<prey.getSizeUsed(); i++)    {
             dinner = prey.get(i);
             int[] coord = dinner.getCoordinate();
-            if (coord[0] == field[0][0] && coord[1] == field[0][1]) {
+            if (coord[0] == field[0][0] && coord[1] == field[0][1]) {                           //Same space -> dinnertime.
                 prey.remove(dinner);    //TODO : reduce hunger - make a flag that handles this
                 System.out.println("Munch");
             }
-            switch (orientation)    {
+            switch (orientation)    {                                                           //Space directly in front -> dinnertime.
                 case 0:
                     if (coord[0] == field[0][0] && coord[1] == ( field[0][1] + 1))  {
                         prey.remove(dinner);    //TODO : reduce hunger
@@ -88,14 +88,14 @@ public class Predator extends Agent {
 
         switch (orientation)    {
             case 0:
-                if (coord[0] == x && directions[0])  {
+                if (coord[0] == x && directions[0])  {              //Prey directly in front -> move straight ahead
                     return orientation;
                 }
-                for (int i=1; i<=rangeOfVision; i++)    {
-                    if ( coord[0] == ((x+i+width)%width) )  {   
+                for (int i=1; i<=rangeOfVision; i++)    {           
+                    if ( coord[0] == ((x+i+width)%width) )  {       //Prey to the right -> move right
                         return right;
                     }
-                    if ( coord[0] == ((x-i+width)%width) )  {
+                    if ( coord[0] == ((x-i+width)%width) )  {       //Prey to the left -> move left
                         return left;
                     }
                 }
@@ -139,12 +139,10 @@ public class Predator extends Agent {
                     }
                 }
                 break;
-
             default:
                 System.out.println("Erreur : orientation, eatAndHunt()");
         }
         return -1;
-        
     }
 
 
@@ -181,8 +179,8 @@ public class Predator extends Agent {
             }
 
 
-            /* set the agent's new position */
-            switch (move)   {
+            
+            switch (move)   {                                                                   //move to the new position
                 case 0:
                     this.y = (this.y + 1 + this.world.getHeight()) % this.world.getHeight();
                     break;
@@ -199,12 +197,11 @@ public class Predator extends Agent {
                     System.out.println("Erreur de déplacement : move = " + move);
             }
 
-            /* Reinitialize the four directions to true*/
-            for (int i=0; i<directions.length; i++)    {
+            
+            for (int i=0; i<directions.length; i++)    {        //reinitialize the four directions to true, making them all accessible
                 directions[i] = true;
             }
 
-            /* Devour prey */
 
 
         }

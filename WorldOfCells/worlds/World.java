@@ -25,9 +25,6 @@ public abstract class World {
 
 	protected ArrayList<UniqueObject> uniqueObjects = new ArrayList<UniqueObject>();
 	protected ArrayList<Agent> uniqueDynamicObjects = new ArrayList<Agent>();
-	//protected ArrayList<Predator> predators = new ArrayList<Predator>();
-	//protected ArrayList<Prey> prey = new ArrayList<Prey>();
-	//protected ArrayList<Plant> plants = new ArrayList<Plant>();
 	protected PoolPrey prey = new PoolPrey();
 	protected PoolPredator predators = new PoolPredator();
 	protected PoolPlant plants = new PoolPlant();

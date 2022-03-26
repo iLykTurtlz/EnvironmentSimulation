@@ -19,7 +19,7 @@ public class Prey extends Agent {
     public Prey( int __x , int __y, World __world ) {
         super(__x,__y,__world, new float[] {0.f,0.f,1.f});
         this.rangeOfVision = 5;
-        this.speed = 20;
+        this.speed = 30;
         this.vision = new PreyVision(__x,__y,rangeOfVision,__world);
     }
 

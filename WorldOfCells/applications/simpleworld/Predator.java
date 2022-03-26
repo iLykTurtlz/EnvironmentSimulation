@@ -30,6 +30,7 @@ public class Predator extends Agent {
 
     private int eatAndHunt()    {            //returns the Predator's next move, based on the prey's location, -1 if no prey is seen.
         PoolPrey prey = world.getPrey();
+        double dice = Math.random();
 
         vision.setOrientation(orientation);
         vision.setPosition(x, y);
@@ -85,57 +86,82 @@ public class Predator extends Agent {
         int width = world.getWidth();
         int right = (orientation + 1 + 4) % 4;
         int left = (orientation - 1 + 4) % 4;
+        
 
         switch (orientation)    {
             case 0:
-                if (coord[0] == x && directions[0])  {              //Prey directly in front -> move straight ahead
+                if (coord[0] == x && directions[orientation])  {                                    //Prey directly in front -> move straight ahead, if possible
                     return orientation;
                 }
                 for (int i=1; i<=rangeOfVision; i++)    {           
-                    if ( coord[0] == ((x+i+width)%width) )  {       //Prey to the right -> move right
-                        return right;
+                    if ( coord[0] == ((x+i+width)%width) && directions[right])  {                    //Prey to the right -> move right
+                        if ( dice < 0.75 )                                                            //A little bit of randomness to avoid infinite looping interactions between predators and prey
+                            return right;
+                        else if (directions[orientation])
+                            return orientation;
                     }
-                    if ( coord[0] == ((x-i+width)%width) )  {       //Prey to the left -> move left
-                        return left;
+                    if ( coord[0] == ((x-i+width)%width) && directions[left])  {                    //Prey to the left -> move left
+                        if ( dice < 0.75 )
+                            return left;                                                   
+                        else if (directions[orientation])
+                            return orientation;
                     }
                 }
                 break;
             case 1:
-                if (coord[1] == y && directions[1])  {
+                if (coord[1] == y && directions[orientation])  {                                  //idem
                     return orientation;
                 }
                 for (int i=1; i<=rangeOfVision; i++)    {
-                    if ( coord[1] == ((y+i+height)%height) )  {   
-                        return left;
+                    if ( coord[1] == ((y+i+height)%height) && directions[left])  {   
+                        if ( dice < 0.75 )
+                            return left;                                                   
+                        else if (directions[orientation])
+                            return orientation;
                     }
-                    if ( coord[1] == ((y-i+height)%height) )  {
-                        return right;
+                    if ( coord[1] == ((y-i+height)%height) && directions[right] )  {
+                        if ( dice < 0.75 )
+                            return right;                                                   
+                        else if (directions[orientation])
+                            return orientation;
                     }
                 }
                 break;
             case 2:
-                if (coord[0] == x && directions[2])  {
+                if (coord[0] == x && directions[orientation])  {
                     return orientation;
                 }
                 for (int i=1; i<=rangeOfVision; i++)    {
-                    if ( coord[0] == ((x+i+width)%width) )  {   
-                        return left;
+                    if ( coord[0] == ((x+i+width)%width) && directions[left] )  {   
+                        if ( dice < 0.75 )
+                            return left;                                                   
+                        else if (directions[orientation])
+                            return orientation;
                     }
-                    if ( coord[0] == ((x-i+width)%width) )  {
-                        return right;
+                    if ( coord[0] == ((x-i+width)%width) && directions[right])  {
+                        if ( dice < 0.75 )
+                            return right;                                                   
+                        else if (directions[orientation])
+                            return orientation;
                     }
                 }
                 break;
             case 3:
-                if (coord[1] == y && directions[3])  {
+                if (coord[1] == y && directions[orientation])  {
                     return orientation;
                 }
                 for (int i=1; i<=rangeOfVision; i++)    {
-                    if ( coord[1] == ((y+i+height)%height) )  {   
-                        return right;
+                    if ( coord[1] == ((y+i+height)%height) && directions[right])  {   
+                        if ( dice < 0.75 )
+                            return right;                                                   
+                        else if (directions[orientation])
+                            return orientation;
                     }
-                    if ( coord[1] == ((y-i+height)%height) )  {
-                        return left;
+                    if ( coord[1] == ((y-i+height)%height) && directions[left])  {
+                        if ( dice < 0.75 )
+                            return left;                                                   
+                        else if (directions[orientation])
+                            return orientation;
                     }
                 }
                 break;
@@ -198,7 +224,7 @@ public class Predator extends Agent {
             }
 
             
-            for (int i=0; i<directions.length; i++)    {        //reinitialize the four directions to true, making them all accessible
+            for (int i=0; i<directions.length; i++)    {        //reinitialize the four directions to true, making them all accessible 
                 directions[i] = true;
             }
 

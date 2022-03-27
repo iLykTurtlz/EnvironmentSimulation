@@ -14,11 +14,12 @@ public abstract class Agent extends UniqueDynamicObject{
 
 
     public static final int MAX_LIFESPAN = 1000;
-    public static final float INITIAL_ENERGY = 100.f;
+    public static final float INITIAL_HUNGER = 100.f;
     protected int speed;
     protected int age;
     protected enum State {ALIVE, DEAD, ONFIRE};
     protected State state;
+    protected int hunger;
 
 
 

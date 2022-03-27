@@ -12,6 +12,8 @@ public class PreyVision extends VisionField {
     }
 
     protected void calculateField() {
+        /* Creates an n x 2 array where n is the array of the square vision field extending 'range' squares out from the prey in four directions.
+           This array serves as a list in order of priority, so that nearer predators will have priority over more distant predators. */
         int size = 4*range*(range+1)+1;                 //number of coordiantes = (2*range+1)^2 
         int direction = 0;                              //priority will follow a spiral, nearest to farthest, (0,1,2,3) = (N,E,S,W)
         int length = 1;                                 //length before changing direction

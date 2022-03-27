@@ -143,6 +143,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
     		initLandscape();
 
 			initAgents();
+
         }
 
         /**
@@ -499,6 +500,9 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
         }
 
 		public void initAgents()	{
+
+			//_myWorld.displayHeightValues();		//Just testing
+
 			PoolPredator predators = _myWorld.getPredators();
 			PoolPrey prey = _myWorld.getPrey();
 			PoolPlant plants = _myWorld.getPlants();

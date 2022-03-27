@@ -13,8 +13,8 @@ public class PredatorVision extends VisionField {
     }
 
     protected void calculateField() {
-    /* Creates n x 2 array, where n is the area of the triangular vision field, fanning out in front of the predator.
-       This array serves as a priority queue, so that nearer prey will have priority over more distant prey. */
+    /* Creates an n x 2 array, where n is the area of the triangular vision field, fanning out in front of the predator.
+       This array serves as a priority list, so that nearer prey will have priority over more distant prey. */
 
         field = new int[(range+1)*(range+1)][2];    //(range+1)^2 coordinates == the area of the vision field.
         int k=0;                                    // index that will span the first dimension of the field array.

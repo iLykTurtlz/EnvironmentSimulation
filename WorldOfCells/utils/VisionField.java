@@ -41,6 +41,4 @@ public abstract class VisionField    {
         return field;
     }
 
-    //= new int [100][2];
-
 }

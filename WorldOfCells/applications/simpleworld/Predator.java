@@ -6,6 +6,7 @@ import objects.UniqueDynamicObject;
 
 import worlds.World;
 import utils.PoolPrey;
+
 import utils.PredatorVision;
 
 public class Predator extends Agent {
@@ -44,31 +45,26 @@ public class Predator extends Agent {
             int[] coord = dinner.getCoordinate();
             if (coord[0] == field[0][0] && coord[1] == field[0][1]) {                           //Same space -> dinnertime.
                 prey.remove(dinner);    //TODO : reduce hunger - make a flag that handles this
-                System.out.println("Munch");
             }
             switch (orientation)    {                                                           //Space directly in front -> dinnertime.
                 case 0:
                     if (coord[0] == field[0][0] && coord[1] == ( field[0][1] + 1))  {
                         prey.remove(dinner);    //TODO : reduce hunger
-                        System.out.println("Munch");
                     }
                     break;
                 case 1:
                     if (coord[0] == (field[0][0] + 1) && coord[1] == field[0][1])  {
                         prey.remove(dinner);    //TODO : reduce hunger
-                        System.out.println("Munch");
                     }
                     break;
                 case 2:
                     if (coord[0] == field[0][0] && coord[1] == ( field[0][1] - 1))  {
                         prey.remove(dinner);    //TODO : reduce hunger
-                        System.out.println("Munch");
                     }
                     break;
                 case 3:
                     if (coord[0] == (field[0][0] - 1) && coord[1] == field[0][1])  {
                         prey.remove(dinner);    //TODO : reduce hunger
-                        System.out.println("Munch");
                     }
                     break;
                 default:
@@ -109,7 +105,7 @@ public class Predator extends Agent {
                 }
                 break;
             case 1:
-                if (coord[1] == y && directions[orientation])  {                                  //idem
+                if (coord[1] == y && directions[orientation])  {                                  //idem for the other cases
                     return orientation;
                 }
                 for (int i=1; i<=rangeOfVision; i++)    {

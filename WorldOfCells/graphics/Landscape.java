@@ -167,6 +167,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
     		dyView = landscape[0].length;
 
     		System.out.println("Landscape contains " + dxView*dyView + " tiles. (" + dxView + "x" + dyView +")");
+
         	
     		_myWorld.init(dxView-1,dyView-1,landscape);
     		

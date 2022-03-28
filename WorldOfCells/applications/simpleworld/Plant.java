@@ -9,16 +9,13 @@ import objects.UniqueDynamicObject;
 import worlds.World;
 
 public class Plant extends UniqueDynamicObject {
-    private static int MAX_PETALS = 12;
+    private static int MAX_PETALS = 11;
     private float[] stemColor;
-    private float petalSize;
     private int totalPetals;
 
     public Plant(int __x , int __y, World __world)  {
         super(__x,__y,__world);
         stemColor = new float[] {1.f,0.f,1.f};
- 
-        this.petalSize = 0.3f;   
         this.totalPetals = 0;           
     }
 
@@ -55,14 +52,14 @@ public class Plant extends UniqueDynamicObject {
         return rgb;
     }
 
-    public void bloom(int petals, float[] petalColor, float radius, int x2, int y2, float height, float altitude, GL2 gl,int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)  {
+    public void bloom(int petals, float heightDecrement, float h, float petalWidth, float[] petalColor, float radius, int x2, int y2, float height, float altitude, GL2 gl,int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)  {
         /* This method recursively adds colored bands to the flower, incrementing its radius */
         int[] sequence = new int[4];
         
-        for (int i=0; i<8; i++) {       //this sequence defines the 4 vertices (x8) needed to draw a petal based on concentric boxes;
+        for (int i=0; i<8; i++) {       //this 8-term sequence of quadruplets defines the 4 vertices (x8) needed to draw a petal: a concentric box.
             sequence[0] = i;
             sequence[1] = (i+4)%8;
-            if (i<5)
+            if (i<4)
                 sequence[2] = (i+1)%4;
             else
                 sequence[2] = (i-1)%4 + 4;
@@ -72,28 +69,28 @@ public class Plant extends UniqueDynamicObject {
             for (int j=0; j<sequence.length; j++)   {
                 switch (sequence[j])   {
                     case 0:
-                        gl.glVertex3f( offset+x2*stepX-lenX*radius, offset+y2*stepY-lenY*radius, height*normalizeHeight + 4.0f);
+                        gl.glVertex3f( offset+x2*stepX-lenX*radius, offset+y2*stepY-lenY*radius, height*normalizeHeight + h);
                         break;
                     case 1:
-                        gl.glVertex3f( offset+x2*stepX-lenX*radius, offset+y2*stepY+lenY*radius, height*normalizeHeight + 4.0f);
+                        gl.glVertex3f( offset+x2*stepX-lenX*radius, offset+y2*stepY+lenY*radius, height*normalizeHeight + h);
                         break;
                     case 2:
-                        gl.glVertex3f( offset+x2*stepX+lenX*radius, offset+y2*stepY+lenY*radius, height*normalizeHeight + 4.0f);
+                        gl.glVertex3f( offset+x2*stepX+lenX*radius, offset+y2*stepY+lenY*radius, height*normalizeHeight + h);
                         break;
                     case 3:
-                        gl.glVertex3f( offset+x2*stepX+lenX*radius, offset+y2*stepY-lenY*radius, height*normalizeHeight + 4.0f);
+                        gl.glVertex3f( offset+x2*stepX+lenX*radius, offset+y2*stepY-lenY*radius, height*normalizeHeight + h);
                         break;
                     case 4:
-                        gl.glVertex3f( offset+x2*stepX-lenX*(radius+petalSize), offset+y2*stepY-lenY*(radius+petalSize), height*normalizeHeight + 4.1f);
+                        gl.glVertex3f( offset+x2*stepX-lenX*(radius+petalWidth), offset+y2*stepY-lenY*(radius+petalWidth), height*normalizeHeight + h - heightDecrement);
                         break;
                     case 5:
-                        gl.glVertex3f( offset+x2*stepX-lenX*(radius+petalSize), offset+y2*stepY+lenY*(radius+petalSize), height*normalizeHeight + 4.1f);
+                        gl.glVertex3f( offset+x2*stepX-lenX*(radius+petalWidth), offset+y2*stepY+lenY*(radius+petalWidth), height*normalizeHeight + h - heightDecrement);
                         break;
                     case 6:
-                        gl.glVertex3f( offset+x2*stepX+lenX*(radius+petalSize), offset+y2*stepY+lenY*(radius+petalSize), height*normalizeHeight + 4.1f);
+                        gl.glVertex3f( offset+x2*stepX+lenX*(radius+petalWidth), offset+y2*stepY+lenY*(radius+petalWidth), height*normalizeHeight + h - heightDecrement);
                         break;
                     case 7:
-                        gl.glVertex3f( offset+x2*stepX+lenX*(radius+petalSize), offset+y2*stepY-lenY*(radius+petalSize), height*normalizeHeight + 4.1f);
+                        gl.glVertex3f( offset+x2*stepX+lenX*(radius+petalWidth), offset+y2*stepY-lenY*(radius+petalWidth), height*normalizeHeight + h - heightDecrement);
                         break;
                     default:
                         System.out.println("Erreur : creation d'une fleur");
@@ -103,7 +100,7 @@ public class Plant extends UniqueDynamicObject {
         }
 
         if (petals < totalPetals)   
-            bloom(++petals, incrementColor(petalColor), radius+petalSize, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight); 
+            bloom(++petals, heightDecrement + 0.03f,h - heightDecrement, 0.3f, incrementColor(petalColor), radius+petalWidth, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight); 
         
         
     }
@@ -132,13 +129,13 @@ public class Plant extends UniqueDynamicObject {
         
 
         //floral disc
-        gl.glColor3f(1.f,1.f,0.f);
-        gl.glVertex3f( offset+x2*stepX-lenX/2.f, offset+y2*stepY-lenY/2.f, height*normalizeHeight + 4.0f);
-        gl.glVertex3f( offset+x2*stepX-lenX/2.f, offset+y2*stepY+lenY/2.f, height*normalizeHeight + 4.0f);
-        gl.glVertex3f( offset+x2*stepX+lenX/2.f, offset+y2*stepY+lenY/2.f, height*normalizeHeight + 4.0f);
-        gl.glVertex3f( offset+x2*stepX+lenX/2.f, offset+y2*stepY-lenY/2.f, height*normalizeHeight + 4.0f);
+        gl.glColor3f(1.f,0.f,0.f);
+        gl.glVertex3f( offset+x2*stepX-lenX*0.2f, offset+y2*stepY-lenY*0.2f, height*normalizeHeight + 5.0f);
+        gl.glVertex3f( offset+x2*stepX-lenX*0.2f, offset+y2*stepY+lenY*0.2f, height*normalizeHeight + 5.0f);
+        gl.glVertex3f( offset+x2*stepX+lenX*0.2f, offset+y2*stepY+lenY*0.2f, height*normalizeHeight + 5.0f);
+        gl.glVertex3f( offset+x2*stepX+lenX*0.2f, offset+y2*stepY-lenY*0.2f, height*normalizeHeight + 5.0f);
 
-        bloom(0, new float[]{1.f,0.f,0.f}, 0.5f, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+        bloom(0, 0, 5.0f, 0.3f, new float[]{1.f,0.5f,0.f}, 0.2f, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight);
         /*
 
         gl.glColor3f(1.f,0.f,0.f);

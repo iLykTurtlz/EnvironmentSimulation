@@ -11,17 +11,21 @@ import worlds.World;
 public class Plant extends UniqueDynamicObject {
     private static int MAX_PETALS = 11;
     private float[] stemColor;
-    private int totalPetals;
+    private float centerRadius;
+    private float centerHeight;
+    protected int size;
 
     public Plant(int __x , int __y, World __world)  {
         super(__x,__y,__world);
         stemColor = new float[] {1.f,0.f,1.f};
-        this.totalPetals = 0;           
+        this.size = 0;       
+        this.centerRadius = 0.05f;
+        this.centerHeight = 1.0f;    
     }
 
     public void step()  {
-        if ( world.getIteration() % 100 == 0 && totalPetals <= MAX_PETALS) {
-            totalPetals++;
+        if ( world.getIteration() % 100 == 0 && size <= MAX_PETALS) {
+            incrementSize();
         }
     }
 
@@ -52,11 +56,11 @@ public class Plant extends UniqueDynamicObject {
         return rgb;
     }
 
-    public void bloom(int petals, float heightDecrement, float h, float petalWidth, float[] petalColor, float radius, int x2, int y2, float height, float altitude, GL2 gl,int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)  {
-        /* This method recursively adds colored bands to the flower, incrementing its radius */
+    public void grow(int nbBands, float heightDecrement, float h, float bandWidth, float[] bandColor, float radius, int x2, int y2, float height, float altitude, GL2 gl,int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)  {
+        /* This method recursively adds colored bands to the mushroom, incrementing its radius */
         int[] sequence = new int[4];
         
-        for (int i=0; i<8; i++) {       //this 8-term sequence of quadruplets defines the 4 vertices (x8) needed to draw a petal: a concentric box.
+        for (int i=0; i<8; i++) {       //this 8-term sequence of quadruplets defines the 4 vertices needed to draw each of the 8 triangular components of a concentric box.
             sequence[0] = i;
             sequence[1] = (i+4)%8;
             if (i<4)
@@ -65,9 +69,9 @@ public class Plant extends UniqueDynamicObject {
                 sequence[2] = (i-1)%4 + 4;
             sequence[3] = i;
             
-            gl.glColor3f(petalColor[0],petalColor[1],petalColor[2]);
+            gl.glColor3f(bandColor[0],bandColor[1],bandColor[2]);
             for (int j=0; j<sequence.length; j++)   {
-                switch (sequence[j])   {
+                switch (sequence[j])   {        //8 vertices used to draw the concentric boxes.  0-3 : inner square, 4-7 : outer square
                     case 0:
                         gl.glVertex3f( offset+x2*stepX-lenX*radius, offset+y2*stepY-lenY*radius, height*normalizeHeight + h);
                         break;
@@ -81,16 +85,16 @@ public class Plant extends UniqueDynamicObject {
                         gl.glVertex3f( offset+x2*stepX+lenX*radius, offset+y2*stepY-lenY*radius, height*normalizeHeight + h);
                         break;
                     case 4:
-                        gl.glVertex3f( offset+x2*stepX-lenX*(radius+petalWidth), offset+y2*stepY-lenY*(radius+petalWidth), height*normalizeHeight + h - heightDecrement);
+                        gl.glVertex3f( offset+x2*stepX-lenX*(radius+bandWidth), offset+y2*stepY-lenY*(radius+bandWidth), height*normalizeHeight + h - heightDecrement);
                         break;
                     case 5:
-                        gl.glVertex3f( offset+x2*stepX-lenX*(radius+petalWidth), offset+y2*stepY+lenY*(radius+petalWidth), height*normalizeHeight + h - heightDecrement);
+                        gl.glVertex3f( offset+x2*stepX-lenX*(radius+bandWidth), offset+y2*stepY+lenY*(radius+bandWidth), height*normalizeHeight + h - heightDecrement);
                         break;
                     case 6:
-                        gl.glVertex3f( offset+x2*stepX+lenX*(radius+petalWidth), offset+y2*stepY+lenY*(radius+petalWidth), height*normalizeHeight + h - heightDecrement);
+                        gl.glVertex3f( offset+x2*stepX+lenX*(radius+bandWidth), offset+y2*stepY+lenY*(radius+bandWidth), height*normalizeHeight + h - heightDecrement);
                         break;
                     case 7:
-                        gl.glVertex3f( offset+x2*stepX+lenX*(radius+petalWidth), offset+y2*stepY-lenY*(radius+petalWidth), height*normalizeHeight + h - heightDecrement);
+                        gl.glVertex3f( offset+x2*stepX+lenX*(radius+bandWidth), offset+y2*stepY-lenY*(radius+bandWidth), height*normalizeHeight + h - heightDecrement);
                         break;
                     default:
                         System.out.println("Erreur : creation d'une fleur");
@@ -99,8 +103,9 @@ public class Plant extends UniqueDynamicObject {
             }
         }
 
-        if (petals < totalPetals)   
-            bloom(++petals, heightDecrement + 0.03f,h - heightDecrement, 0.3f, incrementColor(petalColor), radius+petalWidth, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight); 
+        //recursive call limited by size which represents the plant's growth state.
+        if (nbBands < size)   
+            grow(++nbBands, heightDecrement + 0.005f,h - heightDecrement, 0.1f, incrementColor(bandColor), radius+bandWidth, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight); 
         
         
     }
@@ -118,24 +123,24 @@ public class Plant extends UniqueDynamicObject {
         //stems
         gl.glColor3f(stemColor[0],stemColor[1],stemColor[2]);
         gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude );
-        gl.glVertex3f( offset+x2*stepX-lenY/16.f, offset+y2*stepY+lenY/2.f, altitude + 4.f );
+        gl.glVertex3f( offset+x2*stepX-lenY/16.f, offset+y2*stepY+lenY/2.f, altitude + centerHeight );
         gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude );
-        gl.glVertex3f( offset+x2*stepX+lenY/16.f, offset+y2*stepY-lenY/2.f, altitude + 4.f );
+        gl.glVertex3f( offset+x2*stepX+lenY/16.f, offset+y2*stepY-lenY/2.f, altitude + centerHeight );
         
     	gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude );
-        gl.glVertex3f( offset+x2*stepX-lenY/2.f, offset+y2*stepY+lenY/16.f, altitude + 4.f );
+        gl.glVertex3f( offset+x2*stepX-lenY/2.f, offset+y2*stepY+lenY/16.f, altitude + centerHeight );
         gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude );
-        gl.glVertex3f( offset+x2*stepX+lenY/2.f, offset+y2*stepY-lenY/16.f, altitude + 4.f );
+        gl.glVertex3f( offset+x2*stepX+lenY/2.f, offset+y2*stepY-lenY/16.f, altitude + centerHeight );
         
 
         //floral disc
         gl.glColor3f(1.f,0.f,0.f);
-        gl.glVertex3f( offset+x2*stepX-lenX*0.2f, offset+y2*stepY-lenY*0.2f, height*normalizeHeight + 5.0f);
-        gl.glVertex3f( offset+x2*stepX-lenX*0.2f, offset+y2*stepY+lenY*0.2f, height*normalizeHeight + 5.0f);
-        gl.glVertex3f( offset+x2*stepX+lenX*0.2f, offset+y2*stepY+lenY*0.2f, height*normalizeHeight + 5.0f);
-        gl.glVertex3f( offset+x2*stepX+lenX*0.2f, offset+y2*stepY-lenY*0.2f, height*normalizeHeight + 5.0f);
+        gl.glVertex3f( offset+x2*stepX-lenX*centerRadius, offset+y2*stepY-lenY*centerRadius, altitude + centerHeight);
+        gl.glVertex3f( offset+x2*stepX-lenX*centerRadius, offset+y2*stepY+lenY*centerRadius, altitude + centerHeight);
+        gl.glVertex3f( offset+x2*stepX+lenX*centerRadius, offset+y2*stepY+lenY*centerRadius, altitude + centerHeight);
+        gl.glVertex3f( offset+x2*stepX+lenX*centerRadius, offset+y2*stepY-lenY*centerRadius, altitude + centerHeight);
 
-        bloom(0, 0, 5.0f, 0.3f, new float[]{1.f,0.5f,0.f}, 0.2f, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+        grow(0, 0, centerHeight, 0.1f, new float[]{1.f,0.5f,0.f}, 0.1f, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight);
         /*
 
         gl.glColor3f(1.f,0.f,0.f);
@@ -240,6 +245,19 @@ public class Plant extends UniqueDynamicObject {
 
     public void reinitialize()  {
         return;
+    }
+
+
+    public int getSize()    {
+        return size;
+    }
+
+    public void decrementSize() {
+        size--;
+    }
+
+    public void incrementSize() {
+        size++;
     }
 
 }

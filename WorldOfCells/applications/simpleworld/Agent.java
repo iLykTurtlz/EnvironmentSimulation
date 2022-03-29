@@ -15,7 +15,7 @@ public abstract class Agent extends UniqueDynamicObject{
 
     public static final int MAX_LIFESPAN = 1000;
     public static final float INITIAL_HUNGER = 100.f;
-    protected int speed;
+    protected int speed;                    // between 0 and 100
     protected int age;
     protected enum State {ALIVE, DEAD, ONFIRE};
     protected State state;
@@ -37,7 +37,7 @@ public abstract class Agent extends UniqueDynamicObject{
 
         this.age = 0;
         this.state = State.ALIVE;
-
+        this.hunger = 0;
         this.headColor = headColor;
 	}
 
@@ -54,9 +54,10 @@ public abstract class Agent extends UniqueDynamicObject{
 	
 	public void step() {
 
-        if ( world.getIteration() % speed == 0 )   {
+        if ( world.getIteration() % (100 - speed) == 0 )   {
 
             this.updateAge();
+            this.updateHunger();
             if (this.age >= Agent.MAX_LIFESPAN)  {
                 this.state = State.DEAD;
             }
@@ -174,15 +175,17 @@ public abstract class Agent extends UniqueDynamicObject{
 
     /* GETTERS AND SETTERS */
 
-    public int getAge()    {
-        return this.age;
-    }
-    
-
     public void updateAge()   {
         this.age++;
     }
 
+    public void updateHunger()  {
+        this.hunger++;
+    }
+
+    public int getAge()    {
+        return this.age;
+    }
 
     public State getState()  {
         return this.state;

@@ -16,13 +16,15 @@ public class Predator extends Agent {
     protected int orientation;                          // (0,1,2,3) = (nord,est,sud,ouest)
     private PredatorVision vision;
     private int rangeOfVision;
+    protected int bloodlustThreshold;
 
     public Predator( int __x , int __y, World __world ) {
         super(__x,__y,__world, new float[] {1.f, 0.f, 0.f});
         this.orientation = (int)(4*Math.random());      //random orientation by default
         this.rangeOfVision = 10;
-        this.speed = 20;
+        this.speed = 80;
         this.vision = new PredatorVision(__x,__y,rangeOfVision,orientation,__world);
+        this.bloodlustThreshold = 15;
     }
 
     public Predator( int __x, int __y, World __world, boolean[] orientation)  {
@@ -32,6 +34,7 @@ public class Predator extends Agent {
     private int eatAndHunt()    {            //returns the Predator's next move, based on the prey's location, -1 if no prey is seen.
         PoolPrey prey = world.getPrey();
         double dice = Math.random();
+        boolean dinnertime = false;
 
         vision.setOrientation(orientation);
         vision.setPosition(x, y);
@@ -44,33 +47,39 @@ public class Predator extends Agent {
             dinner = prey.get(i);
             int[] coord = dinner.getCoordinate();
             if (coord[0] == field[0][0] && coord[1] == field[0][1]) {                           //Same space -> dinnertime.
-                prey.remove(dinner);    //TODO : reduce hunger - make a flag that handles this
+                dinnertime = true;    
             }
             switch (orientation)    {                                                           //Space directly in front -> dinnertime.
                 case 0:
                     if (coord[0] == field[0][0] && coord[1] == ( field[0][1] + 1))  {
-                        prey.remove(dinner);    //TODO : reduce hunger
+                        dinnertime = true;
                     }
                     break;
                 case 1:
                     if (coord[0] == (field[0][0] + 1) && coord[1] == field[0][1])  {
-                        prey.remove(dinner);    //TODO : reduce hunger
+                        dinnertime = true;
                     }
                     break;
                 case 2:
                     if (coord[0] == field[0][0] && coord[1] == ( field[0][1] - 1))  {
-                        prey.remove(dinner);    //TODO : reduce hunger
+                        dinnertime = true;
                     }
                     break;
                 case 3:
                     if (coord[0] == (field[0][0] - 1) && coord[1] == field[0][1])  {
-                        prey.remove(dinner);    //TODO : reduce hunger
+                        dinnertime = true;
                     }
                     break;
                 default:
                     System.out.println("Erreur : eatAndHunt, EAT");
             }
+            if (dinnertime)  {
+                prey.remove(dinner);
+                this.hunger = 0;
+                break;
+            }
         }
+        
 
         /* HUNT */
         Prey target = vision.searchPrey(prey);
@@ -171,7 +180,7 @@ public class Predator extends Agent {
     public void step() 
 	{
         super.step();
-		if ( world.getIteration() % speed == 0 )
+		if ( world.getIteration() % (100-speed) == 0 )
 		{
             
             double dice = Math.random();
@@ -181,8 +190,12 @@ public class Predator extends Agent {
                 return;
             }
 
-            int move = eatAndHunt();    //move in the direction of the prey (0,1,2,3) = (N,E,S,W)
-
+            int move;
+            if (hunger > bloodlustThreshold) {
+                move = eatAndHunt();    //move in the direction of the prey (0,1,2,3) = (N,E,S,W)
+            } else {
+                move = -1;
+            }
             if (move == -1) {           //Random movements if no prey seen
                 int j=0;
 

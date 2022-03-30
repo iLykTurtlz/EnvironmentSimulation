@@ -20,13 +20,13 @@ public class Pool<E> {
 		this.used = new ArrayList<E>();
 		this.queue = new ArrayList<E>();
 	}
-
+    //TO-DO newInstance
 	public E add(E e)	{
 		if (queue.isEmpty()) {
 			used.add(e);
 			return e;
 		 }
-		E plant = queue.get(0);
+		E e = queue.get(0);
         //e.reinitialize();
 		queue.remove(0);
 		used.add(e);
@@ -52,7 +52,7 @@ public class Pool<E> {
 		}
 	}
 
-	abstract void reinit(E e);
+	//abstract void reinit(E e);
 
 	public void clear() {
 		//TO DO clear() method in Agent and so on

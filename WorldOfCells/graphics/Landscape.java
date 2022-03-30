@@ -17,8 +17,7 @@ import com.jogamp.opengl.fixedfunc.*;
 import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.gl2.GLUT;
 
-import applications.simpleworld.Mushroom;
-import applications.simpleworld.Plant;
+import applications.simpleworld.*;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -57,6 +56,7 @@ import landscapegenerator.PerlinNoiseLandscapeGenerator;
 public class Landscape implements GLEventListener, KeyListener, MouseListener{
 	
 		private World _myWorld; 
+		private Weather weather;
 
 		private static final double INITIAL_PREDATOR_DENSITY = 0.001;
 		private static final double INITIAL_PREY_DENSITY = 0.005;
@@ -176,6 +176,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 
     		System.out.println("Landscape contains " + dxView*dyView + " tiles. (" + dxView + "x" + dyView +")");
 
+    		weather = new Weather(_myWorld);
         	
     		_myWorld.init(dxView-1,dyView-1,landscape);
     		
@@ -394,7 +395,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
             	_myWorld.step();
 
         		// ** draw everything
-        		Weather.drawSky();
+        		weather.drawSky(gl);
 
             	gl.glBegin(GL2.GL_QUADS);                
                 

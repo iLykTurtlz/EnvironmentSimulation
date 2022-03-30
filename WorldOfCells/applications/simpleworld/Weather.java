@@ -1,12 +1,21 @@
-import com.jogamp.opengl.GL;
+package applications.simpleworld;
+
+import applications.simpleworld.*;
+import worlds.*;
+import com.jogamp.opengl.*;
 
 public class Weather {
     public enum Time { SUNNY, SNOWING, RAINY };
+    private World world;
     private float elapsed_time = 0;
     private long last_checked = 0;
     private static final float WEATHER_UPDATE_DELAY = 10f; //10 seconds
     private Time weather = Time.SUNNY; //sunny default
     private float time_speed = 0.001f;
+
+    public Weather(World world) {
+        this.world = world;
+    }
 
     public void step() {
         elapsed_time += time_speed;
@@ -15,9 +24,9 @@ public class Weather {
     public void updateWeather() {
         //calculus...
         //check every 10 seconds to update the weather
-        long current_time = System.getCurrentMillis();
+        long current_time = System.currentTimeMillis();
         if ((last_checked - current_time)/1000f >= WEATHER_UPDATE_DELAY) {
-            int random = Math.random() * Time.values().length; //between 2 and 0 by default
+            int random = (int) (Math.random() * Time.values().length); //between 2 and 0 by default
             setTime(Time.values()[random]);
             System.out.println("[DEBUG] Weather updated to " + getTime().toString());
         }

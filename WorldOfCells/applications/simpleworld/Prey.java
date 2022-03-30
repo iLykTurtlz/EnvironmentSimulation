@@ -66,6 +66,7 @@ public class Prey extends Agent {
         //double dice = Math.random();
         vision.setPosition(x, y);
         vision.updateField();
+        double dice = Math.random();
 
         Plant p = vision.searchFood(plants);
         if (p == null)  {
@@ -82,6 +83,7 @@ public class Prey extends Agent {
             hunger-=10;
             return -2;      //if the prey is eating, it stays until it is no longer hungry or the plant has been completely eaten.
         }
+
 
         for (int i=2; i<rangeOfVision; i++) {   //the case i < 2 has already been addressed
             if (coord[1] == (y+i+height)%height && directions[0])

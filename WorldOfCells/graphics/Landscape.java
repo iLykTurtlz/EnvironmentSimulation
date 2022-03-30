@@ -393,7 +393,11 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
         		// ** update Cellular Automata
             	
             	_myWorld.step();
+<<<<<<< HEAD
 				weather.step();
+=======
+            	weather.step();
+>>>>>>> 51831a2af90999accae01c4b8144421059cc82b2
 
         		// ** draw everything
         		weather.drawSky(gl);

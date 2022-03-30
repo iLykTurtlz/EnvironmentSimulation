@@ -29,7 +29,7 @@ public class Tree extends CommonObject {
         
         if ( cellState > 0 )
         {
-    		float altitude = (float)height * normalizeHeight ;
+    		float altitude = (float)height * normalizeHeight + myWorld.getLandscape().getZOffset();
     		
     		//float heightFactor, double heightBooster, float smoothFactor[]
     		

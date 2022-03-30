@@ -13,6 +13,7 @@ import worlds.World;
 public class WorldOfTrees extends World {
 
     protected ForestCA cellularAutomata;
+    protected Landscape landscape;
 
     public void init ( int __dxCA, int __dyCA, double[][] landscape )
     {
@@ -48,7 +49,7 @@ public class WorldOfTrees extends World {
 		        	// water
 					color[0] = -height;
 					color[1] = -height;
-					color[2] = 1.f;
+					color[2] = 0.8f;
 		        }
 		        this.cellsColorValues.setCellState(x, y, color);
     		}
@@ -183,6 +184,13 @@ public class WorldOfTrees extends World {
 			prey.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
 		
 	}
+
+		//change
+	public void setLandscape(Landscape l) {
+        this.landscape = l;
+    }
+
+    public Landscape getLandscape() { return landscape; }
 
 	public void addPredator(int x, int y)	{
 		//uniqueDynamicObjects.add(new Predator(x,y,this));

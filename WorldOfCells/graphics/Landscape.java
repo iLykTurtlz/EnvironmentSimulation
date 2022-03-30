@@ -129,6 +129,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
         
         int movingX = 0; 
         int movingY = 0; 
+        int movingZ = 0;
         
         /**
          * 
@@ -463,7 +464,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 	                        		zValue = heightFactor*(float)altitude * smoothFactor[i];
 	                        }
 	                        
-	                        gl.glVertex3f( offset+x*stepX+xSign*lenX, offset+y*stepY+ySign*lenY, zValue);
+	                        gl.glVertex3f( offset+x*stepX+xSign*lenX, offset+y*stepY+ySign*lenY, zValue + movingZ);
                         }
 
                         /**/
@@ -499,6 +500,8 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
             	
 
         }
+
+        public int getZOffset() { return movingZ; }
 
 		public void initAgents()	{
 
@@ -642,6 +645,12 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 				if ( heightBooster > 0 )
 					heightBooster--;
 				break;
+            case KeyEvent.VK_L:
+                movingZ += 1;
+                break;
+            case KeyEvent.VK_M:
+                movingZ -= 1;
+                break;
 			case KeyEvent.VK_UP:
 				movingX = ( movingX + 1 ) % (dxView-1);
 				break;
@@ -667,6 +676,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 						"           [o] objects display on/off\n" +
 						"           [z] decrease altitude booster\n" +
 						"           [a] increase altitude booster\n" +
+						"           [l/m] increase/decrease z-axis\n +
 						" [cursor keys] navigate in the landscape\n" +
 						"         [q/d] rotation wrt landscape\n" +
 						" [cursor keys] navigate\n"

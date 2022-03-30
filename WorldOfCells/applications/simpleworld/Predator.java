@@ -12,11 +12,13 @@ import utils.PredatorVision;
 public class Predator extends Agent {
 
     public static final double p_reproduce = 0.01;
-
+    protected enum Sex {MALE, FEMALE};
+    protected Sex sex;
     protected int orientation;                          // (0,1,2,3) = (nord,est,sud,ouest)
     private PredatorVision vision;
     private int rangeOfVision;
     protected int bloodlustThreshold;
+
 
     public Predator( int __x , int __y, World __world ) {
         super(__x,__y,__world, new float[] {1.f, 0.f, 0.f});
@@ -36,6 +38,7 @@ public class Predator extends Agent {
 
     private int findMate()  {
         Pool predators = world.getPredators();
+        
 
     }
     */
@@ -247,9 +250,12 @@ public class Predator extends Agent {
                 directions[i] = true;
             }
 
-
-
         }
+    }
+
+
+    public Sex getSex() {
+        return sex;
     }
 
 }

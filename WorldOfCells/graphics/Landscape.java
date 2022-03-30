@@ -138,6 +138,9 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
         {
     		_myWorld = __myWorld;
 
+            //change
+    		_myWorld.setLandscape(this);
+
     		landscape = PerlinNoiseLandscapeGenerator.generatePerlinNoiseLandscape(__dx,__dy,scaling,landscapeAltitudeRatio, 100); // 11
     		
 
@@ -387,6 +390,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
             	_myWorld.step();
 
         		// ** draw everything
+        		Weather.drawSky();
 
             	gl.glBegin(GL2.GL_QUADS);                
                 

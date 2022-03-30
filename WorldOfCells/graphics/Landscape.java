@@ -676,7 +676,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 						"           [o] objects display on/off\n" +
 						"           [z] decrease altitude booster\n" +
 						"           [a] increase altitude booster\n" +
-						"           [l/m] increase/decrease z-axis\n +
+						"           [l/m] increase/decrease z-axis\n" +
 						" [cursor keys] navigate in the landscape\n" +
 						"         [q/d] rotation wrt landscape\n" +
 						" [cursor keys] navigate\n"

@@ -15,6 +15,7 @@ import utils.PoolPlant;
 import applications.simpleworld.Predator;
 import applications.simpleworld.Prey;
 import cellularautomata.*;
+import graphics.*;
 
 
 import objects.*;

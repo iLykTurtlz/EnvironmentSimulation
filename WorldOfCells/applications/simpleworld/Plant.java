@@ -60,7 +60,7 @@ public abstract class Plant extends UniqueDynamicObject {
         grow(0, 0, centerHeight, 0.1f, new float[]{1.f,0.5f,0.f}, 0.1f, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight);
 
         */
-        
+
         /*
 
         gl.glColor3f(1.f,0.f,0.f);
@@ -181,5 +181,4 @@ public abstract class Plant extends UniqueDynamicObject {
         if (size < max_size)
             size++;
     }
-
 }

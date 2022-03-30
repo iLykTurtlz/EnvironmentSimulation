@@ -9,12 +9,16 @@ import utils.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 import com.jogamp.opengl.*;
 import com.jogamp.opengl.awt.GLCanvas;
 import com.jogamp.opengl.fixedfunc.*;
 import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.gl2.GLUT;
+
+import applications.simpleworld.Mushroom;
+import applications.simpleworld.Plant;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -513,14 +517,15 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 
 			PoolPredator predators = _myWorld.getPredators();
 			PoolPrey prey = _myWorld.getPrey();
-			PoolPlant plants = _myWorld.getPlants();
+			//_myWorld.test();
+			ArrayList<Plant> plants = _myWorld.getPlants();  //???
 			
 			for (int x=0; x<_myWorld.getWidth(); x++)	{
 				for (int y=0; y<_myWorld.getHeight(); y++)	{
 					if (_myWorld.getCellHeight(x,y) > 0)	{
 						double dice = Math.random();
 						if (dice < INITIAL_PLANT_DENSITY)	{
-							//plants.add(x,y,_myWorld);
+							plants.add(new Mushroom(x,y,_myWorld));
 						}
 						else if (dice < INITIAL_PLANT_DENSITY + INITIAL_PREDATOR_DENSITY)	{
 							predators.add(x,y,_myWorld);

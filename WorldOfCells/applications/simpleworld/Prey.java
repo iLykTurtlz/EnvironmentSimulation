@@ -1,11 +1,12 @@
 package applications.simpleworld;
 
+import java.util.ArrayList;
+
 import com.jogamp.opengl.GL2;
 
 import objects.UniqueDynamicObject;
 
 import worlds.World;
-import utils.PoolPlant;
 import utils.PoolPredator;
 import utils.PreyVision;
 
@@ -60,7 +61,7 @@ public class Prey extends Agent {
     }
 
     private int graze() {
-        PoolPlant plants = world.getPlants();
+        ArrayList<Plant> plants = world.getPlants();
         //double dice = Math.random();
         vision.setPosition(x, y);
         vision.updateField();

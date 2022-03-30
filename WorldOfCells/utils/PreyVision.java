@@ -1,4 +1,6 @@
 package utils;
+import java.util.ArrayList;
+
 import applications.simpleworld.Plant;
 import applications.simpleworld.Predator;
 import worlds.*;
@@ -77,12 +79,12 @@ public class PreyVision extends VisionField {
         return null;
     }
 
-    public Plant searchFood(PoolPlant plants)   {
+    public Plant searchFood(ArrayList<Plant> plants)   {
         /* Finds the nearest plant in the field and returns it.
            Returns null if no plant is found. */
         Plant p;
         for (int i=0; i<field.length; i++)  {
-            for (int j=0; j<plants.getSizeUsed(); j++)  {
+            for (int j=0; j<plants.size(); j++)  {
                 p = plants.get(j);
                 int[] coord = p.getCoordinate();
                 if (coord[0] == field[i][0] && coord[1] == field[i][1]) {

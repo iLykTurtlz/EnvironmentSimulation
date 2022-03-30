@@ -107,7 +107,9 @@ public class Mushroom extends Plant {
     public void displayUniqueObject(World myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight ) {
 
         float height = Math.max ( 0 , (float)myWorld.getCellHeight(x, y) );
-        float altitude = (float)height * normalizeHeight ;
+
+    	float zoff = myWorld.getLandscape().getZOffset();
+        float altitude = (float)height * normalizeHeight + zoff;
 
         int x2 = (x-(offsetCA_x%myWorld.getWidth()));
     	if ( x2 < 0) x2+=myWorld.getWidth();

@@ -11,7 +11,7 @@ public class Weather {
     private long last_checked = 0;
     private static final float WEATHER_UPDATE_DELAY = 10f; //10 seconds
     private Time weather = Time.SUNNY; //sunny default
-    private float time_speed = 0.001f;
+    private float time_speed = 0.01f;
 
     public Weather(World world) {
         this.world = world;

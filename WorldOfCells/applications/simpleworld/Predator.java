@@ -31,14 +31,20 @@ public class Predator extends Agent {
         super(__x,__y,__world, orientation, new float[] {1.f,0.f,0.f});
     }
 
+
+    /*
+
+    private int findMate()  {
+        Pool predators = world.getPredators();
+
+    }
+    */
+
     private int eatAndHunt()    {            //returns the Predator's next move, based on the prey's location, -1 if no prey is seen.
         PoolPrey prey = world.getPrey();
         double dice = Math.random();
         boolean dinnertime = false;
 
-        vision.setOrientation(orientation);
-        vision.setPosition(x, y);
-        vision.updateField();
         int[][] field = vision.getField();
 
         /* EAT */
@@ -189,6 +195,10 @@ public class Predator extends Agent {
             if (accessible == 0)    {   //If no direction is accessible, the agent does not move.
                 return;
             }
+
+            vision.setOrientation(orientation);
+            vision.setPosition(x, y);
+            vision.updateField();
 
             int move;
             if (hunger > bloodlustThreshold) {

@@ -34,9 +34,7 @@ public class Prey extends Agent {
         int height = world.getHeight();
         int width = world.getWidth();
 
-        //update vision and search for the nearest threat
-        vision.setPosition(x, y);
-        vision.updateField();
+        //search for the nearest threat
         Predator threat = vision.searchPredator(predators);
 
         if (threat == null) {   // no predator spotted in the field of vision -> return -1 to allow random displacement.
@@ -44,7 +42,7 @@ public class Prey extends Agent {
         }
 
         int[] coord = threat.getCoordinate();
-        for (int i=0; i<rangeOfVision; i++) {                           //Tests of predator's location in counterclockwise sequence (to compensate for the prey's field of vision being a priority queue - implemented as a static array - in CLOCKWISE direction)
+        for (int i=0; i<rangeOfVision; i++) {                           //Tests of predator's location in counterclockwise sequence (to compensate for the prey's field of vision giving priority in CLOCKWISE direction)
             
             if ( ((x-i+width)%width) == coord[0] && directions[1] )     //predator in direction 3 -> move in direction 1 (if possible)
                 return 1;
@@ -66,7 +64,6 @@ public class Prey extends Agent {
         //double dice = Math.random();
         vision.setPosition(x, y);
         vision.updateField();
-        double dice = Math.random();
 
         Plant p = vision.searchFood(plants);
         if (p == null)  {
@@ -83,7 +80,6 @@ public class Prey extends Agent {
             hunger-=10;
             return -2;      //if the prey is eating, it stays until it is no longer hungry or the plant has been completely eaten.
         }
-
 
         for (int i=2; i<rangeOfVision; i++) {   //the case i < 2 has already been addressed
             if (coord[1] == (y+i+height)%height && directions[0])
@@ -105,17 +101,18 @@ public class Prey extends Agent {
 
 		if ( world.getIteration() % speed == 0 )
 		{
-			double dice = Math.random();
             
-
-        
             if (accessible == 0)    {           //If no direction is accessible, the agent does not move.
                 return;
             }
 
+            double dice = Math.random();
+            vision.setPosition(x, y);
+            vision.updateField();
+
             int move = flee();
 
-            if (move == -1 && hunger > 20)  {                  //If there is no threat in view, the prey can look for food.
+            if (move == -1 && hunger > 20)  {   //If there is no threat in view, the prey can look for food.
                 move = graze();
             }
 

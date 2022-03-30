@@ -9,6 +9,7 @@ import com.jogamp.opengl.GL2;
 import applications.simpleworld.Agent.State;
 import objects.*;
 import worlds.World;
+import graphics.*;
 
 public class WorldOfTrees extends World {
 

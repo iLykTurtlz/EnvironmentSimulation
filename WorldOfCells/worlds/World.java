@@ -9,9 +9,8 @@ import com.jogamp.opengl.GL2;
 
 import applications.simpleworld.Agent;
 import applications.simpleworld.Plant;
-import utils.PoolPrey;
 import utils.PoolPredator;
-import utils.PoolPlant;
+import utils.PoolPrey;
 import applications.simpleworld.Predator;
 import applications.simpleworld.Prey;
 import cellularautomata.*;
@@ -28,7 +27,7 @@ public abstract class World {
 	protected ArrayList<Agent> uniqueDynamicObjects = new ArrayList<Agent>();
 	protected PoolPrey prey = new PoolPrey();
 	protected PoolPredator predators = new PoolPredator();
-	protected PoolPlant plants = new PoolPlant();
+	protected ArrayList<Plant> plants = new ArrayList<Plant>();
 
     
 	protected int dxCA;
@@ -152,11 +151,12 @@ public abstract class World {
 	public void displayUniqueObjects(World _myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset,
 			float stepX, float stepY, float lenX, float lenY, float normalizeHeight) 
 	{
+		
     	for ( int i = 0 ; i < uniqueObjects.size(); i++ )
     		uniqueObjects.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
     	for ( int i = 0 ; i < uniqueDynamicObjects.size(); i++ )
     		uniqueDynamicObjects.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
-
+		
 
 	}
     
@@ -173,8 +173,6 @@ public abstract class World {
 
 	public abstract void addPrey(int posx, int posy);
 
-	public abstract void addPlant(int posx, int posy);
-
 
 
 
@@ -187,10 +185,12 @@ public abstract class World {
 		return prey;
 	}
 
-	public PoolPlant getPlants()	{
+	public ArrayList<Plant> getPlants()	{
 		return plants;
 	}
-
+	public void test()	{
+		System.out.println("Bonjour");
+	}
 	
 
 	public void displayHeightValues()	{

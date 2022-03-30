@@ -140,7 +140,7 @@ public class WorldOfTrees extends World {
 			}
 		}
 
-		for ( int i = 0 ; i < this.plants.getSizeUsed() ; i++ )
+		for ( int i = 0 ; i < this.plants.size() ; i++ )
 		{
 			Plant p = this.plants.get(i);
 			p.step();
@@ -177,7 +177,7 @@ public class WorldOfTrees extends World {
 			float stepX, float stepY, float lenX, float lenY, float normalizeHeight)
 	{
 		super.displayUniqueObjects(_myWorld, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight);
-		for ( int i = 0 ; i < plants.getSizeUsed(); i++ )
+		for ( int i = 0 ; i < plants.size(); i++ )
 			plants.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
 		for ( int i = 0 ; i < predators.getSizeUsed(); i++ )
 			predators.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);	
@@ -210,10 +210,6 @@ public class WorldOfTrees extends World {
 	public void addPrey(int posx, int posy, Prey prey)	{
 		prey.setPosition(posx, posy);
 		uniqueDynamicObjects.add(prey);
-	}
-
-	public void addPlant(int x, int y)	{
-		plants.add(x,y,this);
 	}
 
 	public void removeAgent(Agent a)	{

@@ -27,34 +27,36 @@ public class Monolith extends UniqueObject{
     	int y2 = (y-(offsetCA_y%myWorld.getHeight()));
     	if ( y2 < 0) y2+=myWorld.getHeight();
 
+    	float zoffset = myWorld.getLandscape().getZOffset();
+
         gl.glColor3f(0.5f,0.f,0.f);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, 0.f);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, 0.1f*normalizeHeight);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, 0.1f*normalizeHeight);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, 0.f);
+        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, 0.f + zoffset);
+        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, 0.1f*normalizeHeight + zoffset);
+        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, 0.1f*normalizeHeight + zoffset);
+        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, 0.f + zoffset);
 
         gl.glColor3f(0.6f,0.f,0.f);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, 0.f);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, 0.1f*normalizeHeight);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, 0.1f*normalizeHeight);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, 0.f);
+        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, 0.f + zoffset);
+        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, 0.1f*normalizeHeight + zoffset);
+        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, 0.1f*normalizeHeight + zoffset);
+        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, 0.f + zoffset);
         
         gl.glColor3f(0.55f,0.f,0.f);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, 0.f);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, 0.1f*normalizeHeight);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, 0.1f*normalizeHeight);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, 0.f);
+        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, 0.f + zoffset);
+        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, 0.1f*normalizeHeight + zoffset);
+        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, 0.1f*normalizeHeight + zoffset);
+        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, 0.f + zoffset);
 
         gl.glColor3f(0.45f,0.f,0.f);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, 0.f);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, 0.1f*normalizeHeight);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, 0.1f*normalizeHeight);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, 0.f);
+        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, 0.f + zoffset);
+        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, 0.1f*normalizeHeight + zoffset);
+        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, 0.1f*normalizeHeight + zoffset);
+        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, 0.f + zoffset);
 
         gl.glColor3f(0.5f,0.f,0.f);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, 0.1f*normalizeHeight);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, 0.1f*normalizeHeight);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, 0.1f*normalizeHeight);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, 0.1f*normalizeHeight);
+        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, 0.1f*normalizeHeight + zoffset);
+        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, 0.1f*normalizeHeight + zoffset);
+        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, 0.1f*normalizeHeight + zoffset);
+        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, 0.1f*normalizeHeight + zoffset);
     }
 }

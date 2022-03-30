@@ -165,6 +165,8 @@ public abstract class World {
 	public double getMaxEverHeight() { return this.maxEverHeightValue; }
 	public double getMinEverHeight() { return this.minEverHeightValue; }
 
+	abstract public void setLandscape(Landscape l);
+	abstract public Landscape getLandscape();
 
 	public abstract void addPredator(int posx, int posy);
 

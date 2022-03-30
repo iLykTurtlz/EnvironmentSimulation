@@ -1,8 +1,12 @@
 package applications.simpleworld;
 import worlds.World;
 
+import javax.lang.model.util.ElementScanner14;
+
+import com.jogamp.opengl.GL2;
+
 public class Mushroom extends Plant {
-    private float[] stemColor;
+    protected float[] stemColor;
     private float centerRadius;
     private float centerHeight;
 

@@ -35,6 +35,8 @@ public abstract class Plant extends UniqueDynamicObject {
     	int y2 = (y-(offsetCA_y%myWorld.getHeight()));
     	if ( y2 < 0) y2+=myWorld.getHeight();
         
+
+        /*
         //stems
         gl.glColor3f(stemColor[0],stemColor[1],stemColor[2]);
         gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude );
@@ -56,6 +58,9 @@ public abstract class Plant extends UniqueDynamicObject {
         gl.glVertex3f( offset+x2*stepX+lenX*centerRadius, offset+y2*stepY-lenY*centerRadius, altitude + centerHeight);
 
         grow(0, 0, centerHeight, 0.1f, new float[]{1.f,0.5f,0.f}, 0.1f, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+
+        */
+        
         /*
 
         gl.glColor3f(1.f,0.f,0.f);

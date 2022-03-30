@@ -41,15 +41,6 @@ public abstract class Agent extends UniqueDynamicObject{
         this.headColor = headColor;
 	}
 
-	public Agent ( int __x , int __y, World __world, boolean orientation[], float[] headColor )
-	{
-		super(__x,__y,__world);
-        directions = new boolean[4];    // above, right, below, left; in that order
-        for (int i=0; i<directions.length; i++) {
-            directions[i] = true;
-        }
-        this.headColor = headColor;
-	}
 
 	
 	public void step() {
@@ -80,19 +71,19 @@ public abstract class Agent extends UniqueDynamicObject{
                 hThis  = this.world.getCellHeight(this.x,this.y);
 
             /* Block off water and cliffs */       
-            if ( (hAbove < 0) || (Math.abs(hAbove - hThis)) > 0.5)    {
+            if ( (hAbove < 0) || (Math.abs(hAbove - hThis)) > 0.2)    {
                 directions[0] = false;
                 accessible--;
             }
-            if ( (hRight < 0) || (Math.abs(hRight - hThis) > 0.5) )   {
+            if ( (hRight < 0) || (Math.abs(hRight - hThis) > 0.2) )   {
                 directions[1] = false;
                 accessible--;
             }
-            if ( (hBelow < 0) || (Math.abs(hBelow - hThis) > 0.5) )    {
+            if ( (hBelow < 0) || (Math.abs(hBelow - hThis) > 0.2) )    {
                 directions[2] = false;
                 accessible--;
             }
-            if ( (hLeft < 0) || (Math.abs(hLeft - hThis) > 0.5) )      {
+            if ( (hLeft < 0) || (Math.abs(hLeft - hThis) > 0.2) )      {
                 directions[3] = false;
                 accessible--;
             }

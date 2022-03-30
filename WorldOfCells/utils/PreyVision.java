@@ -63,37 +63,5 @@ public class PreyVision extends VisionField {
         }
     }
 
-    public Predator searchPredator(PoolPredator predators)  {
-        /* Finds the nearest predator in the field and returns it.
-           Returns null if no predator is found */
-        Predator p;
-        for (int i=1; i<field.length; i++)  {   //if the predator is at i=0, it's on the same space, which means random movement is as good as fleeing.
-            for (int j=0; j<predators.getSizeUsed(); j++)    {
-                p = predators.get(j);
-                int[] coord = p.getCoordinate();
-                if (coord[0] == field[i][0] && coord[1] == field[i][1]) {
-                    return p;
-                }
-            }
-        }
-        return null;
-    }
-
-    public Plant searchFood(ArrayList<Plant> plants)   {
-        /* Finds the nearest plant in the field and returns it.
-           Returns null if no plant is found. */
-        Plant p;
-        for (int i=0; i<field.length; i++)  {
-            for (int j=0; j<plants.size(); j++)  {
-                p = plants.get(j);
-                int[] coord = p.getCoordinate();
-                if (coord[0] == field[i][0] && coord[1] == field[i][1]) {
-                    return p;
-                }
-            }
-        }
-        return null;
-    }
-
 
 }

@@ -19,15 +19,12 @@ public class Prey extends Agent {
     
 
     public Prey( int __x , int __y, World __world ) {
-        super(__x,__y,__world, new float[] {0.f,0.f,1.f});
+        super(__x,__y,__world, new float[] {0.f,0.75f,1.f});
         this.rangeOfVision = 5;
-        this.speed = 20;
+        this.speed = 80;
         this.vision = new PreyVision(__x,__y,rangeOfVision,__world);
     }
 
-    public Prey( int __x , int __y, World __world, boolean[] orientation ) {
-        super(__x,__y,__world, orientation, new float[] {0.f,0.f,1.f});
-    }
 
     private int flee()  {
         //local variables for use later in the method
@@ -63,10 +60,8 @@ public class Prey extends Agent {
     private int graze() {
         ArrayList<Plant> plants = world.getPlants();
         //double dice = Math.random();
-        vision.setPosition(x, y);
-        vision.updateField();
 
-        Plant p = vision.searchFood(plants);
+        Plant p = vision.searchPlant(plants);
         if (p == null)  {
             return -1;      //random displacement if no plant in view
         }
@@ -100,16 +95,17 @@ public class Prey extends Agent {
 	{
         super.step();
 
-		if ( world.getIteration() % speed == 0 )
+		if ( world.getIteration() % (100 - speed) == 0 )
 		{
             
             if (accessible == 0)    {           //If no direction is accessible, the agent does not move.
                 return;
             }
 
-            double dice = Math.random();
             vision.setPosition(x, y);
             vision.updateField();
+            double dice = Math.random();
+            
 
             int move = flee();
 

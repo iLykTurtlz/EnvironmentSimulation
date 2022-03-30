@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 import worlds.*;
 
-abstract class Pool<E> {
+public abstract class Pool<E> {
 	protected ArrayList<E> used;
 	protected ArrayList<E> queue;
 

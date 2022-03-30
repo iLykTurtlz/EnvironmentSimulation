@@ -5,6 +5,8 @@ import com.jogamp.opengl.GL2;
 import objects.UniqueDynamicObject;
 
 import worlds.World;
+import utils.Pool;
+import utils.PoolPredator;
 import utils.PoolPrey;
 
 import utils.PredatorVision;
@@ -27,34 +29,58 @@ public class Predator extends Agent {
         this.speed = 80;
         this.vision = new PredatorVision(__x,__y,rangeOfVision,orientation,__world);
         this.bloodlustThreshold = 15;
+        if (Math.random() < 0.5)    {
+            this.sex = Sex.MALE;
+        } else {
+            this.sex = Sex.FEMALE;
+        }
     }
 
-    public Predator( int __x, int __y, World __world, boolean[] orientation)  {
-        super(__x,__y,__world, orientation, new float[] {1.f,0.f,0.f});
-    }
-
-
-    /*
-
+    
     private int findMate()  {
-        Pool predators = world.getPredators();
-        
+        PoolPredator predators = world.getPredators();
+        Predator mate;
+        boolean copulate;
+
+        mate = vision.searchPredator(predators);
+        int[] coord;
+        while (mate != null && mate.getSex() == this.sex) {                                     //Find the nearest predator of the opposite sex
+            coord = mate.getCoordinate(); 
+            mate = vision.searchPredator(predators, coord);
+        }
+        coord = mate.getCoordinate();
+        if (mate != null)   {                                                                   //in this case mate is of the opposite sex
+            copulate = isHere((Agent)mate);
+            if (copulate)  {
+                this.reproduce(mate);
+                return -2;                                                                      //In this case, they should probably hold still for a moment
+            }
+        }
+        return moveToward(coord, 1.f);
+    }
+
+    private void reproduce(Predator mate)   {
 
     }
-    */
+   
 
     private int eatAndHunt()    {            //returns the Predator's next move, based on the prey's location, -1 if no prey is seen.
         PoolPrey prey = world.getPrey();
-        double dice = Math.random();
-        boolean dinnertime = false;
+        boolean dinnertime;
 
-        int[][] field = vision.getField();
+        //int[][] field = vision.getField();
 
         /* EAT */
+        Prey dinner = vision.searchPrey(prey);
+        if (dinner != null) { 
+            dinnertime = isHere((Agent)dinner);
+        /*
         Prey dinner;
         for (int i=0; i<prey.getSizeUsed(); i++)    {
             dinner = prey.get(i);
             int[] coord = dinner.getCoordinate();
+            boolean dinnertime = isHere((Agent))
+            
             if (coord[0] == field[0][0] && coord[1] == field[0][1]) {                           //Same space -> dinnertime.
                 dinnertime = true;    
             }
@@ -82,107 +108,27 @@ public class Predator extends Agent {
                 default:
                     System.out.println("Erreur : eatAndHunt, EAT");
             }
+
+            */
             if (dinnertime)  {
                 prey.remove(dinner);
                 this.hunger = 0;
-                break;
+                return -1;                      //Having eaten, hunting is unnecessary
             }
-        }
+        
         
 
-        /* HUNT */
-        Prey target = vision.searchPrey(prey);
-        if (target == null) {
-            return -1;
+            /* HUNT */
+            /*
+            Prey target = vision.searchPrey(prey);
+            if (target == null) {
+                return -1;
+            }
+            */
+            int[] coord = dinner.getCoordinate();
+            return moveToward(coord, 0.75f);
         }
-        int[] coord = target.getCoordinate();
-        int height = world.getHeight();
-        int width = world.getWidth();
-        int right = (orientation + 1 + 4) % 4;
-        int left = (orientation - 1 + 4) % 4;
-        
-
-        switch (orientation)    {
-            case 0:
-                if (coord[0] == x && directions[orientation])  {                                    //Prey directly in front -> move straight ahead, if possible
-                    return orientation;
-                }
-                for (int i=1; i<=rangeOfVision; i++)    {           
-                    if ( coord[0] == ((x+i+width)%width) && directions[right])  {                    //Prey to the right -> move right
-                        if ( dice < 0.75 )                                                            //A little bit of randomness to avoid infinite looping interactions between predators and prey
-                            return right;
-                        else if (directions[orientation])
-                            return orientation;
-                    }
-                    if ( coord[0] == ((x-i+width)%width) && directions[left])  {                    //Prey to the left -> move left
-                        if ( dice < 0.75 )
-                            return left;                                                   
-                        else if (directions[orientation])
-                            return orientation;
-                    }
-                }
-                break;
-            case 1:
-                if (coord[1] == y && directions[orientation])  {                                  //idem for the other cases
-                    return orientation;
-                }
-                for (int i=1; i<=rangeOfVision; i++)    {
-                    if ( coord[1] == ((y+i+height)%height) && directions[left])  {   
-                        if ( dice < 0.75 )
-                            return left;                                                   
-                        else if (directions[orientation])
-                            return orientation;
-                    }
-                    if ( coord[1] == ((y-i+height)%height) && directions[right] )  {
-                        if ( dice < 0.75 )
-                            return right;                                                   
-                        else if (directions[orientation])
-                            return orientation;
-                    }
-                }
-                break;
-            case 2:
-                if (coord[0] == x && directions[orientation])  {
-                    return orientation;
-                }
-                for (int i=1; i<=rangeOfVision; i++)    {
-                    if ( coord[0] == ((x+i+width)%width) && directions[left] )  {   
-                        if ( dice < 0.75 )
-                            return left;                                                   
-                        else if (directions[orientation])
-                            return orientation;
-                    }
-                    if ( coord[0] == ((x-i+width)%width) && directions[right])  {
-                        if ( dice < 0.75 )
-                            return right;                                                   
-                        else if (directions[orientation])
-                            return orientation;
-                    }
-                }
-                break;
-            case 3:
-                if (coord[1] == y && directions[orientation])  {
-                    return orientation;
-                }
-                for (int i=1; i<=rangeOfVision; i++)    {
-                    if ( coord[1] == ((y+i+height)%height) && directions[right])  {   
-                        if ( dice < 0.75 )
-                            return right;                                                   
-                        else if (directions[orientation])
-                            return orientation;
-                    }
-                    if ( coord[1] == ((y-i+height)%height) && directions[left])  {
-                        if ( dice < 0.75 )
-                            return left;                                                   
-                        else if (directions[orientation])
-                            return orientation;
-                    }
-                }
-                break;
-            default:
-                System.out.println("Erreur : orientation, eatAndHunt()");
-        }
-        return -1;
+        return -1;                         
     }
 
 
@@ -252,6 +198,138 @@ public class Predator extends Agent {
 
         }
     }
+
+    
+    private boolean isHere(Agent a) {
+        /* Returns true if the Agent, Predator or Prey, is directly in front or on the same space.
+           Otherwise returns false. */
+        int[] coord = a.getCoordinate();
+        int height = world.getHeight();
+        int width = world.getWidth();
+        if (x == coord[0] && y == coord[1])                                                 //Same space -> true
+            return true;
+        
+        switch (orientation)    {                                                           //Space directly in front -> true
+            case 0:
+                if (coord[0] == x && coord[1] == ((y + 1 + height)%height))  {
+                    return true;
+                }
+                break;
+            case 1:
+                if (coord[0] == ((x + 1 + width)%width) && coord[1] == y)  {
+                    return true;
+                }
+                break;
+            case 2:
+                if (coord[0] == x && coord[1] == ((y - 1 + height)%height))  {
+                    return true;
+                }
+                break;
+            case 3:
+                if (coord[0] == ((x - 1 + width)%width) && coord[1] == y)  {
+                    return true;
+                }
+                break;
+            default:
+                System.out.println("Erreur : findMate");
+        }
+        return false;                                                                           //Otherwise false
+    }
+    
+
+
+    private int moveToward(int[] coord, float p_rightOrLeft)    {
+        /* This function takes in a target coordinate and a probability of moving right or left if the target is NOT directly ahead.
+           Returns the int corresponding to the direction of movement or -1 for random displacement. */
+        int height = world.getHeight();
+        int width = world.getWidth();
+        int right = (orientation + 1 + 4) % 4;
+        int left = (orientation - 1 + 4) % 4;
+        double dice = Math.random();
+        
+        switch (orientation)    {
+            case 0:
+                if (coord[0] == x && directions[orientation])  {                                    //directly in front -> move straight ahead, if possible
+                    return orientation;
+                }
+                for (int i=1; i<=rangeOfVision; i++)    {           
+                    if ( coord[0] == ((x+i+width)%width) && directions[right])  {                   //to the right -> move right
+                        if ( dice < p_rightOrLeft )                                                 //A little bit of randomness to avoid infinite looping interactions
+                            return right;
+                        else if (directions[orientation])
+                            return orientation;
+                    }
+                    if ( coord[0] == ((x-i+width)%width) && directions[left])  {                    //to the left -> move left
+                        if ( dice < p_rightOrLeft )
+                            return left;                                                   
+                        else if (directions[orientation])
+                            return orientation;
+                    }
+                }
+                break;
+            case 1:
+                if (coord[1] == y && directions[orientation])  {                                   //idem for the other cases
+                    return orientation;
+                }
+                for (int i=1; i<=rangeOfVision; i++)    {
+                    if ( coord[1] == ((y+i+height)%height) && directions[left])  {   
+                        if ( dice < p_rightOrLeft )
+                            return left;                                                   
+                        else if (directions[orientation])
+                            return orientation;
+                    }
+                    if ( coord[1] == ((y-i+height)%height) && directions[right] )  {
+                        if ( dice < p_rightOrLeft )
+                            return right;                                                   
+                        else if (directions[orientation])
+                            return orientation;
+                    }
+                }
+                break;
+            case 2:
+                if (coord[0] == x && directions[orientation])  {
+                    return orientation;
+                }
+                for (int i=1; i<=rangeOfVision; i++)    {
+                    if ( coord[0] == ((x+i+width)%width) && directions[left] )  {   
+                        if ( dice < p_rightOrLeft )
+                            return left;                                                   
+                        else if (directions[orientation])
+                            return orientation;
+                    }
+                    if ( coord[0] == ((x-i+width)%width) && directions[right])  {
+                        if ( dice < p_rightOrLeft )
+                            return right;                                                   
+                        else if (directions[orientation])
+                            return orientation;
+                    }
+                }
+                break;
+            case 3:
+                if (coord[1] == y && directions[orientation])  {
+                    return orientation;
+                }
+                for (int i=1; i<=rangeOfVision; i++)    {
+                    if ( coord[1] == ((y+i+height)%height) && directions[right])  {   
+                        if ( dice < p_rightOrLeft )
+                            return right;                                                   
+                        else if (directions[orientation])
+                            return orientation;
+                    }
+                    if ( coord[1] == ((y-i+height)%height) && directions[left])  {
+                        if ( dice < p_rightOrLeft )
+                            return left;                                                   
+                        else if (directions[orientation])
+                            return orientation;
+                    }
+                }
+                break;
+            default:
+                System.out.println("Erreur : orientation, moveToward");
+        }
+        return -1;
+    }
+
 
 
     public Sex getSex() {

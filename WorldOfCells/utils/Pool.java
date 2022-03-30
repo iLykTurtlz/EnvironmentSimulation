@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 import worlds.*;
 
-abstract class Pool<E> {
+public class Pool<E> {
 	protected ArrayList<E> used;
 	protected ArrayList<E> queue;
 
@@ -21,7 +21,17 @@ abstract class Pool<E> {
 		this.queue = new ArrayList<E>();
 	}
 
-	abstract E add(int __x , int __y, World __world);
+	public E add(E e)	{
+		if (queue.isEmpty()) {
+			used.add(e);
+			return e;
+		 }
+		E plant = queue.get(0);
+        //e.reinitialize();
+		queue.remove(0);
+		used.add(e);
+		return e;
+	}
 
 	public E get(int index) {
 		return used.get(index);

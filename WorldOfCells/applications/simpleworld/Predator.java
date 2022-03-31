@@ -22,14 +22,15 @@ public class Predator extends Agent {
     protected int bloodlustThreshold;
     private int gestationPeriod;
     private int gestationStage;
-    private int offspringCharacters[]; // (rangeOfVision, speed, bloodlustThreshold, gestationPeriod)
+    private int offspringCharacters[]; // (rangeOfVision, baseSpeed, bloodlustThreshold, gestationPeriod)
 
 
     public Predator( int __x , int __y, WorldOfTrees __world ) {
         super(__x,__y,__world, new float[] {1.f, 0.f, 0.f});
         this.orientation = (int)(4*Math.random());      //random orientation by default
         this.rangeOfVision = 10;
-        this.speed = 80;
+        this.baseSpeed = 80;
+        this.speed = this.baseSpeed;
         this.vision = new PredatorVision(__x,__y,rangeOfVision,orientation,__world);
         this.bloodlustThreshold = 15;
         if (Math.random() < 0.5)    {
@@ -151,42 +152,11 @@ public class Predator extends Agent {
             } else {
                 move = -1;
             }
-            if (move == -1) {           //Random movements if no prey seen
-                int j=0;
-
-                double partition_size = 1/((double)accessible);
-
-                for (int i=0; i<directions.length; i++)    {
-                    if ( directions[i] )    {
-                        j++;
-                        if ( dice < (j*partition_size) )  {    
-                            move = i;
-                            orientation = i;
-                            break;
-                        }
-                    }
-                }
-            }
-
-
             
-            switch (move)   {                                                                   //move to the new position
-                case 0:
-                    this.y = (this.y + 1 + this.world.getHeight()) % this.world.getHeight();
-                    break;
-                case 1:
-                    this.x = (this.x + 1 + this.world.getWidth()) % this.world.getWidth();
-                    break;
-                case 2:
-                    this.y = (this.y - 1 + this.world.getHeight()) % this.world.getHeight();
-                    break;
-                case 3:
-                    this.x = (this.x - 1 + this.world.getWidth()) % this.world.getWidth();
-                    break;
-                default:
-                    System.out.println("Erreur de déplacement : move = " + move);
-            }
-
+            double currentHeight = world.getCellHeight(x,y);
+            updatePosition(move);
+            double nextHeight = world.getCellHeight(x,y);
+            updateSpeed(currentHeight, nextHeight);
             
             for (int i=0; i<directions.length; i++)    {        //reinitialize the four directions to true, making them all accessible 
                 directions[i] = true;
@@ -331,8 +301,9 @@ public class Predator extends Agent {
         this.x = coord[0];
         this.y = coord[1];
         this.orientation = (int)(4*Math.random());           
-        this.rangeOfVision = 10;                           
-        this.speed = 80;
+        this.rangeOfVision = 10;  
+        this.baseSpeed = 80;                         
+        this.speed = baseSpeed;
         this.vision.setOrientation(this.orientation);
         this.vision.setPosition(this.x, this.y);
         this.vision.updateField();
@@ -351,7 +322,8 @@ public class Predator extends Agent {
         this.y = y;
         this.orientation = (int)(4*Math.random());           
         this.rangeOfVision = offspringCharacters[0];                           
-        this.speed = offspringCharacters[1];
+        this.baseSpeed = offspringCharacters[1];
+        this.speed = baseSpeed;
         this.vision.setOrientation(this.orientation);
         this.vision.setPosition(this.x, this.y);
         this.vision.updateField();
@@ -373,6 +345,10 @@ public class Predator extends Agent {
 
     public int getRangeOfVision()   {
         return rangeOfVision;
+    }
+
+    public int getBaseSpeed()   {
+        return baseSpeed;
     }
 
     public int getSpeed()   {

@@ -21,7 +21,8 @@ public class Prey extends Agent {
     public Prey( int __x , int __y, WorldOfTrees __world ) {
         super(__x,__y,__world, new float[] {0.f,0.75f,1.f});
         this.rangeOfVision = 5;
-        this.speed = 80;
+        this.baseSpeed = 80;
+        this.speed = this.baseSpeed;
         this.vision = new PreyVision(__x,__y,rangeOfVision,__world);
     }
 
@@ -102,6 +103,7 @@ public class Prey extends Agent {
                 return;
             }
 
+
             vision.setPosition(x, y);
             vision.updateField();
             double dice = Math.random();
@@ -113,41 +115,10 @@ public class Prey extends Agent {
                 move = graze();
             }
 
-            if (move == -1) {                   //Random displacement if there's no food or predators
-                int j=0;
-
-                double partition_size = 1/((double)accessible);
-
-                for (int i=0; i<directions.length; i++)    {
-                    if ( directions[i] )    {
-                        j++;
-                        if ( dice < (j*partition_size) )  {    
-                            move = i;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            /* set the agent's new position */
-            switch (move)   {   
-                case -2:
-                    break; 
-                case 0:
-                    this.y = (this.y + 1 + this.world.getHeight()) % this.world.getHeight();
-                    break;
-                case 1:
-                    this.x = (this.x + 1 + this.world.getWidth()) % this.world.getWidth();
-                    break;
-                case 2:
-                    this.y = (this.y - 1 + this.world.getHeight()) % this.world.getHeight();
-                    break;
-                case 3:
-                    this.x = (this.x - 1 + this.world.getWidth()) % this.world.getWidth();
-                    break;
-                default:
-                    System.out.println("Erreur de déplacement : move = " + move);
-            }
+            double currentHeight = world.getCellHeight(x,y);
+            updatePosition(move);
+            double nextHeight = world.getCellHeight(x,y);
+            updateSpeed(currentHeight, nextHeight);
 
             /* Reset the four directions to true*/
             for (int i=0; i<directions.length; i++)    {

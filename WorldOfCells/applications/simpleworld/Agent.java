@@ -4,6 +4,8 @@
 
 package applications.simpleworld;
 
+import javax.lang.model.util.ElementScanner14;
+
 import com.jogamp.opengl.GL2;
 
 import objects.UniqueDynamicObject;
@@ -15,6 +17,7 @@ public abstract class Agent extends UniqueDynamicObject{
 
     public static final int MAX_LIFESPAN = 1000;
     public static final float INITIAL_HUNGER = 100.f;
+    protected int baseSpeed;
     protected int speed;                    // between 0 and 100
     protected int age;
     protected enum State {ALIVE, DEAD, ONFIRE};
@@ -176,6 +179,76 @@ public abstract class Agent extends UniqueDynamicObject{
         this.hunger++;
     }
 
+    public void updateSpeed(double currentHeight, double nextHeight)    {
+        /* adjusts speed based on topography : uphill -> slower, downhill ->faster */
+        double diff = nextHeight - currentHeight;
+        if (diff > 0.03)   
+            speed = baseSpeed + 10;
+        else if (diff > 0.02)   
+            speed = baseSpeed + 5;
+        else if (diff > 0.01) 
+            speed = baseSpeed + 2;
+        else if (diff > 0.005) 
+            speed = baseSpeed + 1;
+        else if (diff > -0.005)   
+            speed = baseSpeed;
+        else if (diff > -0.01)   
+            speed = baseSpeed - 1;
+        else if (diff > -0.02)  
+            speed = baseSpeed - 2;
+        else if (diff > -0.03)   
+            speed = baseSpeed -5;
+        else 
+            speed = baseSpeed -10;
+    }
+
+    public void updatePosition(int move)    {
+        /* Updates the agent's position based on an int value:
+            -1 -> random displacement
+            -2 -> no change
+            (0,1,2,3) -> (N,E,S,W)
+        */
+
+        //Random movements
+        double dice = Math.random();
+        if (move == -1) {           
+            int j=0;
+
+            System.out.println("accessible = "+accessible);
+            double partition_size = 1/((double)accessible);
+
+            for (int i=0; i<directions.length; i++)    {
+                if ( directions[i] )    {
+                    j++;
+                    if ( dice < (j*partition_size) )  {    
+                        move = i;
+                        break;
+                    }
+                }
+            }
+        }
+
+        //Having determined the random direction (if applicable) we now set the agent's position
+        switch (move)   {   
+            case -2:
+                break; 
+            case 0:
+                this.y = (this.y + 1 + this.world.getHeight()) % this.world.getHeight();
+                break;
+            case 1:
+                this.x = (this.x + 1 + this.world.getWidth()) % this.world.getWidth();
+                break;
+            case 2:
+                this.y = (this.y - 1 + this.world.getHeight()) % this.world.getHeight();
+                break;
+            case 3:
+                this.x = (this.x - 1 + this.world.getWidth()) % this.world.getWidth();
+                break;
+            default:
+                System.out.println("Erreur de déplacement : updatePosition(),move = " + move);
+        }
+    }
+
     public int getAge()    {
         return this.age;
     }
@@ -183,5 +256,6 @@ public abstract class Agent extends UniqueDynamicObject{
     public State getState()  {
         return this.state;
     }
+
  
 }

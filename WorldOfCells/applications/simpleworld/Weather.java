@@ -42,6 +42,7 @@ public class Weather {
 
     public void drawSky(GL2 gl) {
         //Math.sin simulates the weather condition as the function is perodically repeated and corresponds to the schedule of day to night
+        //Math.sin simulates the weather conditions as the function is perodically repeated and corresponds to the schedule of day to night
         float time_value = (float) Math.max(0f, Math.sin(elapsed_time));
         //gl.glClearColor(0.25f, time_value/8f, time_value, 0.0f); //sunset -> day
        gl.glClear(gl.GL_COLOR_BUFFER_BIT);

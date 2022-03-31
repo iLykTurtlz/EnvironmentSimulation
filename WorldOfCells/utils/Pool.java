@@ -7,12 +7,13 @@ import objects.UniqueDynamicObject;
 import worlds.World;
 
 import applications.simpleworld.Prey;
+import applications.simpleworld.WorldOfTrees;
 
 import java.util.ArrayList;
 
 import worlds.*;
 
-abstract class Pool<E> {
+public abstract class Pool<E> {
 	protected ArrayList<E> used;
 	protected ArrayList<E> queue;
 
@@ -21,7 +22,7 @@ abstract class Pool<E> {
 		this.queue = new ArrayList<E>();
 	}
 
-	abstract E add(int __x, int __y, World myWorld);
+	abstract E add(int __x, int __y, WorldOfTrees myWorld);
 
 	public E get(int index) {
 		return used.get(index);

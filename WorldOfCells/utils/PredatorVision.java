@@ -1,12 +1,13 @@
 package utils;
-import applications.simpleworld.Prey;
-import worlds.*;
+import applications.simpleworld.Agent;
+import applications.simpleworld.WorldOfTrees;
+
 
 public class PredatorVision extends VisionField {
 
     protected int orientation;
 
-    public PredatorVision(int x, int y, int range, int orientation, World world) {
+    public PredatorVision(int x, int y, int range, int orientation, WorldOfTrees world) {
         super(x, y, range, world);
         this.orientation = orientation;
         calculateField();
@@ -98,22 +99,20 @@ public class PredatorVision extends VisionField {
         }
     }
 
-    public Prey searchPrey(PoolPrey prey)    {  
-    /* Finds the nearest prey in the field of vision and returns it.
-       Returns null if no prey is found. */          
-        Prey p;
-        for (int i=1; i<field.length; i++)  {               //If there's a prey at i=0, it has already been eaten.
-            for (int j=0; j<prey.getSizeUsed(); j++)    {
-                p = prey.get(j);
-                int[] coord = p.getCoordinate();
+
+    public Agent search(Pool<Agent> p) {
+        Agent a;
+        for (int i=2; i<field.length; i++)   {
+            for (int j=0; j<p.getSizeUsed(); j++)   {
+                a = p.get(j);
+                int[] coord = a.getCoordinate();
                 if (coord[0] == field[i][0] && coord[1] == field[i][1]) {
-                    return p;
+                    return a;
                 }
             }
         }
         return null;
     }
-
 
     public int getOrientation(int o)    {
         return this.orientation;

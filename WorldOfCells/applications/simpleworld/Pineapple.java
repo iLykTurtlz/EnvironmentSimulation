@@ -4,7 +4,7 @@ import worlds.World;
 public class Pineapple extends Plant {
 
 
-    public Pineapple(int __x , int __y, World __world)  {
+    public Pineapple(int __x , int __y, WorldOfTrees __world)  {
         super(__x,__y,__world);
     }
 

@@ -7,6 +7,7 @@ import objects.UniqueDynamicObject;
 import worlds.World;
 
 import applications.simpleworld.Prey;
+import applications.simpleworld.WorldOfTrees;
 
 public class PoolPrey extends Pool<Prey> {
 
@@ -14,7 +15,7 @@ public class PoolPrey extends Pool<Prey> {
 		super();
 	}
 
-	public Prey add(int __x , int __y, World __world) {
+	public Prey add(int __x , int __y, WorldOfTrees __world) {
 		if (queue.isEmpty()) {
 			Prey prey = new Prey(__x,__y,__world); //default paramaters
 			super.used.add(prey);

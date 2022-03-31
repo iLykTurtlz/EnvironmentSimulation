@@ -107,7 +107,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
         int dxView;
         int dyView;
 
-        double[][] landscape; 
+        public double[][] landscape;
 
         int lastFpsValue = 0;
         
@@ -145,9 +145,8 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
             //change
     		_myWorld.setLandscape(this);
 
-    		landscape = PerlinNoiseLandscapeGenerator.generatePerlinNoiseLandscape(__dx,__dy,scaling,landscapeAltitudeRatio, 100); // 11
+    		landscape = PerlinNoiseLandscapeGenerator.generatePerlinNoiseLandscape(__dx,__dy,scaling,landscapeAltitudeRatio, 11); //last argument : how many noise functions we want to sum up in the perlin noise result 11 seems to be decent for details and smooth map
     		
-
     		initLandscape();
 
 			initAgents();

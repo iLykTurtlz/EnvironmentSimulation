@@ -16,7 +16,7 @@ public class PerlinNoiseLandscapeGenerator {
         System.out.println("BLABLABLA");
     	for (int x = 0; x < dxView; x++) {
     		for (int y = 0; y < dyView; y++) {
-                landscape[x][y] = perlinNoise2D((double) x / dxView * random_generation, (double) y / dyView * random_generation, 1d, perlinLayerCount); //low persistence for a smoother landscape (argument after random_generation
+                landscape[x][y] = perlinNoise2D((double) x / dxView * random_generation, (double) y / dyView * random_generation, 0.4d, perlinLayerCount); //low persistence for a smoother landscape (argument after random_generation (0.4d seems stable now)
             }
         }
 

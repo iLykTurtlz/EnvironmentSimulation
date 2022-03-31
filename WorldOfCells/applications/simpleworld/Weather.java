@@ -3,6 +3,7 @@ package applications.simpleworld;
 import applications.simpleworld.*;
 import worlds.*;
 import com.jogamp.opengl.*;
+import com.jogamp.opengl.util.gl2.GLUT;
 
 public class Weather {
     public enum Condition { SUNNY, SNOWING, RAINY };
@@ -12,9 +13,11 @@ public class Weather {
     private static final float WEATHER_UPDATE_DELAY = 10f; //10 seconds
     private Condition weather = Condition.SUNNY; //sunny default
     private float time_speed = 0.01f;
+    private GLUT glut;
 
     public Weather(World world) {
         this.world = world;
+        glut = new GLUT();
     }
 
     public void step() {
@@ -32,6 +35,10 @@ public class Weather {
         }
     }
 
+    public float getTime() {
+        return elapsed_time;
+    }
+
     public Condition getCondition() {
         return weather;
     }
@@ -40,16 +47,24 @@ public class Weather {
         this.weather = cond;
     }
 
-    public void drawSky(GL2 gl) {
+    public void drawSky(GL2 gl) { //draw(GL2 gl)
         //Math.sin simulates the weather condition as the function is perodically repeated and corresponds to the schedule of day to night
         //Math.sin simulates the weather conditions as the function is perodically repeated and corresponds to the schedule of day to night
-        float time_value = (float) Math.max(0f, Math.sin(elapsed_time));
+        float speed = getTime();
+        float time_value = (float) Math.max(0f, Math.cos(speed));
         gl.glClearColor(0.5f, time_value/4f, time_value, 0.5f); //sunset -> day
-      // gl.glClear(gl.GL_COLOR_BUFFER_BIT);
-      gl.glPushMatrix();
-       gl.glColor3f(1f, 0f, 0f);
-       drawSphere(gl, 5, 5, 20, 20);
-       gl.glPopMatrix();
+        //gl.glLoadIdentity();
+        gl.glPushMatrix();
+        float x = (float) Math.sin(speed) * world.getLandscape().landscape.length;
+        float y = 0;
+        float z = 50f + (float) Math.cos(speed) * world.getLandscape().landscape[0].length;
+       gl.glTranslatef(x, y, z);
+       gl.glColor3f(1f, 0.8f, 0f);
+       glut.glutSolidSphere(10,
+                    10, 10);
+        gl.glPopMatrix();
+      /* drawSphere(gl, 5, 5, 20, 20);
+       gl.glPopMatrix();*/
     }
 
     /**

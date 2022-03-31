@@ -107,7 +107,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
         int dxView;
         int dyView;
 
-        double[][] landscape; 
+        public double[][] landscape;
 
         int lastFpsValue = 0;
         

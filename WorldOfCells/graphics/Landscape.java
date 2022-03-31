@@ -145,7 +145,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
             //change
     		_myWorld.setLandscape(this);
 
-    		landscape = PerlinNoiseLandscapeGenerator.generatePerlinNoiseLandscape(__dx,__dy,scaling,landscapeAltitudeRatio, 100); //last argument : how many noise functions we want to sum up in the perlin noise result 100 seems to be decent for details
+    		landscape = PerlinNoiseLandscapeGenerator.generatePerlinNoiseLandscape(__dx,__dy,scaling,landscapeAltitudeRatio, 11); //last argument : how many noise functions we want to sum up in the perlin noise result 11 seems to be decent for details and smooth map
     		
     		initLandscape();
 

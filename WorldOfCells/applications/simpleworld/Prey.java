@@ -18,7 +18,7 @@ public class Prey extends Agent {
     private int rangeOfVision;
     
 
-    public Prey( int __x , int __y, World __world ) {
+    public Prey( int __x , int __y, WorldOfTrees __world ) {
         super(__x,__y,__world, new float[] {0.f,0.75f,1.f});
         this.rangeOfVision = 5;
         this.speed = 80;
@@ -149,7 +149,7 @@ public class Prey extends Agent {
                     System.out.println("Erreur de déplacement : move = " + move);
             }
 
-            /* Reinitialize the four directions to true*/
+            /* Reset the four directions to true*/
             for (int i=0; i<directions.length; i++)    {
                 directions[i] = true;
             }

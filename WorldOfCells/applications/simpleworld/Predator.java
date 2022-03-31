@@ -3,7 +3,7 @@ package applications.simpleworld;
 import com.jogamp.opengl.GL2;
 
 import objects.UniqueDynamicObject;
-
+import applications.simpleworld.*;
 import worlds.World;
 import utils.Pool;
 import utils.PoolPredator;
@@ -20,9 +20,12 @@ public class Predator extends Agent {
     private PredatorVision vision;
     private int rangeOfVision;
     protected int bloodlustThreshold;
+    private int gestationPeriod;
+    private int gestationStage;
+    private int offspringCharacters[]; // (rangeOfVision, speed, bloodlustThreshold, gestationPeriod)
 
 
-    public Predator( int __x , int __y, World __world ) {
+    public Predator( int __x , int __y, WorldOfTrees __world ) {
         super(__x,__y,__world, new float[] {1.f, 0.f, 0.f});
         this.orientation = (int)(4*Math.random());      //random orientation by default
         this.rangeOfVision = 10;
@@ -34,10 +37,29 @@ public class Predator extends Agent {
         } else {
             this.sex = Sex.FEMALE;
         }
+        this.gestationPeriod = 5;
+        this.gestationStage = 0;
+    }
+
+    public Predator( int __x , int __y, WorldOfTrees __world, int[] offspringCharacters) {
+        super(__x,__y,__world, new float[] {1.f, 0.f, 0.f});
+        this.orientation = (int)(4*Math.random());      //random orientation by default
+        this.rangeOfVision = offspringCharacters[0];
+        this.speed = offspringCharacters[1];
+        this.vision = new PredatorVision(__x,__y,rangeOfVision,orientation,__world);
+        this.bloodlustThreshold = offspringCharacters[2];
+        if (Math.random() < 0.5)    {
+            this.sex = Sex.MALE;
+        } else {
+            this.sex = Sex.FEMALE;
+        }
+        this.gestationPeriod = offspringCharacters[3];
+        this.gestationStage = 0;
     }
 
     
     private int findMate()  {
+        /* Finds the nearest opposite-sex predator, reproduces if possible, otherwise moves in the direction of the prospective mate. */
         PoolPredator predators = world.getPredators();
         Predator mate;
         boolean copulate;
@@ -60,72 +82,46 @@ public class Predator extends Agent {
     }
 
     private void reproduce(Predator mate)   {
+        Predator m,f;
+        if (this.getSex() == Sex.FEMALE)    {
+            m = mate;
+            f = this;
+        } else {
+            m = this;
+            f = mate;
+        }
+        f.offspringCharacters = new int[4];
+        //recombine characteristics of both parents
+        f.setOffspringCharacters((m.getRangeOfVision() + f.getRangeOfVision())/2, (m.getSpeed() + f.getSpeed())/2, (m.getBloodlustThreshold() + f.getBloodlustThreshold())/2, (m.getGestationPeriod() + f.getGestationPeriod())/2);
+        //mutation
 
+
+    }
+
+    private void gestate()  {
+        this.gestationStage++;
+        if (gestationStage == gestationPeriod)  {
+            world.addPredator(this.x, this.y, offspringCharacters);      //TO DO : add arguments to combine traits from both parents.
+            this.gestationStage = 0;
+        }
     }
    
 
-    private int eatAndHunt()    {            //returns the Predator's next move, based on the prey's location, -1 if no prey is seen.
+    private int eatAndHunt()    {                   
+        /* Finds nearest prey, eats it if possible, 
+           otherwise returns the Predator's next move, based on the prey's location, -1 if no prey is seen. */
         PoolPrey prey = world.getPrey();
         boolean dinnertime;
 
-        //int[][] field = vision.getField();
-
-        /* EAT */
-        Prey dinner = vision.searchPrey(prey);
-        if (dinner != null) { 
-            dinnertime = isHere((Agent)dinner);
-        /*
-        Prey dinner;
-        for (int i=0; i<prey.getSizeUsed(); i++)    {
-            dinner = prey.get(i);
-            int[] coord = dinner.getCoordinate();
-            boolean dinnertime = isHere((Agent))
-            
-            if (coord[0] == field[0][0] && coord[1] == field[0][1]) {                           //Same space -> dinnertime.
-                dinnertime = true;    
-            }
-            switch (orientation)    {                                                           //Space directly in front -> dinnertime.
-                case 0:
-                    if (coord[0] == field[0][0] && coord[1] == ( field[0][1] + 1))  {
-                        dinnertime = true;
-                    }
-                    break;
-                case 1:
-                    if (coord[0] == (field[0][0] + 1) && coord[1] == field[0][1])  {
-                        dinnertime = true;
-                    }
-                    break;
-                case 2:
-                    if (coord[0] == field[0][0] && coord[1] == ( field[0][1] - 1))  {
-                        dinnertime = true;
-                    }
-                    break;
-                case 3:
-                    if (coord[0] == (field[0][0] - 1) && coord[1] == field[0][1])  {
-                        dinnertime = true;
-                    }
-                    break;
-                default:
-                    System.out.println("Erreur : eatAndHunt, EAT");
-            }
-
-            */
+        Prey dinner = vision.searchPrey(prey);      //find nearest prey, null if no prey in field of vision
+        if (dinner != null) {
+            dinnertime = isHere((Agent)dinner);     //if prey accessible -> eat
             if (dinnertime)  {
                 prey.remove(dinner);
                 this.hunger = 0;
-                return -1;                      //Having eaten, hunting is unnecessary
+                return -1;                          //Having eaten, hunting is unnecessary
             }
-        
-        
-
-            /* HUNT */
-            /*
-            Prey target = vision.searchPrey(prey);
-            if (target == null) {
-                return -1;
-            }
-            */
-            int[] coord = dinner.getCoordinate();
+            int[] coord = dinner.getCoordinate();   //if prey not accessible -> hunt
             return moveToward(coord, 0.75f);
         }
         return -1;                         
@@ -201,7 +197,7 @@ public class Predator extends Agent {
 
     
     private boolean isHere(Agent a) {
-        /* Returns true if the Agent, Predator or Prey, is directly in front or on the same space.
+        /* Returns true if the Agent, Predator or Prey (requires cast), is directly in front or on the same space.
            Otherwise returns false. */
         int[] coord = a.getCoordinate();
         int height = world.getHeight();
@@ -330,10 +326,88 @@ public class Predator extends Agent {
         return -1;
     }
 
+    public void reinitialize()  {
+        int[] coord = world.getRandomLandCoordinate();      //random or default values
+        this.x = coord[0];
+        this.y = coord[1];
+        this.orientation = (int)(4*Math.random());           
+        this.rangeOfVision = 10;                           
+        this.speed = 80;
+        this.vision.setOrientation(this.orientation);
+        this.vision.setPosition(this.x, this.y);
+        this.vision.updateField();
+        this.bloodlustThreshold = 15;
+        if (Math.random() < 0.5)    {
+            this.sex = Sex.MALE;
+        } else {
+            this.sex = Sex.FEMALE;
+        }
+        this.gestationPeriod = 5;
+        this.gestationStage = 0;
+    }
 
+    public void reinitialize(int x, int y, int[] offspringCharacters) {      
+        this.x = x;
+        this.y = y;
+        this.orientation = (int)(4*Math.random());           
+        this.rangeOfVision = offspringCharacters[0];                           
+        this.speed = offspringCharacters[1];
+        this.vision.setOrientation(this.orientation);
+        this.vision.setPosition(this.x, this.y);
+        this.vision.updateField();
+        this.bloodlustThreshold = offspringCharacters[2];
+        if (Math.random() < 0.5)    {
+            this.sex = Sex.MALE;
+        } else {
+            this.sex = Sex.FEMALE;
+        }
+        this.gestationPeriod = offspringCharacters[3];
+        this.gestationStage = 0;
+    }
+
+    /* GETTERS AND SETTERS */
 
     public Sex getSex() {
         return sex;
+    }
+
+    public int getRangeOfVision()   {
+        return rangeOfVision;
+    }
+
+    public int getSpeed()   {
+        return speed;
+    }
+
+    public int getBloodlustThreshold()  {
+        return bloodlustThreshold;
+    }
+
+    public int getGestationPeriod() {
+        return gestationPeriod;
+    }
+
+    public void setRangeOfVision(int rangeOfVision)   {
+        this.rangeOfVision = rangeOfVision;
+    }
+
+    public void setSpeed(int speed)   {
+        this.speed = speed;
+    }
+
+    public void setBloodlustThreshold(int bloodlustThreshold)  {
+        this.bloodlustThreshold = bloodlustThreshold;
+    }
+
+    public void setGestationPeriod(int gestationPeriod) {
+        this.gestationPeriod = gestationPeriod;
+    }
+
+    public void setOffspringCharacters(int rangeOfVision, int speed, int bloodlustThreshold, int gestationPeriod)    {
+        offspringCharacters[0] = rangeOfVision;
+        offspringCharacters[1] = speed;
+        offspringCharacters[2] = bloodlustThreshold;
+        offspringCharacters[3] = gestationPeriod;
     }
 
 }

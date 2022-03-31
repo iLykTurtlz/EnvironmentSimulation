@@ -12,7 +12,7 @@ public abstract class Plant extends UniqueDynamicObject {
     protected int size;
     protected int max_size;
 
-    public Plant(int __x , int __y, World __world)  {
+    public Plant(int __x , int __y, WorldOfTrees __world)  {
         super(__x,__y,__world);
         this.size = 0;       
     }

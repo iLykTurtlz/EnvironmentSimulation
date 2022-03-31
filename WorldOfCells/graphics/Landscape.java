@@ -55,7 +55,7 @@ import landscapegenerator.PerlinNoiseLandscapeGenerator;
  */
 public class Landscape implements GLEventListener, KeyListener, MouseListener{
 	
-		private World _myWorld; 
+		private WorldOfTrees _myWorld; 
 		private Weather weather;
 
 		private static final double INITIAL_PREDATOR_DENSITY = 0.001;
@@ -138,7 +138,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
         /**
          * 
          */
-        public Landscape (World __myWorld, int __dx, int __dy, double scaling, double landscapeAltitudeRatio)
+        public Landscape (WorldOfTrees __myWorld, int __dx, int __dy, double scaling, double landscapeAltitudeRatio)
         {
     		_myWorld = __myWorld;
 
@@ -157,7 +157,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
         /**
          * 
          */
-        public Landscape (World __myWorld, String __filename, double scaling, double landscapeAltitudeRatio)
+        public Landscape (WorldOfTrees __myWorld, String __filename, double scaling, double landscapeAltitudeRatio)
         {
     		_myWorld = __myWorld;
 
@@ -533,6 +533,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 							predators.add(x,y,_myWorld);
 						}
 						else if (dice < INITIAL_PLANT_DENSITY + INITIAL_PREDATOR_DENSITY + INITIAL_PREY_DENSITY)	{
+							//System.out.println("myWorld"+_myWorld.getClass().getName());
 							prey.add(x,y,_myWorld);
 						}						
 					}

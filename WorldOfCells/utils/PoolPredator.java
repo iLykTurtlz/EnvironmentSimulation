@@ -8,26 +8,45 @@ import worlds.World;
 
 
 import applications.simpleworld.Predator;
+import applications.simpleworld.WorldOfTrees;
 
 public class PoolPredator extends Pool<Predator> {
 	public PoolPredator() {
 		super();
 	}
 
-	public Predator add(int __x , int __y, World __world) {
+	
+	public Predator add(int __x , int __y, WorldOfTrees __world, int[] offspringCharacters) {
 		if (queue.isEmpty()) {
-			Predator pred = new Predator(__x,__y,__world); //default paramaters
+			Predator pred = new Predator(__x,__y,__world, offspringCharacters);
 			super.used.add(pred);
 			return pred;
-		 }
+		}
 		Predator pred = queue.get(0);
-        pred.reinitialize();
+        reinit(__x, __y, pred, offspringCharacters);
+		queue.remove(0);
+		used.add(pred);
+		return pred;
+	}
+	
+	public Predator add(int __x , int __y, WorldOfTrees __world) {
+		if (queue.isEmpty()) {
+			Predator pred = new Predator(__x,__y,__world);	//call constructor with random characters
+			super.used.add(pred);
+			return pred;
+		}
+		Predator pred = queue.get(0);
+        reinit(pred);										//reinit with random characters
 		queue.remove(0);
 		used.add(pred);
 		return pred;
 	}
 
-	public void reinit(Predator pred) {
+	public void reinit(int x, int y, Predator pred, int[] offspringCharacters) {
+		pred.reinitialize(x, y, offspringCharacters);
+	}
+
+	public void reinit(Predator pred)	{
 		pred.reinitialize();
 	}
 }

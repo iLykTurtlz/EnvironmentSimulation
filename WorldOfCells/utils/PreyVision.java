@@ -3,12 +3,13 @@ import java.util.ArrayList;
 
 import applications.simpleworld.Plant;
 import applications.simpleworld.Predator;
+import applications.simpleworld.WorldOfTrees;
 import worlds.*;
 
 public class PreyVision extends VisionField {
 
 
-    public PreyVision(int x, int y, int range, World world) {
+    public PreyVision(int x, int y, int range, WorldOfTrees world) {
         super(x, y, range, world);
         calculateField();
     }

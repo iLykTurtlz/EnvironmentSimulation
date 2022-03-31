@@ -1,13 +1,13 @@
 package utils;
 import applications.simpleworld.Agent;
-import applications.simpleworld.Prey;
-import worlds.*;
+import applications.simpleworld.WorldOfTrees;
+
 
 public class PredatorVision extends VisionField {
 
     protected int orientation;
 
-    public PredatorVision(int x, int y, int range, int orientation, World world) {
+    public PredatorVision(int x, int y, int range, int orientation, WorldOfTrees world) {
         super(x, y, range, world);
         this.orientation = orientation;
         calculateField();

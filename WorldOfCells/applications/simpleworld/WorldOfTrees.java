@@ -194,14 +194,14 @@ public class WorldOfTrees extends World {
     public Landscape getLandscape() { return landscape; }
 
 	public void addPredator(int x, int y)	{
-		//uniqueDynamicObjects.add(new Predator(x,y,this));
 		predators.add(x,y,this);
 	}
 
-	public void addPredator(int posx, int posy, Predator pred)	{
-		pred.setPosition(posx, posy);
-		uniqueDynamicObjects.add(pred);
+	public void addPredator(int x, int y, int[] offspringCharacters)	{
+		predators.add(x,y,this,offspringCharacters);
 	}
+
+
 
 	public void addPrey(int x, int y)	{
 		prey.add(x,y,this);

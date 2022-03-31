@@ -10,7 +10,7 @@ public class Mushroom extends Plant {
     private float centerRadius;
     private float centerHeight;
 
-    public Mushroom(int __x , int __y, World __world)   {
+    public Mushroom(int __x , int __y, WorldOfTrees __world)   {
         super(__x,__y,__world);
         this.stemColor = new float[] {1.f,0.f,1.f};
         this.centerRadius = 0.05f;

@@ -4,17 +4,18 @@ import java.util.ArrayList;
 import applications.simpleworld.Plant;
 import applications.simpleworld.Predator;
 import applications.simpleworld.Prey;
+import applications.simpleworld.WorldOfTrees;
 import worlds.*;
 
 
 public abstract class VisionField    {
     int[][] field;
     int range;
-    World world;
+    WorldOfTrees world;
     int x;
     int y;
 
-    public VisionField(int x, int y, int range, World world)  {
+    public VisionField(int x, int y, int range, WorldOfTrees world)  {
         this.x = x;
         this.y = y;
         this.range = range;

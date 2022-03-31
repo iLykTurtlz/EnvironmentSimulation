@@ -229,4 +229,18 @@ public abstract class World {
 		System.out.println("avgDiff = "+totDiff/((dxCA-1)*dyCA));
 	}
 
+	public int[] getRandomLandCoordinate()	{
+		/* Returns a coordinate on land.  May have high temporal cost.*/
+		int[] coord = new int[2];
+		coord[0] = (int)(Math.random()*dxCA);
+		coord[1] = (int)(Math.random()*dyCA);
+		double height = cellsHeightValuesCA.getCellState(coord[0]%dxCA,coord[1]%dyCA);
+		while (height < 0)	{
+			coord[0] = (int)(Math.random()*dxCA);
+			coord[1] = (int)(Math.random()*dyCA);
+			height = cellsHeightValuesCA.getCellState(coord[0]%dxCA,coord[1]%dyCA);
+		}
+		return coord;
+	}
+
 }

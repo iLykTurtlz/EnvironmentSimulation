@@ -261,12 +261,12 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
                 gl.glHint(GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
                 
                 // Culling - display only triangles facing the screen
-                gl.glCullFace(GL.GL_FRONT);
-                gl.glEnable(GL.GL_CULL_FACE);
+                //gl.glCullFace(GL.GL_FRONT);
+                //gl.glEnable(GL.GL_CULL_FACE);
 
                 // trucs d'alex
-                gl.glEnable(GL.GL_DITHER);
-                
+                //gl.glEnable(GL.GL_DITHER);
+
                 
         }
         
@@ -278,7 +278,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
         public void display(GLAutoDrawable gLDrawable) {
            
         		// ** compute FPS
-        		
+
         		if ( System.currentTimeMillis() - lastTimeStamp >= 1000 )
         		{
     				int fps = ( it - lastItStamp ) / 1;
@@ -298,10 +298,8 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
         		// ** clean screen
         		
         		final GL2 gl = gLDrawable.getGL().getGL2();
-                gl.glClear(GL.GL_COLOR_BUFFER_BIT);
-                gl.glClear(GL.GL_DEPTH_BUFFER_BIT);
+                gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
                 gl.glLoadIdentity();
-
                 // ** display FPS on screen
                 
                 if ( DISPLAY_FPS )

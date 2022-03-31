@@ -44,10 +44,12 @@ public class Weather {
         //Math.sin simulates the weather condition as the function is perodically repeated and corresponds to the schedule of day to night
         //Math.sin simulates the weather conditions as the function is perodically repeated and corresponds to the schedule of day to night
         float time_value = (float) Math.max(0f, Math.sin(elapsed_time));
-        //gl.glClearColor(0.25f, time_value/8f, time_value, 0.0f); //sunset -> day
-       gl.glClear(gl.GL_COLOR_BUFFER_BIT);
+        gl.glClearColor(0.5f, time_value/4f, time_value, 0.5f); //sunset -> day
+      // gl.glClear(gl.GL_COLOR_BUFFER_BIT);
+      gl.glPushMatrix();
        gl.glColor3f(1f, 0f, 0f);
-       drawSphere(gl, 5, 10, 10);
+       drawSphere(gl, 5, 5, 20, 20);
+       gl.glPopMatrix();
     }
 
     /**
@@ -62,38 +64,25 @@ public class Weather {
      * @param longs
      *            number of sub-divisions along the longitude
      */
-    private void drawSphere(GL2 gl, double radius, int lats, int longs) {
-        /*
-         * This algorithm moves along the z-axis, for PI radians and then at
-         * each point rotates around the z-axis drawing a QUAD_STRIP.
-         *
-         * If you you start i at a non-zero value then you will see an open end
-         * along the z-axis. If you start j at a none zero-axis then you will
-         * see segements taken out.
-         */
-
-        for (int i = 0; i <= lats; i++) {
+    private void drawSphere(GL2 gl, double radiusH, double radiusV, float lats, float longs) {
+        float zoff = world.getLandscape().getZOffset() + 50;
+       for (int i = 0; i <= lats; i++) {
             double lat0 = Math.PI * (-0.5 + (double) (i - 1) / lats);
-            float zoff = 0; //world.getLandscape().getZOffset()
-            double z0 = Math.sin(lat0) * radius + zoff;
-            double zr0 = Math.cos(lat0) * radius;
+            double z0 = Math.sin(lat0) * radiusH + zoff;
+            double zr0 = Math.cos(lat0) * radiusV;
 
             double lat1 = Math.PI * (-0.5 + (double) i / lats);
-            double z1 = Math.sin(lat1) * radius + zoff;
-            double zr1 = Math.cos(lat1) * radius;
+            double z1 = Math.sin(lat1) * radiusH + zoff;
+            double zr1 = Math.cos(lat1) * radiusV;
 
             gl.glBegin(gl.GL_QUAD_STRIP);
             for (int j = 0; j <= longs; j++) {
-                float pc1 = j / longs;
-                float pc2 = j + 1 / longs;
-
                 double lng = 2 * Math.PI * (double) (j - 1) / longs;
-                double x = Math.cos(lng) * radius;
-                double y = Math.sin(lng) * radius;
+                double x = Math.cos(lng) * radiusH;
+                double y = Math.sin(lng) * radiusV;
 
                 gl.glNormal3d(x * zr0, y * zr0, z0);
                 gl.glVertex3d(x * zr0, y * zr0, z0);
-
                 gl.glNormal3d(x * zr1, y * zr1, z1);
                 gl.glVertex3d(x * zr1, y * zr1, z1);
             }

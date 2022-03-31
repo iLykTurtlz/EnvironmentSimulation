@@ -11,10 +11,12 @@ public class PerlinNoiseLandscapeGenerator {
     public static double[][] generatePerlinNoiseLandscape ( int dxView, int dyView, double scaling, double landscapeAltitudeRatio, int perlinLayerCount)
     {
     	double landscape[][] = new double[dxView][dyView];
-        double facteur_aleatoire = Math.random() * 20;
+        double random_generation = Math.random() * 20 + 1; //allows different generations since perlin noise is based on noise based on fixed primal numbers
+        //random_generation is between 1 and 20 ! if 0 is included it generates cliffs with no transition which causes graphical problems
+        System.out.println("BLABLABLA");
     	for (int x = 0; x < dxView; x++) {
     		for (int y = 0; y < dyView; y++) {
-                landscape[x][y] = perlinNoise2D((double) x / dxView * facteur_aleatoire, (double) y / dyView * facteur_aleatoire, 0.2d, perlinLayerCount); //faible persistence pour un terrain plus lisse
+                landscape[x][y] = perlinNoise2D((double) x / dxView * random_generation, (double) y / dyView * random_generation, 1d, perlinLayerCount); //low persistence for a smoother landscape (argument after random_generation
             }
         }
 

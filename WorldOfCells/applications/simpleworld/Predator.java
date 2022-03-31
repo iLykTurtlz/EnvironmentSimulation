@@ -154,9 +154,11 @@ public class Predator extends Agent {
             }
             
             double currentHeight = world.getCellHeight(x,y);
-            updatePosition(move);
+            move = updatePosition(move);
+            setOrientation(move);
             double nextHeight = world.getCellHeight(x,y);
             updateSpeed(currentHeight, nextHeight);
+
             
             for (int i=0; i<directions.length; i++)    {        //reinitialize the four directions to true, making them all accessible 
                 directions[i] = true;
@@ -361,6 +363,14 @@ public class Predator extends Agent {
 
     public int getGestationPeriod() {
         return gestationPeriod;
+    }
+
+    public void setOrientation(int move) {
+        /* sets predator orientation based on direction of movement:
+            -2 -> no change
+        */
+        if (move != -2)
+            this.orientation = move;
     }
 
     public void setRangeOfVision(int rangeOfVision)   {

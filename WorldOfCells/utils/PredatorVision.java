@@ -95,7 +95,7 @@ public class PredatorVision extends VisionField {
                 }
                 break;
             default :
-                System.out.println("Erreur : calcul de champs de vision, predator orientation");
+                System.out.println("Erreur : calcul de champs de vision, predator orientation = "+orientation);
         }
     }
 

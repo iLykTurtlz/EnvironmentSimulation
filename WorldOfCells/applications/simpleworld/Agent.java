@@ -202,25 +202,32 @@ public abstract class Agent extends UniqueDynamicObject{
             speed = baseSpeed -10;
     }
 
-    public void updatePosition(int move)    {
+    public int updatePosition(int move)    {
         /* Updates the agent's position based on an int value:
             -1 -> random displacement
             -2 -> no change
             (0,1,2,3) -> (N,E,S,W)
+            Returns the final value of move, which is needed to set predator orientation.
         */
 
         //Random movements
         double dice = Math.random();
         if (move == -1) {           
             int j=0;
-
-            System.out.println("accessible = "+accessible);
             double partition_size = 1/((double)accessible);
 
             for (int i=0; i<directions.length; i++)    {
                 if ( directions[i] )    {
                     j++;
                     if ( dice < (j*partition_size) )  {    
+                        move = i;
+                        break;
+                    }
+                }
+            }
+            if (move == -1)  {      //In rare cases, double comparison fails and move is still -1.  When that happens, the move should be the LAST accessible direction in directions.
+                for (int i = directions.length - 1; i > -1; i--)    {
+                    if (directions[i])  {
                         move = i;
                         break;
                     }
@@ -247,6 +254,7 @@ public abstract class Agent extends UniqueDynamicObject{
             default:
                 System.out.println("Erreur de déplacement : updatePosition(),move = " + move);
         }
+        return move;
     }
 
     public int getAge()    {

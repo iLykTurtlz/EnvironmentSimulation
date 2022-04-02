@@ -24,22 +24,28 @@ public class Mushroom extends Plant {
         super.step();
     }
 
-    public static float[] incrementColor(float color[])    {
+    public static void incrementColor(float color[])    {
         /* Increments the color according to the spectrum*/
         // TO DO : make this BETTER!
 
         for (int i=0; i<color.length; i++)  {
             if (color[i] == 0.f)  {
-                if (color[(i-1)%color.length] == 1.f && color[(i+1)%color.length] == 1) {
-                    color[i] = 0.5f
+                if (color[(i-1)%color.length] == 1.f && color[(i+1)%color.length] == 1.f) {
+                    color[i] = 0.5f;
+                }
+            }
+            if (color[i] == 1.f)    {
+                if (color[(i-1)%color.length] == 0.f && color[(i+1)%color.length] == 1.f) {
+                    color[i] = 0.5f;
                 }
 
             }
-            if (color[i] == 1.f)    {
-
-            }
             else {
-
+                if (color[(i-1)%color.length] == 1.f && color[(i+1)%color.length] == 0.f)   {
+                    color[i] = 1.f;
+                } else {
+                    color[i] = 0.f;
+                }
             }
         }
         /*
@@ -119,7 +125,8 @@ public class Mushroom extends Plant {
 
         //recursive call limited by size which represents the plant's current growth state.
         if (nbBands < size)   
-            drawBands(myWorld, ++nbBands, heightDecrement + curvature,h - heightDecrement, 0.2f, incrementColor(bandColor), radius+bandWidth, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight); 
+            incrementColor(bandColor);
+            drawBands(myWorld, ++nbBands, heightDecrement + curvature,h - heightDecrement, 0.2f, bandColor, radius+bandWidth, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight); 
         
         
     }

@@ -127,6 +127,7 @@ public class Prey extends Agent {
         }
     }
 
+
     public void reinitialize()  {
         super.reinitialize();
     }

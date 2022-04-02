@@ -16,7 +16,6 @@ public class Predator extends Agent {
     public static final double p_reproduce = 0.01;
     protected enum Sex {MALE, FEMALE};
     protected Sex sex;
-    protected int orientation;                          // (0,1,2,3) = (nord,est,sud,ouest)
     private PredatorVision vision;
     private int rangeOfVision;
     protected int bloodlustThreshold;

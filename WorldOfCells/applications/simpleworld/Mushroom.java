@@ -9,6 +9,7 @@ public class Mushroom extends Plant {
     protected float[] stemColor;
     private float centerRadius;
     private float centerHeight;
+    private float curvature;
 
     public Mushroom(int __x , int __y, WorldOfTrees __world)   {
         super(__x,__y,__world);
@@ -16,6 +17,7 @@ public class Mushroom extends Plant {
         this.centerRadius = 0.2f;
         this.centerHeight = 2.0f;    
         this.max_size = 11;
+        this.curvature = 0.015f;     //needs to be a small value.  The height delta for each band is equal to decrement^x with x in [1,size], so the growth is exponential.
     }
 
     public void step()  {
@@ -52,6 +54,7 @@ public class Mushroom extends Plant {
 
     public void drawBands(World myWorld, int nbBands, float heightDecrement, float h, float bandWidth, float[] bandColor, float radius, int x2, int y2, float height, float altitude, GL2 gl,int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)  {
         /* This method recursively adds colored bands to the mushroom, incrementing its radius */
+
         int[] sequence = new int[4];
         
         for (int i=0; i<8; i++) {       //this 8-term sequence of quadruplets defines the 4 vertices needed to draw each of the 8 triangular components of a concentric box.
@@ -99,7 +102,7 @@ public class Mushroom extends Plant {
 
         //recursive call limited by size which represents the plant's growth state.
         if (nbBands < size)   
-            drawBands(myWorld, ++nbBands, heightDecrement + 0.015f,h - heightDecrement, 0.2f, incrementColor(bandColor), radius+bandWidth, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight); 
+            drawBands(myWorld, ++nbBands, heightDecrement + curvature,h - heightDecrement, 0.2f, incrementColor(bandColor), radius+bandWidth, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight); 
         
         
     }

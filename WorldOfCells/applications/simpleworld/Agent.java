@@ -20,9 +20,11 @@ public abstract class Agent extends UniqueDynamicObject{
     protected int baseSpeed;
     protected int speed;                    // between 0 and 100
     protected int age;
+    protected int orientation;                          // (0,1,2,3) = (nord,est,sud,ouest)
     protected enum State {ALIVE, DEAD, ONFIRE};
     protected State state;
     protected int hunger;
+    protected double p_ch_dir;
 
 
 

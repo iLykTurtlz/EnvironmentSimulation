@@ -304,13 +304,18 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
                 if ( DISPLAY_FPS )
                 {
 	                gl.glPushMatrix();
-	                gl.glColor3f((float)Math.random(),(float)Math.random(),(float)Math.random()); // do this before calling glWindowsPos2d
-	                gl.glWindowPos2d(0, 728);
+	                int xoff = 10;
+	                int yoff = 20;
+	                int y = 720;
+	                gl.glColor3f(1f, 1f, 1f); // do this before calling glWindowsPos2d
+	                gl.glWindowPos2d(xoff, y);
 	                GLUT glut = new GLUT();
-	                gl.glTranslatef(0, 0, 0);
-	                glut.glutBitmapString(GLUT.BITMAP_HELVETICA_18, "fps: " + lastFpsValue);
-	                gl.glWindowPos2d(0, 700);
-	                glut.glutBitmapString(GLUT.BITMAP_HELVETICA_18, "movingZ: " + getZOffset());
+	                //gl.glTranslatef(0, 0, 0);
+	                glut.glutBitmapString(GLUT.BITMAP_9_BY_15, "fps: " + lastFpsValue);
+	                gl.glWindowPos2d(xoff, y - yoff);
+	                glut.glutBitmapString(GLUT.BITMAP_9_BY_15, "movingZ: " + getZOffset());
+	                gl.glWindowPos2d(xoff, y - 2*yoff);
+	                glut.glutBitmapString(GLUT.BITMAP_9_BY_15, "time/condition : " + String.format("%.3f", getWeather().getTime()) + "/" + getWeather().getCondition().toString());
 	                gl.glPopMatrix();
 	            }
         	
@@ -503,7 +508,6 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 
                 // increasing rotation for the next iteration                   
                 rotateX += rotationVelocity;
-  
                 //gl.glFlush(); // GO FAST ???
             	//gLDrawable.swapBuffers(); // GO FAST ???  // should be done at the end (http://stackoverflow.com/questions/1540928/jogl-double-buffering)
             	
@@ -511,6 +515,8 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
         }
 
         public int getZOffset() { return movingZ; }
+
+        public Weather getWeather() { return weather; }
 
 		public void initAgents()	{
 

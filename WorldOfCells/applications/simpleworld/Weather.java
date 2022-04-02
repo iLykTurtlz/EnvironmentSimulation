@@ -61,7 +61,7 @@ public class Weather {
         float z = 50f + (float) Math.cos(speed) * world.getLandscape().landscape[0].length; //50f base height
         gl.glTranslatef(x, y, z + world.getLandscape().getZOffset());
         gl.glColor3f(1f, 0.8f, 0f);
-        glut.glutSolidSphere(10, 10, 10);
+        glut.glutSolidSphere(10, 20, 20);
 
         gl.glPopMatrix();
       /* drawSphere(gl, 5, 5, 20, 20);

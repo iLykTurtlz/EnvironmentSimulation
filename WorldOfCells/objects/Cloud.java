@@ -22,7 +22,7 @@ public class Cloud extends UniqueObject{
 		len = 20f + (float) (Math.random() * 100);
 		size = 1f + ((float) Math.random()) % .35f + 0.05f;
 		altitude += (float) Math.random() * 200f;
-		color = (float) Math.random() * 0.5f + 0.25f;
+		color = (float) Math.random() * 0.35f + 0.25f;
 		speed = __world.getLandscape().getWeather().getTimeSpeed()*((float) (Math.random() * 100f + 25f));
 	}
 
@@ -38,14 +38,14 @@ public class Cloud extends UniqueObject{
     	float zoff = myWorld.getLandscape().getZOffset() + altitude;
 
     	gl.glBegin(gl.GL_QUADS);
-
-        gl.glColor4f(0f, 1f, 1f, color);
+        float t = (float) Math.cos(myWorld.getLandscape().getWeather().getTime());
+        gl.glColor4f(1f, 1f, 1f, color);
 
     	//lower face
         gl.glVertex3f( offset+x2*stepX-lenX-len, offset+y2*stepY-lenY, 0.1f*normalizeHeight + zoff);
         gl.glVertex3f( offset+x2*stepX-lenX-len, offset+y2*stepY+lenY+len, 0.1f*normalizeHeight + zoff);
 
-        gl.glColor4f(1f, 1f, 0f, color);
+        gl.glColor4f(1f, 1f, t, color);
         gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY+len, 0.1f*normalizeHeight + zoff);
         gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, 0.1f*normalizeHeight + zoff);
 
@@ -54,8 +54,6 @@ public class Cloud extends UniqueObject{
         gl.glVertex3f( offset+x2*stepX-lenX-len, offset+y2*stepY-lenY, 0.1f*normalizeHeight + zoff);
         gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, 0.1f*normalizeHeight + zoff);
         gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, 0.1f*normalizeHeight*size + zoff);
-
-        gl.glEnd();
 
         //gl.glColor3f(1f,0.f,0.f);
         gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY+len, 0.1f*normalizeHeight*size + zoff);
@@ -81,6 +79,9 @@ public class Cloud extends UniqueObject{
         gl.glVertex3f( offset+x2*stepX-lenX-len, offset+y2*stepY+lenY+len, 0.1f*normalizeHeight*size + zoff);
         gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY+len, 0.1f*normalizeHeight*size + zoff);
         gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, 0.1f*normalizeHeight*size + zoff);
+
+
+        gl.glEnd();
 
     }
 }

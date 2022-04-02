@@ -74,7 +74,9 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 		
 		static boolean DISPLAY_OBJECTS = true; // useful to deactivate if view_from_above
 		
-		final static boolean DISPLAY_FPS = true; // on-screen display
+		static boolean DISPLAY_FPS = true; // on-screen display
+
+		static boolean DISPLAY_HELP = true; // on-screen display
 
 		
 		/*
@@ -319,7 +321,24 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 	                gl.glWindowPos2d(xoff, y - yoff);
 	                glut.glutBitmapString(GLUT.BITMAP_9_BY_15, "movingZ: " + getZOffset());
 	                gl.glWindowPos2d(xoff, y - 2*yoff);
-	                glut.glutBitmapString(GLUT.BITMAP_9_BY_15, "time/condition : " + String.format("%.3f", getWeather().getTime()) + "/" + getWeather().getCondition().toString());
+	                glut.glutBitmapString(GLUT.BITMAP_9_BY_15, "time speed/condition : " + String.format("%.1f", getWeather().getTimeSpeed()*1000f) + "/" + getWeather().getCondition().toString());
+	                if (DISPLAY_HELP) {
+                        gl.glWindowPos2d(xoff, 30);
+                        glut.glutBitmapString(GLUT.BITMAP_HELVETICA_10,
+                            "           [b] toggle display info\t" +
+                            "           [h] toggle help\t" +
+                            "           [v] change view\t" +
+                            "           [o] objects display on/off\t" +
+                            "           [z] decrease altitude booster\t" +
+                            "           [a] increase altitude booster\t");
+                        gl.glWindowPos2d(xoff, 10);
+                        glut.glutBitmapString(GLUT.BITMAP_HELVETICA_10,
+                            "           [l/m] increase/decrease z-axis\t" +
+                            "           [u/i] increase/decrase speed time\n" +
+                            " [cursor keys] navigate in the landscape\n" +
+                            "         [q/d] rotation with landscape\n" +
+                            " [cursor keys] navigate\n");
+                    }
 	                gl.glPopMatrix();
 	            }
         	
@@ -686,7 +705,18 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 			case KeyEvent.VK_D:
 				rotationVelocity+=0.1;
 				break;
-			case KeyEvent.VK_H:
+            case KeyEvent.VK_U:
+                weather.setTimeSpeed(weather.getTimeSpeed() + 0.0001f);
+                break;
+            case KeyEvent.VK_I:
+                weather.setTimeSpeed(weather.getTimeSpeed() - 0.0001f);
+                break;
+            case KeyEvent.VK_B:
+                DISPLAY_FPS = !DISPLAY_FPS;
+                break;
+            case KeyEvent.VK_H:
+                DISPLAY_HELP = !DISPLAY_HELP;
+			/*case KeyEvent.VK_H:
 				System.out.println(
 						"Help:\n" +
 						"           [v] change view\n" +
@@ -694,11 +724,12 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 						"           [z] decrease altitude booster\n" +
 						"           [a] increase altitude booster\n" +
 						"           [l/m] increase/decrease z-axis\n" +
+						"           [u/i] increase/decrase speed time\n" +
 						" [cursor keys] navigate in the landscape\n" +
 						"         [q/d] rotation wrt landscape\n" +
 						" [cursor keys] navigate\n"
 						);
-				break;
+				break;*/
 			default:
 				break;
 			}

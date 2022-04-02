@@ -36,6 +36,10 @@ public class Weather {
         }
     }
 
+    public void setTimeSpeed(float speed) {
+        this.time_speed = Math.max(0f, speed);
+    }
+
     public static float getTimeSpeed() {
         return time_speed;
     }

@@ -309,6 +309,8 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 	                GLUT glut = new GLUT();
 	                gl.glTranslatef(0, 0, 0);
 	                glut.glutBitmapString(GLUT.BITMAP_HELVETICA_18, "fps: " + lastFpsValue);
+	                gl.glWindowPos2d(0, 700);
+	                glut.glutBitmapString(GLUT.BITMAP_HELVETICA_18, "movingZ: " + getZOffset());
 	                gl.glPopMatrix();
 	            }
         	
@@ -497,10 +499,10 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 	            	_myWorld.displayUniqueObjects(_myWorld,gl,movingX,movingY,offset,stepX,stepY,lenX,lenY,normalizeHeight); 
 	            }
 
-	            gl.glEnd();      		
+	            gl.glEnd();
 
                 // increasing rotation for the next iteration                   
-                rotateX += rotationVelocity; 
+                rotateX += rotationVelocity;
   
                 //gl.glFlush(); // GO FAST ???
             	//gLDrawable.swapBuffers(); // GO FAST ???  // should be done at the end (http://stackoverflow.com/questions/1540928/jogl-double-buffering)
@@ -642,7 +644,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 				VIEW_FROM_ABOVE = !VIEW_FROM_ABOVE ;
 				break;
 			case KeyEvent.VK_R:
-				//MY_LIGHT_RENDERING = !MY_LIGHT_RENDERING;
+				MY_LIGHT_RENDERING = !MY_LIGHT_RENDERING;
 				break;
 			case KeyEvent.VK_O:
 				DISPLAY_OBJECTS = !DISPLAY_OBJECTS;

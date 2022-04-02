@@ -12,7 +12,7 @@ public class Weather {
     private long last_checked = 0;
     private static final float WEATHER_UPDATE_DELAY = 10f; //10 seconds
     private Condition weather = Condition.SUNNY; //sunny default
-    private float time_speed = 0.01f;
+    private float time_speed = 0.001f; //0.001 is good
     private GLUT glut;
 
     public Weather(World world) {
@@ -21,6 +21,7 @@ public class Weather {
     }
 
     public void step() {
+        //updateWeather();
         elapsed_time += time_speed;
     }
 
@@ -52,14 +53,13 @@ public class Weather {
         //Math.sin simulates the weather conditions as the function is perodically repeated and corresponds to the schedule of day to night
         float speed = getTime();
         float time_value = (float) Math.max(0f, Math.cos(speed));
-        gl.glClearColor(0.5f, time_value/4f, time_value, 0.5f); //sunset -> day
+        gl.glClearColor(0.3f, time_value/2f, time_value, 0.5f); //sunset -> day
         //gl.glLoadIdentity();
         gl.glPushMatrix();
-
         float x = (float) Math.sin(speed) * world.getLandscape().landscape.length;
         float y = (float) Math.sin(speed) * world.getLandscape().landscape.length / 3f; //move the sun diagonally
-        float z = 50f + (float) Math.cos(speed) * world.getLandscape().landscape[0].length;
-        gl.glTranslatef(x, y, z);
+        float z = 50f + (float) Math.cos(speed) * world.getLandscape().landscape[0].length; //50f base height
+        gl.glTranslatef(x, y, z + world.getLandscape().getZOffset());
         gl.glColor3f(1f, 0.8f, 0f);
         glut.glutSolidSphere(10, 10, 10);
 

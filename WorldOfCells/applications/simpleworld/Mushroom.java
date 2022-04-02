@@ -13,8 +13,8 @@ public class Mushroom extends Plant {
     public Mushroom(int __x , int __y, WorldOfTrees __world)   {
         super(__x,__y,__world);
         this.stemColor = new float[] {1.f,0.f,1.f};
-        this.centerRadius = 0.05f;
-        this.centerHeight = 1.0f;    
+        this.centerRadius = 0.2f;
+        this.centerHeight = 2.0f;    
         this.max_size = 11;
     }
 
@@ -22,35 +22,35 @@ public class Mushroom extends Plant {
         super.step();
     }
 
-    public static float[] incrementColor(float petalColor[])    {
+    public static float[] incrementColor(float color[])    {
         /* Increments the color according to the spectrum*/
         // TO DO : make this BETTER!
         float[] rgb = new float[3];
-        for (int i=0; i<petalColor.length; i++) {
-            if (petalColor[i] == 0.f)   {
-                if (petalColor[(i+1)%petalColor.length] == 0.f)
+        for (int i=0; i<color.length; i++) {
+            if (color[i] == 0.f)   {
+                if (color[(i+1)%color.length] == 0.f)
                     rgb[i] = 0.5f;
                 else
-                    rgb[i] = petalColor[i];
+                    rgb[i] = color[i];
             }
-            else if (petalColor[i] == 0.5f) {
-                if (petalColor[(i+1)%petalColor.length] == 0.f)
+            else if (color[i] == 0.5f) {
+                if (color[(i+1)%color.length] == 0.f)
                     rgb[i] = 1.f;
                 else
                     rgb[i] = 0.f;
             }
             else {
-                if (petalColor[(i+1)%petalColor.length] == 1.f)
+                if (color[(i+1)%color.length] == 1.f)
                     rgb[i] = 0.5f;
                 else
-                    rgb[i] = petalColor[i];
+                    rgb[i] = color[i];
             }
         }
         return rgb;
     }
 
 
-    public void grow(World myWorld, int nbBands, float heightDecrement, float h, float bandWidth, float[] bandColor, float radius, int x2, int y2, float height, float altitude, GL2 gl,int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)  {
+    public void drawBands(World myWorld, int nbBands, float heightDecrement, float h, float bandWidth, float[] bandColor, float radius, int x2, int y2, float height, float altitude, GL2 gl,int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)  {
         /* This method recursively adds colored bands to the mushroom, incrementing its radius */
         int[] sequence = new int[4];
         
@@ -99,7 +99,7 @@ public class Mushroom extends Plant {
 
         //recursive call limited by size which represents the plant's growth state.
         if (nbBands < size)   
-            grow(myWorld, ++nbBands, heightDecrement + 0.005f,h - heightDecrement, 0.2f, incrementColor(bandColor), radius+bandWidth, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight); 
+            drawBands(myWorld, ++nbBands, heightDecrement + 0.015f,h - heightDecrement, 0.2f, incrementColor(bandColor), radius+bandWidth, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight); 
         
         
     }
@@ -136,7 +136,7 @@ public class Mushroom extends Plant {
         gl.glVertex3f( offset+x2*stepX+lenX*centerRadius, offset+y2*stepY+lenY*centerRadius, altitude + centerHeight);
         gl.glVertex3f( offset+x2*stepX+lenX*centerRadius, offset+y2*stepY-lenY*centerRadius, altitude + centerHeight);
 
-        grow(myWorld, 0, 0, centerHeight, 0.2f, new float[]{1.f,0.5f,0.f}, 0.1f, x2, y2, height + zoff, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+        drawBands(myWorld, 0, 0, centerHeight, 0.2f, new float[]{1.f,0.5f,0.f}, centerRadius, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight);
        
 
         

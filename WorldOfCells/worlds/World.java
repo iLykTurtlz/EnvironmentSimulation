@@ -21,6 +21,8 @@ import objects.*;
 
 public abstract class World {
 	
+    protected double[][] map;
+
 	protected int iteration = 0;
 
 	protected ArrayList<UniqueObject> uniqueObjects = new ArrayList<UniqueObject>();
@@ -52,9 +54,11 @@ public abstract class World {
     
     public void init( int __dxCA, int __dyCA, double[][] landscape )
     {
+        this.map = landscape;
+
     	dxCA = __dxCA;
     	dyCA = __dyCA;
-    	
+
     	iteration = 0;
 
     	this.cellsHeightValuesCA = new CellularAutomataDouble (__dxCA,__dyCA,false);
@@ -126,6 +130,10 @@ public abstract class World {
     abstract public void setCellValue(int x, int y, int state);
     
     // ---- 
+
+    public double[][] getMap() {
+        return map;
+    }
     
     public double getCellHeight(int x, int y) // used by the visualization code to set correct height values
     {
@@ -154,7 +162,7 @@ public abstract class World {
 		
     	for ( int i = 0 ; i < uniqueObjects.size(); i++ ) {
             UniqueObject object = uniqueObjects.get(i);
-            //if (object instanceof Cloud && _myWorld.getLandscape().VIEW_FROM_ABOVE) continue;
+            if (object instanceof Cloud && _myWorld.getLandscape().VIEW_FROM_ABOVE) continue;
     		uniqueObjects.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
         }
     	for ( int i = 0 ; i < uniqueDynamicObjects.size(); i++ )
@@ -169,9 +177,6 @@ public abstract class World {
 	public double getMaxEverHeight() { return this.maxEverHeightValue; }
 	public double getMinEverHeight() { return this.minEverHeightValue; }
 
-	abstract public void setLandscape(Landscape l);
-	abstract public Landscape getLandscape();
-
 	public abstract void addPredator(int posx, int posy);
 
 	public abstract void addPrey(int posx, int posy);
@@ -180,6 +185,15 @@ public abstract class World {
 
 
 	/* GETTERS AND SETTERS*/
+
+	abstract public void setLandscape(Landscape l);
+
+	public void setCellState(int x, int y, float[] color) {
+        this.cellsColorValues.setCellState(x, y, color);
+    }
+
+	abstract public Landscape getLandscape();
+
 	public PoolPredator getPredators()	{
 		return predators;
 	}

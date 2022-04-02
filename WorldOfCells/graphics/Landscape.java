@@ -162,11 +162,13 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
         {
     		_myWorld = __myWorld;
 
+    		_myWorld.setLandscape(this);
+
     		landscape = LoadFromFileLandscape.load(__filename,scaling,landscapeAltitudeRatio);
 
     		initLandscape();
         }
-        
+        public int x, y;
         /**
          * 
          */
@@ -178,8 +180,18 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
     		System.out.println("Landscape contains " + dxView*dyView + " tiles. (" + dxView + "x" + dyView +")");
 
     		weather = new Weather(_myWorld);
+    		landscape = weather.initVolcano(landscape);
         	
     		_myWorld.init(dxView-1,dyView-1,landscape);
+
+
+    		float color[] = {1f, 0f, 0f};
+    		_myWorld.setCellState(x, y, color);
+    		_myWorld.setCellState(x-1, y, color);
+    		color = new float[]{0f, 0f, 1f};
+    		_myWorld.setCellState(x+1, y, color);
+    		_myWorld.setCellState(x, y-1, color);
+    		_myWorld.setCellState(x, y+1, color);
     		
     		heightFactor = 32.0f; //64.0f; // was: 32.0f;
             heightBooster = 6.0; // default: 2.0 // 6.0 makes nice high mountains.
@@ -266,12 +278,13 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
                 gl.glEnable(gl.GL_BLEND);
                 
                 // Culling - display only triangles facing the screen
-                //gl.glCullFace(GL.GL_FRONT);
-                //gl.glEnable(GL.GL_CULL_FACE);
+                gl.glCullFace(GL.GL_FRONT);
+                gl.glEnable(GL.GL_CULL_FACE);
 
                 // trucs d'alex
                 gl.glEnable(GL.GL_DITHER);
 
+        		weather.drawVolcano(gl);
                 
         }
         

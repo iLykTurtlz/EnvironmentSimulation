@@ -170,7 +170,9 @@ public class WorldOfTrees extends World {
 		case 1: // trees: green, fire, burnt
 		case 2:
 		case 3:
-			Tree.displayObjectAt(_myWorld,gl,cellState, x, y, height, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+            if (!_myWorld.getLandscape().getWeather().onVolcano(x, y)) {
+                Tree.displayObjectAt(_myWorld,gl,cellState, x, y, height, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+            }
 		default:
 			// nothing to display at this location.
 		}

@@ -259,6 +259,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
                 gl.glDepthFunc(GL.GL_LEQUAL);
                 gl.glHint(GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
 
+                // Enables alpha color value
                 gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA);
                 gl.glEnable(gl.GL_BLEND);
                 
@@ -555,11 +556,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
         //@Override
         public void reshape(GLAutoDrawable gLDrawable, int x, int y, int width, int height) {
         		if ( this.it == 0 )
-		        	System.out.println( "W"+"o"+"r"+"l"+"d"+" "+"O"+
-		            "f"+" "+"C"+"e"+"l"+"l"+"s"+" "+"-"+" "+"n"+"i"+
-		            "c"+"o"+"l"+"a"+"s"+"."+"b"+"r"+"e"+"d"+"e"+"c"+
-		            "h"+"e"+(char)(0x40)+"u"+"p"+"m"+"c"+"."+"f"+"r"+
-		            ","+" "+"2"+"0"+"1"+"3"+"\n");
+		        	System.out.println( "World Of Cells by Jarski Paul and Sok Chanattan 2022 - based on Nicolas Bredeche's version of 2013");
         		GL2 gl = gLDrawable.getGL().getGL2();
                 final float aspect = (float) width / (float) height;
                 gl.glMatrixMode(GLMatrixFunc.GL_PROJECTION);

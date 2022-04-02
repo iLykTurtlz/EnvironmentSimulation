@@ -60,9 +60,12 @@ public class Weather {
         gl.glClearColor(0.3f, time_value/2f, time_value, 0.5f); //sunset -> day
         //gl.glLoadIdentity();
         gl.glPushMatrix();
-        float x = (float) Math.sin(speed) * world.getLandscape().landscape.length;
+
+        //Drawing the sun
+
+        float x = (float) Math.sin(speed) * world.getLandscape().landscape.length * 1.5f;
         float y = (float) Math.sin(speed) * world.getLandscape().landscape.length / 3f; //move the sun diagonally
-        float z = 50f + (float) Math.cos(speed) * world.getLandscape().landscape[0].length; //50f base height
+        float z = 70f + (float) Math.cos(speed) * world.getLandscape().landscape[0].length; //70f base height
         gl.glTranslatef(x, y, z + world.getLandscape().getZOffset());
         gl.glColor3f(1f, 0.8f, 0f);
         glut.glutSolidSphere(10, 20, 20);

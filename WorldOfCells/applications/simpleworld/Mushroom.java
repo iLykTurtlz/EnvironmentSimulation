@@ -50,7 +50,7 @@ public class Mushroom extends Plant {
     }
 
 
-    public void grow(int nbBands, float heightDecrement, float h, float bandWidth, float[] bandColor, float radius, int x2, int y2, float height, float altitude, GL2 gl,int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)  {
+    public void grow(World myWorld, int nbBands, float heightDecrement, float h, float bandWidth, float[] bandColor, float radius, int x2, int y2, float height, float altitude, GL2 gl,int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)  {
         /* This method recursively adds colored bands to the mushroom, incrementing its radius */
         int[] sequence = new int[4];
         
@@ -67,28 +67,28 @@ public class Mushroom extends Plant {
             for (int j=0; j<sequence.length; j++)   {
                 switch (sequence[j])   {        //8 vertices used to draw the concentric boxes.  0-3 : inner square, 4-7 : outer square
                     case 0:
-                        gl.glVertex3f( offset+x2*stepX-lenX*radius, offset+y2*stepY-lenY*radius, height*normalizeHeight + h);
+                        gl.glVertex3f( offset+x2*stepX-lenX*radius, offset+y2*stepY-lenY*radius, height*normalizeHeight + myWorld.getLandscape().getZOffset()+ h);
                         break;
                     case 1:
-                        gl.glVertex3f( offset+x2*stepX-lenX*radius, offset+y2*stepY+lenY*radius, height*normalizeHeight + h);
+                        gl.glVertex3f( offset+x2*stepX-lenX*radius, offset+y2*stepY+lenY*radius, height*normalizeHeight + myWorld.getLandscape().getZOffset()+ h);
                         break;
                     case 2:
-                        gl.glVertex3f( offset+x2*stepX+lenX*radius, offset+y2*stepY+lenY*radius, height*normalizeHeight + h);
+                        gl.glVertex3f( offset+x2*stepX+lenX*radius, offset+y2*stepY+lenY*radius, height*normalizeHeight + myWorld.getLandscape().getZOffset()+ h);
                         break;
                     case 3:
-                        gl.glVertex3f( offset+x2*stepX+lenX*radius, offset+y2*stepY-lenY*radius, height*normalizeHeight + h);
+                        gl.glVertex3f( offset+x2*stepX+lenX*radius, offset+y2*stepY-lenY*radius, height*normalizeHeight + myWorld.getLandscape().getZOffset()+ h);
                         break;
                     case 4:
-                        gl.glVertex3f( offset+x2*stepX-lenX*(radius+bandWidth), offset+y2*stepY-lenY*(radius+bandWidth), height*normalizeHeight + h - heightDecrement);
+                        gl.glVertex3f( offset+x2*stepX-lenX*(radius+bandWidth), offset+y2*stepY-lenY*(radius+bandWidth), height*normalizeHeight + myWorld.getLandscape().getZOffset()+ h - heightDecrement);
                         break;
                     case 5:
-                        gl.glVertex3f( offset+x2*stepX-lenX*(radius+bandWidth), offset+y2*stepY+lenY*(radius+bandWidth), height*normalizeHeight + h - heightDecrement);
+                        gl.glVertex3f( offset+x2*stepX-lenX*(radius+bandWidth), offset+y2*stepY+lenY*(radius+bandWidth), height*normalizeHeight + myWorld.getLandscape().getZOffset()+ h - heightDecrement);
                         break;
                     case 6:
-                        gl.glVertex3f( offset+x2*stepX+lenX*(radius+bandWidth), offset+y2*stepY+lenY*(radius+bandWidth), height*normalizeHeight + h - heightDecrement);
+                        gl.glVertex3f( offset+x2*stepX+lenX*(radius+bandWidth), offset+y2*stepY+lenY*(radius+bandWidth), height*normalizeHeight + myWorld.getLandscape().getZOffset()+ h - heightDecrement);
                         break;
                     case 7:
-                        gl.glVertex3f( offset+x2*stepX+lenX*(radius+bandWidth), offset+y2*stepY-lenY*(radius+bandWidth), height*normalizeHeight + h - heightDecrement);
+                        gl.glVertex3f( offset+x2*stepX+lenX*(radius+bandWidth), offset+y2*stepY-lenY*(radius+bandWidth), height*normalizeHeight + myWorld.getLandscape().getZOffset()+ h - heightDecrement);
                         break;
                     default:
                         System.out.println("Erreur : creation d'une fleur");
@@ -99,7 +99,7 @@ public class Mushroom extends Plant {
 
         //recursive call limited by size which represents the plant's growth state.
         if (nbBands < size)   
-            grow(++nbBands, heightDecrement + 0.005f,h - heightDecrement, 0.1f, incrementColor(bandColor), radius+bandWidth, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight); 
+            grow(myWorld, ++nbBands, heightDecrement + 0.005f,h - heightDecrement, 0.2f, incrementColor(bandColor), radius+bandWidth, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight); 
         
         
     }
@@ -136,7 +136,7 @@ public class Mushroom extends Plant {
         gl.glVertex3f( offset+x2*stepX+lenX*centerRadius, offset+y2*stepY+lenY*centerRadius, altitude + centerHeight);
         gl.glVertex3f( offset+x2*stepX+lenX*centerRadius, offset+y2*stepY-lenY*centerRadius, altitude + centerHeight);
 
-        grow(0, 0, centerHeight, 0.1f, new float[]{1.f,0.5f,0.f}, 0.1f, x2, y2, height + zoff, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+        grow(myWorld, 0, 0, centerHeight, 0.2f, new float[]{1.f,0.5f,0.f}, 0.1f, x2, y2, height + zoff, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight);
        
 
         

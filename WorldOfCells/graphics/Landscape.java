@@ -258,13 +258,16 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
                 gl.glEnable(GL.GL_DEPTH_TEST);
                 gl.glDepthFunc(GL.GL_LEQUAL);
                 gl.glHint(GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL.GL_NICEST);
+
+                gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA);
+                gl.glEnable(gl.GL_BLEND);
                 
                 // Culling - display only triangles facing the screen
                 //gl.glCullFace(GL.GL_FRONT);
                 //gl.glEnable(GL.GL_CULL_FACE);
 
                 // trucs d'alex
-                //gl.glEnable(GL.GL_DITHER);
+                gl.glEnable(GL.GL_DITHER);
 
                 
         }

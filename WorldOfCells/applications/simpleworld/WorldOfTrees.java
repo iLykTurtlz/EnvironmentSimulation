@@ -64,7 +64,7 @@ public class WorldOfTrees extends World {
     			uniqueObjects.add(new BridgeBlock(110,110+i,this));
     	}
     	
-
+        uniqueObjects.add(new Cloud(110, 110, this));
 		/*
 		for (int i=0; i<40; i++)	{
 			int posx = (int)(Math.random()*__dxCA);

@@ -68,6 +68,15 @@ public class Weather {
        gl.glPopMatrix();*/
     }
 
+    public void drawVolcano(GL2 gl) {
+        //1 - look on the map a place where the volcano can spawn
+        //make it grow or instantly spawn?
+        //2 - increase altitude based on the center thanks to sinus or cosinus or any growiwng function (landscape[x][y] *= function(x/x,y)
+        //will keep the previous perlin noise values but only increase it => random volcano)
+        //3 - add lava inside of it (the generation of the volcano will make a hollow inside of it to pop lava
+        //change color of cells and increase height
+    }
+
     /**
      * Method to draw a sphere in OpenGL.
      *

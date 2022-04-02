@@ -14,7 +14,7 @@ abstract public class UniqueDynamicObject // UniqueObject are object defined wit
 	protected int x,y;
 	protected WorldOfTrees world;
 	
-	public UniqueDynamicObject(int __x, int __y, WorldOfTrees __world) 
+	public UniqueDynamicObject(int __x, int __y, WorldOfTrees __world)
 	{
 		this.x = __x;
 		this.y = __y;

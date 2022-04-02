@@ -10,7 +10,7 @@ import worlds.World;
 
 public class BridgeBlock extends UniqueObject{
 	
-	public BridgeBlock ( int __x , int __y , World __world )
+	public BridgeBlock ( float __x , float __y , World __world )
 	{
 		super(__x,__y,__world);
 	}
@@ -18,9 +18,9 @@ public class BridgeBlock extends UniqueObject{
     public void displayUniqueObject(World myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)
     {
 
-    	int x2 = (x-(offsetCA_x%myWorld.getWidth()));
+    	float x2 = (x-(offsetCA_x%myWorld.getWidth()));
     	if ( x2 < 0) x2+=myWorld.getWidth();
-    	int y2 = (y-(offsetCA_y%myWorld.getHeight()));
+    	float y2 = (y-(offsetCA_y%myWorld.getHeight()));
     	if ( y2 < 0) y2+=myWorld.getHeight();
 
     	float zoff = myWorld.getLandscape().getZOffset();

@@ -11,25 +11,33 @@ import worlds.World;
 public class Cloud extends UniqueObject{
 
     private float len, size; //width, height
+    private float x_inc = 0f;
+    private float altitude = 70f;
+    private float color;
+    private float speed;
 
-	public Cloud ( int __x , int __y , World __world )
+	public Cloud ( float __x , float __y , World __world )
 	{
 		super(__x,__y,__world);
-		len = 50f + (float) (Math.random() * 100);
-		size = 1f + ((float) Math.random()) % .5f + 0.1f;
+		len = 20f + (float) (Math.random() * 100);
+		size = 1f + ((float) Math.random()) % .35f + 0.05f;
+		altitude += (float) Math.random() * 200f;
+		color = (float) Math.random() * 0.5f + 0.25f;
+		speed = __world.getLandscape().getWeather().getTimeSpeed()*((float) (Math.random() * 100f + 25f));
 	}
 
     public void displayUniqueObject(World myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)
     {
+        x = (x + speed) % (myWorld.getWidth());
 
-    	int x2 = (x-(offsetCA_x%myWorld.getWidth()));
+    	float x2 = (x-(offsetCA_x%myWorld.getWidth()));
     	if ( x2 < 0) x2+=myWorld.getWidth();
-    	int y2 = (y-(offsetCA_y%myWorld.getHeight()));
+    	float y2 = (y-(offsetCA_y%myWorld.getHeight()));
     	if ( y2 < 0) y2+=myWorld.getHeight();
 
-    	float zoff = myWorld.getLandscape().getZOffset() + 40;
+    	float zoff = myWorld.getLandscape().getZOffset() + altitude;
 
-        gl.glColor4f(1f, 1f, 1f, 0.5f);
+        gl.glColor4f(1f, 1f, 1f, color);
 
     	//lower face
         gl.glVertex3f( offset+x2*stepX-lenX-len, offset+y2*stepY-lenY, 0.1f*normalizeHeight + zoff);

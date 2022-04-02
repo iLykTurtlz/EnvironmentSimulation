@@ -70,7 +70,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 		
 		//final static double landscapeAltitudeRatio = 0.6; // 0.5: half mountain, half water ; 0.3: fewer water
 		
-		static boolean VIEW_FROM_ABOVE = false; // also deactivate altitudes
+		public static boolean VIEW_FROM_ABOVE = false; // also deactivate altitudes
 		
 		static boolean DISPLAY_OBJECTS = true; // useful to deactivate if view_from_above
 		

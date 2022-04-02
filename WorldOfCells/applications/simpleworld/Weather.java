@@ -12,7 +12,7 @@ public class Weather {
     private long last_checked = 0;
     private static final float WEATHER_UPDATE_DELAY = 10f; //10 seconds
     private Condition weather = Condition.SUNNY; //sunny default
-    private float time_speed = 0.001f; //0.001 is good
+    private static float time_speed = 0.001f; //0.001 is good
     private GLUT glut;
 
     public Weather(World world) {
@@ -34,6 +34,10 @@ public class Weather {
             setCondition(Condition.values()[random]);
             System.out.println("[DEBUG] Weather updated to " + getCondition().toString());
         }
+    }
+
+    public static float getTimeSpeed() {
+        return time_speed;
     }
 
     public float getTime() {

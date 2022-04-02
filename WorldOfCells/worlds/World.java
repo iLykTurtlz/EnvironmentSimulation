@@ -152,8 +152,11 @@ public abstract class World {
 			float stepX, float stepY, float lenX, float lenY, float normalizeHeight) 
 	{
 		
-    	for ( int i = 0 ; i < uniqueObjects.size(); i++ )
+    	for ( int i = 0 ; i < uniqueObjects.size(); i++ ) {
+            UniqueObject object = uniqueObjects.get(i);
+            //if (object instanceof Cloud && _myWorld.getLandscape().VIEW_FROM_ABOVE) continue;
     		uniqueObjects.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
+        }
     	for ( int i = 0 ; i < uniqueDynamicObjects.size(); i++ )
     		uniqueDynamicObjects.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
 		

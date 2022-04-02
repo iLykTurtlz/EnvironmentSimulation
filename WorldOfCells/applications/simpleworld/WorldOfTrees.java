@@ -15,6 +15,7 @@ public class WorldOfTrees extends World {
 
     protected ForestCA cellularAutomata;
     protected Landscape landscape;
+    private static final int NB_CLOUDS = 30;
 
     public void init ( int __dxCA, int __dyCA, double[][] landscape )
     {
@@ -63,8 +64,10 @@ public class WorldOfTrees extends World {
     		else
     			uniqueObjects.add(new BridgeBlock(110,110+i,this));
     	}
-    	
-        uniqueObjects.add(new Cloud(110, 110, this));
+        //add clouds
+
+        for (int i = 0; i < NB_CLOUDS; i++)
+            uniqueObjects.add(new Cloud((int) (Math.random() * landscape.length), (int) (Math.random() * landscape[0].length), this));
 		/*
 		for (int i=0; i<40; i++)	{
 			int posx = (int)(Math.random()*__dxCA);

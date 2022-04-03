@@ -10,7 +10,7 @@ public class Pineapple extends Plant {
     public Pineapple(int __x , int __y, WorldOfTrees __world)  {
         super(__x,__y,__world);
         this.growth_rate = 900;
-        this.numBands = 10;
+        this.nbBands = 10;
         this.baseHeight = 4.0f;
         this.fruitColor = new float[]{1.f,1.f,0.f};
     }
@@ -19,10 +19,10 @@ public class Pineapple extends Plant {
         super.step();
     }
 
-
+/*
 
     public void drawBottomOrTop(GL2 gl, int x2, int y2, float offset, float stepX, float stepY, float lenX, float lenY, float radius, float altitude, float h)  {
-        /* Draws an octagon for the bottom or top of the fruit */
+        // Draws an octagon for the bottom or top of the fruit 
         gl.glVertex3f( offset+x2*stepX-lenX*radius / 3, offset+y2*stepY-lenY*radius, altitude + h );
         gl.glVertex3f( offset+x2*stepX-lenX*radius, offset+y2*stepY-lenY*radius / 3, altitude + h );
         gl.glVertex3f( offset+x2*stepX-lenX*radius, offset+y2*stepY+lenY*radius / 3, altitude + h );
@@ -106,7 +106,8 @@ public class Pineapple extends Plant {
 
 
     }
-
+    */
+/*
     public void displayUniqueObject(World myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight ) {
 
         
@@ -115,7 +116,7 @@ public class Pineapple extends Plant {
         float height = Math.max ( 0 , (float)myWorld.getCellHeight(x, y) );
         float zoff = myWorld.getLandscape().getZOffset();
         float altitude = (float)height * normalizeHeight +zoff;
-        float radius1 = (float) size*(Math.sqrt(0.125 - (x-0.5)*(x-0.5)));
+        //float radius1 = (float) size*(Math.sqrt(0.125 - (x-0.5)*(x-0.5)));
 
         int x2 = (x-(offsetCA_x%myWorld.getWidth()));
     	if ( x2 < 0) x2+=myWorld.getWidth();
@@ -136,9 +137,10 @@ public class Pineapple extends Plant {
 
 
         gl.glColor3f(fruitColor[0],fruitColor[1],fruitColor[2]);
-        drawBottomOrTop(gl, x2, y2, offset, stepX, stepY, lenX, lenY, radius, altitude, h);
-        drawFruit(radius, height, altitude,x2,y2,myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+        //drawBottomOrTop(gl, x2, y2, offset, stepX, stepY, lenX, lenY, radius, altitude, h);
+        //drawFruit(radius, height, altitude,x2,y2,myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
 
     }
     
+    */
 }

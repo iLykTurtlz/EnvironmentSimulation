@@ -187,11 +187,11 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 
     		float color[] = {1f, 0f, 0f};
     		_myWorld.setCellState(x, y, color);
-    		_myWorld.setCellState(x-1, y, color);
+    		_myWorld.setCellState((x-1 + landscape.length-1) % (landscape.length-1), y, color);
     		color = new float[]{0f, 0f, 1f};
-    		_myWorld.setCellState(x+1, y, color);
-    		_myWorld.setCellState(x, y-1, color);
-    		_myWorld.setCellState(x, y+1, color);
+    		_myWorld.setCellState((x+1) % (landscape.length-1), y, color);
+    		_myWorld.setCellState(x, (y-1 + landscape.length-1) % (landscape.length-1), color);
+    		_myWorld.setCellState(x, (y+1 + landscape.length-1) % (landscape.length-1), color);
     		
     		heightFactor = 32.0f; //64.0f; // was: 32.0f;
             heightBooster = 6.0; // default: 2.0 // 6.0 makes nice high mountains.
@@ -562,7 +562,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 			PoolPrey prey = _myWorld.getPrey();
 			//_myWorld.test();
 			ArrayList<Plant> plants = _myWorld.getPlants();  //???
-			
+
 			for (int x=0; x<_myWorld.getWidth(); x++)	{
 				for (int y=0; y<_myWorld.getHeight(); y++)	{
 					if (_myWorld.getCellHeight(x,y) > 0)	{

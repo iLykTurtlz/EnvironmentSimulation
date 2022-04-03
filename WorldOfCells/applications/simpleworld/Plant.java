@@ -30,9 +30,9 @@ public abstract class Plant extends UniqueDynamicObject {
         float height = Math.max ( 0 , (float)myWorld.getCellHeight(x, y) );
         float altitude = (float)height * normalizeHeight ;
 
-        int x2 = (x-(offsetCA_x%myWorld.getWidth()));
+        float x2 = (x-(offsetCA_x%myWorld.getWidth()));
     	if ( x2 < 0) x2+=myWorld.getWidth();
-    	int y2 = (y-(offsetCA_y%myWorld.getHeight()));
+    	float y2 = (y-(offsetCA_y%myWorld.getHeight()));
     	if ( y2 < 0) y2+=myWorld.getHeight();
         
 

@@ -143,8 +143,8 @@ public class Weather {
         float color[] = {1f, 0f, 0f};
         for (int xi = x - 4; xi < x + 4; xi++) {
             for (int yi = y - 4; yi < y + 4; yi++) {
-                int xm = (xi + landscape.length) % landscape.length;
-                int ym = (yi + landscape[0].length) % landscape[0].length;
+                int xm = (xi + landscape.length-1) % (landscape.length - 1);
+                int ym = (yi + landscape[0].length-1) % (landscape[0].length - 1);
                 world.setCellState(xm, ym, color);
             }
         }

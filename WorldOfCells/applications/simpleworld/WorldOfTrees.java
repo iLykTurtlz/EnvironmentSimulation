@@ -48,6 +48,7 @@ public class WorldOfTrees extends World {
 					/**/
 		        }
 		        else if (height >= WATER_LEVEL) {
+                    // sand
                     color[0] = 0.9f;
                     color[1] = 0.8f;
                     color[2] = 0.7f;

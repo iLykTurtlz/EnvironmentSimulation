@@ -85,6 +85,8 @@ public class Weather {
     private double[][] volcano_cells;
 
     public double[][] initVolcano(double land[][]) {
+
+
         //1 - look on the map a place where the volcano can spawn
         double max = 0;
         double landscape[][] = land;
@@ -130,6 +132,7 @@ public class Weather {
                 landscape[xm][ym] *= 0.5;
             }
         }*/
+
         return landscape;
     }
 

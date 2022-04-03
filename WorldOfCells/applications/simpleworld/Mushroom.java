@@ -17,16 +17,38 @@ public class Mushroom extends Plant {
         this.centerRadius = 0.2f;
         this.centerHeight = 2.0f;    
         this.max_size = 11;
-        this.curvature = 0.015f;     //needs to be a small value.  The height delta for each band is equal to decrement^x with x in [1,size], so the growth is exponential.
+        this.curvature = 0.015f;     //needs to be a small value.  The height delta for each band is equal to curvature^x with x in [1,size], so the growth is exponential.
     }
 
     public void step()  {
         super.step();
     }
 
-    public static float[] incrementColor(float color[])    {
+    public static void incrementColor(float color[])    {
         /* Increments the color according to the spectrum*/
         // TO DO : make this BETTER!
+
+        for (int i=0; i<color.length; i++)  {
+            if (color[i] == 0.f)  {
+                if (color[(i-1+color.length)%color.length] == 1.f && color[(i+1+color.length)%color.length] == 1.f) {
+                    color[i] = 0.5f;
+                }
+            }
+            else if (color[i] == 1.f)    {
+                if (color[(i-1+color.length)%color.length] == 0.f && color[(i+1+color.length)%color.length] == 1.f) {
+                    color[i] = 0.5f;
+                }
+
+            }
+            else {
+                if (color[(i-1+color.length)%color.length] == 1.f && color[(i+1+color.length)%color.length] == 0.f)   {
+                    color[i] = 1.f;
+                } else {
+                    color[i] = 0.f;
+                }
+            }
+        }
+        /*
         float[] rgb = new float[3];
         for (int i=0; i<color.length; i++) {
             if (color[i] == 0.f)   {
@@ -49,6 +71,7 @@ public class Mushroom extends Plant {
             }
         }
         return rgb;
+        */
     }
 
 
@@ -100,9 +123,10 @@ public class Mushroom extends Plant {
             }
         }
 
-        //recursive call limited by size which represents the plant's growth state.
+        //recursive call limited by size which represents the plant's current growth state.
         if (nbBands < size)   
-            drawBands(myWorld, ++nbBands, heightDecrement + curvature,h - heightDecrement, 0.2f, incrementColor(bandColor), radius+bandWidth, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight); 
+            incrementColor(bandColor);
+            drawBands(myWorld, ++nbBands, heightDecrement + curvature,h - heightDecrement, 0.2f, bandColor, radius+bandWidth, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight); 
         
         
     }

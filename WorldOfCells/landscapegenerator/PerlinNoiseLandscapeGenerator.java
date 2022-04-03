@@ -11,18 +11,17 @@ public class PerlinNoiseLandscapeGenerator {
     public static double[][] generatePerlinNoiseLandscape ( int dxView, int dyView, double scaling, double landscapeAltitudeRatio, int perlinLayerCount)
     {
     	double landscape[][] = new double[dxView][dyView];
-        double random_generation = 1d; //allows different generations since perlin noise is based on noise based on fixed primal numbers
-        // Math.random() * 20 + 1
+        double random_generation = Math.random() * 20 + 1; //allows different generations since perlin noise is based on noise based on fixed primal numbers
+        //
     	for (int x = 0; x < dxView; x++) {
     		for (int y = 0; y < dyView; y++) {
-                landscape[x][y] = perlinNoise2D(((double) x / (double) dxView * random_generation), ((double) y / (double) dyView * random_generation), 0.4d, perlinLayerCount); //low persistence for a smoother landscape (argument after random_generation (0.4d seems stable now)
+                landscape[x][y] = perlinNoise2D(((double) x / (double) dxView * random_generation), ((double) y / (double) dyView * random_generation), 0.4d, 10); //low persistence for a smoother landscape (argument after random_generation (0.4d seems stable now)
             }
         }
 
     	// scaling and polishing
     	landscape = LandscapeToolbox.scaleAndCenter(landscape, scaling, landscapeAltitudeRatio);
     	landscape = LandscapeToolbox.smoothLandscape(landscape);
-    	System.out.println("landscape:");
 
 		return landscape;
     }

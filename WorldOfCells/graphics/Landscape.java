@@ -184,7 +184,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
     		weather = new Weather(_myWorld);
     		landscape = weather.initVolcano(landscape);
         	
-    		_myWorld.init(dxView-1,dyView-1,landscape);
+    		_myWorld.init(dxView,dyView,landscape);
 
 
     		float color[] = {1f, 0f, 0f};

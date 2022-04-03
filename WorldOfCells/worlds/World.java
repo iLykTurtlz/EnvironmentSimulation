@@ -71,8 +71,8 @@ public abstract class World {
     		for ( int y = 0 ; y != dyCA ; y++ )
     		{
     			// compute height values (and amplitude) from the landscape for this CA cell 
-    			double minHeightValue = Math.min(Math.min(landscape[x][y],landscape[x+1][y]),Math.min(landscape[x][y+1],landscape[x+1][y+1]));
-    			double maxHeightValue = Math.max(Math.max(landscape[x][y],landscape[x+1][y]),Math.max(landscape[x][y+1],landscape[x+1][y+1])); 
+    			double minHeightValue = Math.min(Math.min(landscape[x][y],landscape[(x+1)%dxCA][y]),Math.min(landscape[x][(y+1)%dyCA],landscape[(x+1)%dxCA][(y+1)%dyCA]));
+    			double maxHeightValue = Math.max(Math.max(landscape[x][y],landscape[(x+1)%dxCA][y]),Math.max(landscape[x][(y+1)%dyCA],landscape[(x+1)%dxCA][(y+1)%dyCA]));
     			
     			if ( this.maxEverHeightValue < maxHeightValue )
     				this.maxEverHeightValue = maxHeightValue;

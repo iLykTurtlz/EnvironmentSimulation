@@ -34,7 +34,7 @@ public class Mushroom extends Plant {
                     color[i] = 0.5f;
                 }
             }
-            if (color[i] == 1.f)    {
+            else if (color[i] == 1.f)    {
                 if (color[(i-1+color.length)%color.length] == 0.f && color[(i+1+color.length)%color.length] == 1.f) {
                     color[i] = 0.5f;
                 }

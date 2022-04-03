@@ -20,7 +20,7 @@ public abstract class Agent extends UniqueDynamicObject{
     protected int speed;                    // between 0 and 100, varies relative to base speed as a function of the terrain
     protected int age;
     protected int orientation;                          // (0,1,2,3) = (nord,est,sud,ouest)
-    protected enum State {ALIVE, DEAD, ONFIRE, PSYCHEDELIC};
+    protected enum State {ALIVE, DEAD, ON_FIRE, PSYCHEDELIC};
     protected State state;
     protected int hunger;
     protected double probablityChangeDirection;         //probability of random movement in the case where there are no threats or food nearby, otherwise the agents move straight ahead.

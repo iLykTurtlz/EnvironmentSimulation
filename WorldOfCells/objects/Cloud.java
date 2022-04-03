@@ -38,7 +38,7 @@ public class Cloud extends UniqueObject{
 
     	float zoff = myWorld.getLandscape().getZOffset() + altitude;
 
-        float t = (float) Math.cos(myWorld.getLandscape().getWeather().getTime());
+        float t = (float) Math.cos(myWorld.getLandscape().getWeather().getElapsedTime());
         gl.glColor4f(1f, 1f, 1f, color);
 
     	//lower face

@@ -7,21 +7,32 @@ import com.jogamp.opengl.util.gl2.GLUT;
 
 public class Weather {
     public enum Condition { SUNNY, SNOWING, RAINY };
+    public enum Time { DAY, NIGHT };
     private WorldOfTrees world;
     private float elapsed_time = 0;
     private long last_checked = 0;
     private static final float WEATHER_UPDATE_DELAY = 10f; //10 seconds
+    private Time time;
     private Condition weather = Condition.SUNNY; //sunny default
     private static float time_speed = 0.001f; //0.001 is good
     private GLUT glut;
 
     public Weather(WorldOfTrees world) {
         this.world = world;
+        time = Time.DAY;
         glut = new GLUT();
     }
 
     public void step() {
         //updateWeather();
+        float time_value = getTimeValue();
+        if (time_value >= .5f) {
+            if (time != Time.DAY)
+                setTime(Time.DAY);
+        } else {
+            if (time != Time.NIGHT)
+                setTime(Time.NIGHT);
+        }
         elapsed_time += time_speed;
     }
 
@@ -36,15 +47,34 @@ public class Weather {
         }
     }
 
+    public void setCondition(Condition cond) {
+        this.weather = cond;
+    }
+
+    public void setTime(Time time) {
+        this.time = time;
+        //float time_value = getTimeValue();
+        //if (
+    }
+
     public void setTimeSpeed(float speed) {
         this.time_speed = Math.max(0f, speed);
+    }
+
+    //getTimeValue() is used locally to define time as a value with cosinus
+    private float getTimeValue() {
+        return (float) Math.max(0f, Math.cos(elapsed_time));
     }
 
     public static float getTimeSpeed() {
         return time_speed;
     }
 
-    public float getTime() {
+    public Time getTime() {
+        return time;
+    }
+
+    public float getElapsedTime() {
         return elapsed_time;
     }
 
@@ -52,24 +82,20 @@ public class Weather {
         return weather;
     }
 
-    public void setCondition(Condition cond) {
-        this.weather = cond;
-    }
-
     public void drawSky(GL2 gl) { //draw(GL2 gl)
         //Math.sin simulates the weather condition as the function is perodically repeated and corresponds to the schedule of day to night
         //Math.sin simulates the weather conditions as the function is perodically repeated and corresponds to the schedule of day to night
-        float speed = getTime();
-        float time_value = (float) Math.max(0f, Math.cos(speed));
+        float time = getElapsedTime();
+        float time_value = getTimeValue();
         gl.glClearColor(0.3f, time_value/2f, time_value, 0.5f); //sunset -> day
         //gl.glLoadIdentity();
         gl.glPushMatrix();
 
         //Drawing the sun
 
-        float x = (float) Math.sin(speed) * world.getLandscape().landscape.length * 2f;
-        float y = (float) Math.sin(speed) * world.getLandscape().landscape.length / 3f; //move the sun diagonally
-        float z = 70f + (float) Math.cos(speed) * world.getLandscape().landscape[0].length; //70f base height
+        float x = (float) Math.sin(time) * world.getLandscape().landscape.length * 2f;
+        float y = (float) Math.sin(time) * world.getLandscape().landscape.length / 3f; //move the sun diagonally
+        float z = 70f + (float) Math.cos(time) * world.getLandscape().landscape[0].length; //70f base height
         gl.glTranslatef(x, y, z + world.getLandscape().getZOffset());
         gl.glColor3f(1f, 0.8f, 0f);
         glut.glutSolidSphere(10, 20, 20);

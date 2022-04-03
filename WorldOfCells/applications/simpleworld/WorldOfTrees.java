@@ -16,7 +16,7 @@ public class WorldOfTrees extends World {
     protected ForestCA cellularAutomata;
     protected Landscape landscape;
     private static final int NB_CLOUDS = 30;
-    public static final float WATER_HEIGHT = -0.05;
+    public static final float WATER_LEVEL = -0.05;
 
     public void init ( int __dxCA, int __dyCA, double[][] landscape )
     {
@@ -47,7 +47,7 @@ public class WorldOfTrees extends World {
 					color[2] = height / ( (float)this.getMaxEverHeight() );
 					/**/
 		        }
-		        else if (height >= WATER_HEIGHT) {
+		        else if (height >= WATER_LEVEL) {
                     color[0] = 0.9f;
                     color[1] = 0.8f;
                     color[2] = 0.7f;

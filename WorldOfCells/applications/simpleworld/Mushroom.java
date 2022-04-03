@@ -18,6 +18,7 @@ public class Mushroom extends Plant {
         this.centerHeight = 2.0f;    
         this.max_size = 11;
         this.curvature = 0.015f;     //needs to be a small value.  The height delta for each band is equal to curvature^x with x in [1,size], so the growth is exponential.
+        this.growth_rate = 900;
     }
 
     public void step()  {

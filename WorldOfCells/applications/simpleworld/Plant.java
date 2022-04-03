@@ -11,6 +11,7 @@ import worlds.World;
 public abstract class Plant extends UniqueDynamicObject {
     protected int size;
     protected int max_size;
+    protected int growth_rate;      //0-1000
 
     public Plant(int __x , int __y, WorldOfTrees __world)  {
         super(__x,__y,__world);
@@ -18,7 +19,7 @@ public abstract class Plant extends UniqueDynamicObject {
     }
 
     public void step()  {
-        if ( world.getIteration() % 100 == 0 && size <= max_size) {
+        if ( world.getIteration() % (1000 - growth_rate) == 0 && size <= max_size) {
             incrementSize();
         }
     }

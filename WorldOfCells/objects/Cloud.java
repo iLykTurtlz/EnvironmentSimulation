@@ -37,7 +37,6 @@ public class Cloud extends UniqueObject{
 
     	float zoff = myWorld.getLandscape().getZOffset() + altitude;
 
-    	gl.glBegin(gl.GL_QUADS);
         float t = (float) Math.cos(myWorld.getLandscape().getWeather().getTime());
         gl.glColor4f(1f, 1f, 1f, color);
 
@@ -80,8 +79,6 @@ public class Cloud extends UniqueObject{
         gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY+len, 0.1f*normalizeHeight*size + zoff);
         gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, 0.1f*normalizeHeight*size + zoff);
 
-
-        gl.glEnd();
 
     }
 }

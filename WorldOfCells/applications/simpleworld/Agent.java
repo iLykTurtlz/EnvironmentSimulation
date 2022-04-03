@@ -118,8 +118,6 @@ public abstract class Agent extends UniqueDynamicObject{
 
     public void displayUniqueObject(World myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)
     {
-
-        // display a monolith
         
         //gl.glColor3f(0.f+(float)(0.5*Math.random()),0.f+(float)(0.5*Math.random()),0.f+(float)(0.5*Math.random()));
         

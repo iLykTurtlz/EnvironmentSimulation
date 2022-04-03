@@ -280,8 +280,8 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
                 gl.glEnable(gl.GL_BLEND);
                 
                 // Culling - display only triangles facing the screen
-                gl.glCullFace(GL.GL_FRONT);
-                gl.glEnable(GL.GL_CULL_FACE);
+                //gl.glCullFace(GL.GL_FRONT);
+                //gl.glEnable(GL.GL_CULL_FACE);
 
                 // trucs d'alex
                 gl.glEnable(GL.GL_DITHER);
@@ -539,7 +539,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 	            if ( DISPLAY_OBJECTS == true) // calls my world with enough info to display anything anywhere
                 { 
 	            	float normalizeHeight = (float)heightBooster * heightFactor;
-	            	_myWorld.displayUniqueObjects(_myWorld,gl,movingX,movingY,offset,stepX,stepY,lenX,lenY,normalizeHeight); 
+	            	_myWorld.displayUniqueObjects(_myWorld,gl,movingX,movingY,offset,stepX,stepY,lenX,lenY,normalizeHeight);
 	            }
 
 	            gl.glEnd();

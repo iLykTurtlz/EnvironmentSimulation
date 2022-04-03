@@ -16,7 +16,7 @@ public class WorldOfTrees extends World {
     protected ForestCA cellularAutomata;
     protected Landscape landscape;
     private static final int NB_CLOUDS = 30;
-    public static final float WATER_LEVEL = -0.05;
+    public static final float WATER_LEVEL = -0.05f;
 
     public void init ( int __dxCA, int __dyCA, double[][] landscape )
     {

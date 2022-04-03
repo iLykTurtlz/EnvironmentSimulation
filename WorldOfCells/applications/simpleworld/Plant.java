@@ -15,13 +15,15 @@ public abstract class Plant extends UniqueDynamicObject {
 
     public Plant(int __x , int __y, WorldOfTrees __world)  {
         super(__x,__y,__world);
-        this.size = 0;       
+        this.size = 10;       
     }
 
     public void step()  {
-        if ( world.getIteration() % (1000 - growth_rate) == 0 && size <= max_size) {
+        /*
+        if ( world.getIteration() % (100) == 0 && size <= max_size) {
             incrementSize();
         }
+        */
     }
 
    

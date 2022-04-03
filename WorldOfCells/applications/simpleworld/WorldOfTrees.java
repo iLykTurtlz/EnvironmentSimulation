@@ -224,6 +224,22 @@ public class WorldOfTrees extends World {
 		uniqueDynamicObjects.add(prey);
 	}
 
+	public void removePredator(int index) {
+		predators.remove(index);
+	}
+
+	public void removePredator(Predator p) {
+		predators.remove(p);
+	}
+
+	public void removePrey(int index) {
+		prey.remove(index);
+	}
+	
+	public void removePrey(Prey p) {
+		prey.remove(p);
+	}
+
 	public void removeAgent(Agent a)	{
 		uniqueDynamicObjects.remove(a);
 	}

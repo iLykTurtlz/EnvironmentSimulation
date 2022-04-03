@@ -17,7 +17,7 @@ public class Mushroom extends Plant {
         this.stemColor = new float[] {1.f,0.f,1.f};
         this.centerRadius = 0.2f;
         this.centerHeight = 2.0f;
-        this.bandWidth = 0.5f;    
+        this.bandWidth = 0.2f;    
         this.max_size = 11;
         this.curvature = 0.015f;     //needs to be a small value.  The height delta for each band is equal to curvature^x with x in [1,size], so the growth is exponential.
         this.growth_rate = 900;

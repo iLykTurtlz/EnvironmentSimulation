@@ -10,12 +10,14 @@ public class Mushroom extends Plant {
     private float centerRadius;
     private float centerHeight;
     private float curvature;
+    private float bandWidth;
 
     public Mushroom(int __x , int __y, WorldOfTrees __world)   {
         super(__x,__y,__world);
         this.stemColor = new float[] {1.f,0.f,1.f};
         this.centerRadius = 0.2f;
-        this.centerHeight = 2.0f;    
+        this.centerHeight = 2.0f;
+        this.bandWidth = 0.5f;    
         this.max_size = 11;
         this.curvature = 0.015f;     //needs to be a small value.  The height delta for each band is equal to curvature^x with x in [1,size], so the growth is exponential.
         this.growth_rate = 900;
@@ -25,11 +27,11 @@ public class Mushroom extends Plant {
         super.step();
     }
 
-    public static float[] incrementColor(float color[])    {
+    public static void incrementColor(float color[])    {
         /* Increments the color according to the spectrum*/
         // TO DO : make this BETTER!
 
-        /*
+        
         for (int i=0; i<color.length; i++)  {
             if (color[i] == 0.f)  {
                 if (color[(i-1+color.length)%color.length] == 1.f && color[(i+1+color.length)%color.length] == 1.f) {
@@ -50,8 +52,8 @@ public class Mushroom extends Plant {
                 }
             }
         }
-        */
         
+        /*
         float[] rgb = new float[3];
         for (int i=0; i<color.length; i++) {
             if (color[i] == 0.f)   {
@@ -74,7 +76,7 @@ public class Mushroom extends Plant {
             }
         }
         return rgb;
-        
+        */
     }
 
 
@@ -97,28 +99,28 @@ public class Mushroom extends Plant {
             for (int j=0; j<sequence.length; j++)   {
                 switch (sequence[j])   {        //8 vertices used to draw the concentric boxes.  0-3 : inner square, 4-7 : outer square
                     case 0:
-                        gl.glVertex3f( offset+x2*stepX-lenX*radius, offset+y2*stepY-lenY*radius, height*normalizeHeight + altitude+ h);
+                        gl.glVertex3f( offset+x2*stepX-lenX*radius, offset+y2*stepY-lenY*radius, altitude+ h);
                         break;
                     case 1:
-                        gl.glVertex3f( offset+x2*stepX-lenX*radius, offset+y2*stepY+lenY*radius, height*normalizeHeight + altitude+ h);
+                        gl.glVertex3f( offset+x2*stepX-lenX*radius, offset+y2*stepY+lenY*radius, altitude+ h);
                         break;
                     case 2:
-                        gl.glVertex3f( offset+x2*stepX+lenX*radius, offset+y2*stepY+lenY*radius, height*normalizeHeight + altitude+ h);
+                        gl.glVertex3f( offset+x2*stepX+lenX*radius, offset+y2*stepY+lenY*radius, altitude+ h);
                         break;
                     case 3:
-                        gl.glVertex3f( offset+x2*stepX+lenX*radius, offset+y2*stepY-lenY*radius, height*normalizeHeight + altitude+ h);
+                        gl.glVertex3f( offset+x2*stepX+lenX*radius, offset+y2*stepY-lenY*radius, altitude+ h);
                         break;
                     case 4:
-                        gl.glVertex3f( offset+x2*stepX-lenX*(radius+bandWidth), offset+y2*stepY-lenY*(radius+bandWidth), height*normalizeHeight + altitude+ h - heightDecrement);
+                        gl.glVertex3f( offset+x2*stepX-lenX*(radius+bandWidth), offset+y2*stepY-lenY*(radius+bandWidth), altitude+ h - heightDecrement);
                         break;
                     case 5:
-                        gl.glVertex3f( offset+x2*stepX-lenX*(radius+bandWidth), offset+y2*stepY+lenY*(radius+bandWidth), height*normalizeHeight + altitude+ h - heightDecrement);
+                        gl.glVertex3f( offset+x2*stepX-lenX*(radius+bandWidth), offset+y2*stepY+lenY*(radius+bandWidth), altitude+ h - heightDecrement);
                         break;
                     case 6:
-                        gl.glVertex3f( offset+x2*stepX+lenX*(radius+bandWidth), offset+y2*stepY+lenY*(radius+bandWidth), height*normalizeHeight + altitude+ h - heightDecrement);
+                        gl.glVertex3f( offset+x2*stepX+lenX*(radius+bandWidth), offset+y2*stepY+lenY*(radius+bandWidth), altitude+ h - heightDecrement);
                         break;
                     case 7:
-                        gl.glVertex3f( offset+x2*stepX+lenX*(radius+bandWidth), offset+y2*stepY-lenY*(radius+bandWidth), height*normalizeHeight + altitude+ h - heightDecrement);
+                        gl.glVertex3f( offset+x2*stepX+lenX*(radius+bandWidth), offset+y2*stepY-lenY*(radius+bandWidth), altitude+ h - heightDecrement);
                         break;
                     default:
                         System.out.println("Erreur : creation d'une fleur");
@@ -130,8 +132,8 @@ public class Mushroom extends Plant {
     
         //recursive call limited by size which represents the plant's current growth state.
         if (nbBands < size)   {
-            bandColor = incrementColor(bandColor);
-            drawBands(++nbBands, heightDecrement + curvature,h - heightDecrement, 0.2f, bandColor, radius+bandWidth, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight); 
+            incrementColor(bandColor);
+            drawBands(++nbBands, heightDecrement + curvature,h - heightDecrement, bandWidth, bandColor, radius+bandWidth, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight); 
         }
     }
 
@@ -167,7 +169,7 @@ public class Mushroom extends Plant {
         gl.glVertex3f( offset+x2*stepX+lenX*centerRadius, offset+y2*stepY+lenY*centerRadius, altitude + centerHeight);
         gl.glVertex3f( offset+x2*stepX+lenX*centerRadius, offset+y2*stepY-lenY*centerRadius, altitude + centerHeight);
 
-        drawBands(0, 0, centerHeight, 0.2f, new float[]{1.f,0.5f,0.f}, centerRadius, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+        drawBands(0, 0, centerHeight, bandWidth, new float[]{1.f,0.5f,0.f}, centerRadius, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight);
        
 
         

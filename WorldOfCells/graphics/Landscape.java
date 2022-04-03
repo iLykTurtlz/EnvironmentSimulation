@@ -325,6 +325,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
                 if ( DISPLAY_FPS )
                 {
 	                gl.glPushMatrix();
+
 	                int xoff = 10;
 	                int yoff = 20;
 	                int y = 720;
@@ -356,6 +357,10 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
                     }
 	                gl.glPopMatrix();
 	            }
+				
+
+
+
         	
                 // ** render all
                
@@ -438,6 +443,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
             	weather.step();
 
         		// ** draw everything
+
         		weather.drawSky(gl);
 
             	gl.glBegin(GL2.GL_QUADS);                
@@ -551,6 +557,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
             	
 
         }
+
 
         public int getZOffset() { return movingZ; }
 

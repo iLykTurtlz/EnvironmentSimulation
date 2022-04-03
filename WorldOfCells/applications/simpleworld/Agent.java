@@ -24,7 +24,7 @@ public abstract class Agent extends UniqueDynamicObject{
     protected enum State {ALIVE, DEAD, ONFIRE};
     protected State state;
     protected int hunger;
-    protected double p_ch_dir;
+    protected double probablityChangeDirection;         //probability of random movement in the case where there are no threats or food nearby, otherwise the agents move straight ahead.
 
 
 
@@ -39,7 +39,7 @@ public abstract class Agent extends UniqueDynamicObject{
         for (int i=0; i<directions.length; i++) {
             directions[i] = true;
         }
-
+        this.orientation = (int)(4*Math.random());      //random orientation by default
         this.age = 0;
         this.state = State.ALIVE;
         this.hunger = 0;

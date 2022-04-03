@@ -132,8 +132,8 @@ public class Weather {
         float color[] = {1f, 0f, 0f};
         //world.setCellState(x, y, color); draw Volcano
         //make it grow or instantly spawn?
-        //2 - increase altitude based on the center thanks to sinus or cosinus or any growiwng function (landscape[x][y] *= function(x/x,y)
-        //we use sinus function since it is a growing function between 0 and pi/2
+        //2 - increase altitude based on the center thanks to sinus or cosinus or any increasing function (landscape[x][y] *= function(x/x,y)
+        //we use sinus function since it is an increasing function between 0 and pi/2
         System.out.println("Increasing the borders");
         float i = 0;
         float max_height = 0.55f;

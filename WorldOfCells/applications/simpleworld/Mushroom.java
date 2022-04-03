@@ -34,7 +34,7 @@ public class Mushroom extends Plant {
         
         for (int i=0; i<color.length; i++)  {
             if (color[i] == 0.f)  {
-                if (color[(i-1+color.length)%color.length] == 1.f && color[(i+1+color.length)%color.length] == 1.f) {
+                if (color[(i-1+color.length)%color.length] == 1.f && color[(i+1+color.length)%color.length] == 0.f) {
                     color[i] = 0.5f;
                 }
             }
@@ -45,11 +45,22 @@ public class Mushroom extends Plant {
 
             }
             else {
-                if (color[(i-1+color.length)%color.length] == 1.f && color[(i+1+color.length)%color.length] == 0.f)   {
+                
+                if (color[(i-1+color.length)%color.length] == 0.f && color[(i+1+color.length)%color.length] == 1.f) {
+                    color[i] = 0.f;
+                    return;
+                }
+                else if (color[(i-1+color.length)%color.length] == 1.f && color[(i+1+color.length)%color.length] == 0.f)   {
                     color[i] = 1.f;
-                } else {
+                    
+                } 
+                /*
+                
+                else {
                     color[i] = 0.f;
                 }
+                */
+                
             }
         }
         

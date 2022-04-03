@@ -92,6 +92,8 @@ public abstract class Agent extends UniqueDynamicObject{
                 directions[3] = false;
                 accessible--;
             }
+
+            
         }
 
 
@@ -204,7 +206,9 @@ public abstract class Agent extends UniqueDynamicObject{
 
     public int updatePosition(int move)    {
         /* Updates the agent's position based on an int value:
-            -1 -> random displacement
+            -1 -> 
+                if (dice > probabilityChangeDirection and directions[orientation]) then move straight ahead
+                otherwise random displacement
             -2 -> no change
             (0,1,2,3) -> (N,E,S,W)
             Returns the final value of move, which is needed to set predator orientation.
@@ -212,30 +216,38 @@ public abstract class Agent extends UniqueDynamicObject{
 
         //Random movements
         double dice = Math.random();
-        if (move == -1) {           
-            int j=0;
-            double partition_size = 1/((double)accessible);
+        if (move == -1) {   
 
-            for (int i=0; i<directions.length; i++)    {
-                if ( directions[i] )    {
-                    j++;
-                    if ( dice < (j*partition_size) )  {    
-                        move = i;
-                        break;
+            if (dice > probablityChangeDirection && directions[orientation]) {          //straight ahead
+                move = orientation;
+
+            } else {
+
+                int j=0;                                                                //random displacement
+                double partition_size = 1/((double)accessible);
+
+                for (int i=0; i<directions.length; i++)    {
+                    if ( directions[i] )    {
+                        j++;
+                        if ( dice < (j*partition_size) )  {    
+                            move = i;
+                            break;
+                        }
+                    }
+                }
+                if (move == -1)  {      //In rare cases, double comparison fails and move is still -1.  When that happens, the move should be the LAST accessible direction in directions.
+                    for (int i = directions.length - 1; i > -1; i--)    {
+                        if (directions[i])  {
+                            move = i;
+                            break;
+                        }
                     }
                 }
             }
-            if (move == -1)  {      //In rare cases, double comparison fails and move is still -1.  When that happens, the move should be the LAST accessible direction in directions.
-                for (int i = directions.length - 1; i > -1; i--)    {
-                    if (directions[i])  {
-                        move = i;
-                        break;
-                    }
-                }
-            }
+
         }
 
-        //Having determined the random direction (if applicable) we now set the agent's position
+        //Having determined the direction we now set the agent's position
         switch (move)   {   
             case -2:
                 break; 

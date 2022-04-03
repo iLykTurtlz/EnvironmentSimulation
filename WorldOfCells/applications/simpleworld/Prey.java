@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.jogamp.opengl.GL2;
 
+import applications.simpleworld.Weather.Time;
 import objects.UniqueDynamicObject;
 
 import worlds.World;
@@ -24,6 +25,7 @@ public class Prey extends Agent {
         this.baseSpeed = 80;
         this.speed = this.baseSpeed;
         this.vision = new PreyVision(__x,__y,rangeOfVision,__world);
+        this.probablityChangeDirection = 0.2;
     }
 
 
@@ -99,14 +101,13 @@ public class Prey extends Agent {
 		if ( world.getIteration() % (100 - speed) == 0 )
 		{
             
-            if (accessible == 0)    {           //If no direction is accessible, the agent does not move.
+            if (accessible == 0 || world.getLandscape().getWeather().getTime() == Time.NIGHT )    {           //If no direction is accessible, or if it is nighttime the agent does not move.
                 return;
             }
 
 
             vision.setPosition(x, y);
             vision.updateField();
-            double dice = Math.random();
             
 
             int move = flee();

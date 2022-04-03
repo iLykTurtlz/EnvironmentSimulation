@@ -4,6 +4,7 @@ import com.jogamp.opengl.GL2;
 
 import objects.UniqueDynamicObject;
 import applications.simpleworld.*;
+import applications.simpleworld.Weather.Time;
 import worlds.World;
 import utils.Pool;
 import utils.PoolPredator;
@@ -26,7 +27,6 @@ public class Predator extends Agent {
 
     public Predator( int __x , int __y, WorldOfTrees __world ) {
         super(__x,__y,__world, new float[] {1.f, 0.f, 0.f});
-        this.orientation = (int)(4*Math.random());      //random orientation by default
         this.rangeOfVision = 10;
         this.baseSpeed = 80;
         this.speed = this.baseSpeed;
@@ -39,6 +39,7 @@ public class Predator extends Agent {
         }
         this.gestationPeriod = 5;
         this.gestationStage = 0;
+        this.probablityChangeDirection = 0.1;
     }
 
     public Predator( int __x , int __y, WorldOfTrees __world, int[] offspringCharacters) {
@@ -134,10 +135,10 @@ public class Predator extends Agent {
 		if ( world.getIteration() % (100-speed) == 0 )
 		{
             
-            double dice = Math.random();
+            //double dice = Math.random();
 
 
-            if (accessible == 0)    {   //If no direction is accessible, the agent does not move.
+            if (accessible == 0 || world.getLandscape().getWeather().getTime() == Time.NIGHT )    {   //If no direction is accessible, or if it is nighttime, the agent does not move.
                 return;
             }
 
@@ -147,7 +148,7 @@ public class Predator extends Agent {
 
             int move;
             if (hunger > bloodlustThreshold) {
-                move = eatAndHunt();    //move in the direction of the prey (0,1,2,3) = (N,E,S,W)
+                move = eatAndHunt();    //move in the direction of the prey (0,1,2,3) = (N,E,S,W), -1 if no prey in view
             } else {
                 move = -1;
             }

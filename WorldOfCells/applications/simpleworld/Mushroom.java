@@ -19,7 +19,7 @@ public class Mushroom extends Plant {
         this.centerHeight = 2.0f;
         this.bandWidth = 0.2f;    
         this.max_size = 11;
-        this.curvature = 0.015f;     //needs to be a small value.  The height delta for each band is equal to curvature^x with x in [1,size], so the growth is exponential.
+        this.curvature = 0.015f;     //needs to be a small value.  The height delta for each band is equal to curvature*(2^x) with x in [0,size], so its growth is exponential.
         this.growth_rate = 900;
     }
 
@@ -48,12 +48,14 @@ public class Mushroom extends Plant {
                 
                 if (color[(i-1+color.length)%color.length] == 0.f && color[(i+1+color.length)%color.length] == 1.f) {
                     color[i] = 0.f;
-                    return;
+                    
                 }
                 else if (color[(i-1+color.length)%color.length] == 1.f && color[(i+1+color.length)%color.length] == 0.f)   {
                     color[i] = 1.f;
                     
+ 
                 } 
+                return;
                 /*
                 
                 else {

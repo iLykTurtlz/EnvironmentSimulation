@@ -48,7 +48,7 @@ public class Pineapple extends Plant {
 
 
             for (int j=0; j<sequence.length; j++)   {
-                switch(sequence[i]) {                                                                                               // 0-7: vertices of the previous octagon, 8-15: vertices of the next octagon
+                switch(sequence[j]) {                                                                                               // 0-7: vertices of the previous octagon, 8-15: vertices of the next octagon
                     case 0:
                         gl.glVertex3f( offset+x2*stepX-lenX*radius1 / 3, offset+y2*stepY-lenY*radius1, height*normalizeHeight + h);
                         break;

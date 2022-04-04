@@ -31,6 +31,7 @@ public class WorldOfTrees extends World {
 
 	        	float height = (float) this.getCellHeight(x, y);
 		    	
+				/*
 				if (height > 2.5)	
 				{
 					color[0] = height / (float)this.getMaxEverHeight();
@@ -38,7 +39,10 @@ public class WorldOfTrees extends World {
 					color[2] = height / (float)this.getMaxEverHeight();
 				}
 
-		        else if ( height >= 0 )
+		        else 
+				*/
+				
+				if ( height >= 0 )
 		        {
 		        	// snowy mountains
 		        	/*

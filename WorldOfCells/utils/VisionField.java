@@ -51,12 +51,14 @@ public abstract class VisionField    {
         while (  (i < field.length) && (coordinate[0] != field[i][0] || coordinate[1] != field[i][1])  )  {
             i++;
         }
-        for (int j = i+1; j<field.length; j++)    {
-            for (int k=0; k<predators.getSizeUsed(); k++)   {
-                p = predators.get(j);
-                int[] coord = p.getCoordinate();
-                if (coord[0] == field[j][0] && coord[1] == field[j][1]) {
-                    return p;
+        if ( i < field.length )   {
+            for (int j = i+1; j<field.length; j++)    {
+                for (int k=0; k<predators.getSizeUsed(); k++)   {
+                    p = predators.get(k);
+                    int[] coord = p.getCoordinate();
+                    if (coord[0] == field[j][0] && coord[1] == field[j][1]) {
+                        return p;
+                    }
                 }
             }
         }

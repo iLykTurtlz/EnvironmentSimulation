@@ -8,20 +8,19 @@ import javax.lang.model.util.ElementScanner14;
 
 import com.jogamp.opengl.GL2;
 
+import applications.simpleworld.Weather.Time;
 import objects.UniqueDynamicObject;
 
 import worlds.World;
 
 public abstract class Agent extends UniqueDynamicObject{
 
-
-    public static final int MAX_LIFESPAN = 1000;
-    public static final float INITIAL_HUNGER = 100.f;
-    protected int baseSpeed;
-    protected int speed;                    // between 0 and 100
+    protected int defaultBaseSpeed;
+    protected int baseSpeed;                
+    protected int speed;                    // between 0 and 100, varies relative to base speed as a function of the terrain
     protected int age;
     protected int orientation;                          // (0,1,2,3) = (nord,est,sud,ouest)
-    protected enum State {ALIVE, DEAD, ONFIRE};
+    protected enum State {ALIVE, DEAD, ON_FIRE, PSYCHEDELIC};
     protected State state;
     protected int hunger;
     protected double probablityChangeDirection;         //probability of random movement in the case where there are no threats or food nearby, otherwise the agents move straight ahead.
@@ -31,8 +30,12 @@ public abstract class Agent extends UniqueDynamicObject{
     protected boolean directions[];          // true if the direction is accessible, false otherwise : indices (0,1,2,3) = (N,E,S,W)
     protected int accessible;                // number of accessible directions
     protected float[] headColor;             // to distinguish different types of agents
+
+    protected float[] bodyColor;            // for fun :)
+
+
 	
-    public Agent ( int __x , int __y, WorldOfTrees __world, float[] headColor )
+    public Agent ( int __x , int __y, WorldOfTrees __world, float[] headColor, float[] bodyColor )
 	{
 		super(__x,__y,__world);
         directions = new boolean[4];    // above, right, below, left; in that order
@@ -44,6 +47,7 @@ public abstract class Agent extends UniqueDynamicObject{
         this.state = State.ALIVE;
         this.hunger = 0;
         this.headColor = headColor;
+        this.bodyColor = bodyColor;
 	}
 
 
@@ -52,11 +56,11 @@ public abstract class Agent extends UniqueDynamicObject{
 
         if ( world.getIteration() % (100 - speed) == 0 )   {
 
-            this.updateAge();
-            this.updateHunger();
-            if (this.age >= Agent.MAX_LIFESPAN)  {
-                this.state = State.DEAD;
+            if (world.getLandscape().getWeather().getTime() == Time.DAY)    {   
+                this.updateAge();
+                this.updateHunger();
             }
+            
 
             this.accessible = 4;
 
@@ -92,6 +96,8 @@ public abstract class Agent extends UniqueDynamicObject{
                 directions[3] = false;
                 accessible--;
             }
+
+            
         }
 
 
@@ -204,7 +210,9 @@ public abstract class Agent extends UniqueDynamicObject{
 
     public int updatePosition(int move)    {
         /* Updates the agent's position based on an int value:
-            -1 -> random displacement
+            -1 -> 
+                if (dice > probabilityChangeDirection and directions[orientation]) then move straight ahead
+                otherwise random displacement
             -2 -> no change
             (0,1,2,3) -> (N,E,S,W)
             Returns the final value of move, which is needed to set predator orientation.
@@ -212,30 +220,38 @@ public abstract class Agent extends UniqueDynamicObject{
 
         //Random movements
         double dice = Math.random();
-        if (move == -1) {           
-            int j=0;
-            double partition_size = 1/((double)accessible);
+        if (move == -1) {   
 
-            for (int i=0; i<directions.length; i++)    {
-                if ( directions[i] )    {
-                    j++;
-                    if ( dice < (j*partition_size) )  {    
-                        move = i;
-                        break;
+            if (dice > probablityChangeDirection && directions[orientation]) {          //straight ahead
+                move = orientation;
+
+            } else {
+
+                int j=0;                                                                //random displacement
+                double partition_size = 1/((double)accessible);
+
+                for (int i=0; i<directions.length; i++)    {
+                    if ( directions[i] )    {
+                        j++;
+                        if ( dice < (j*partition_size) )  {    
+                            move = i;
+                            break;
+                        }
+                    }
+                }
+                if (move == -1)  {      //In rare cases, double comparison fails and move is still -1.  When that happens, the move should be the LAST accessible direction in directions.
+                    for (int i = directions.length - 1; i > -1; i--)    {
+                        if (directions[i])  {
+                            move = i;
+                            break;
+                        }
                     }
                 }
             }
-            if (move == -1)  {      //In rare cases, double comparison fails and move is still -1.  When that happens, the move should be the LAST accessible direction in directions.
-                for (int i = directions.length - 1; i > -1; i--)    {
-                    if (directions[i])  {
-                        move = i;
-                        break;
-                    }
-                }
-            }
+
         }
 
-        //Having determined the random direction (if applicable) we now set the agent's position
+        //Having determined the direction we now set the agent's position
         switch (move)   {   
             case -2:
                 break; 

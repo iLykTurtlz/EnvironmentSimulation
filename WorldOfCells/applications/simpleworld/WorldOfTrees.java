@@ -31,7 +31,18 @@ public class WorldOfTrees extends World {
 
 	        	float height = (float) this.getCellHeight(x, y);
 		    	
-		        if ( height >= 0 )
+				/*
+				if (height > 2.5)	
+				{
+					color[0] = height / (float)this.getMaxEverHeight();
+					color[1] = height / (float)this.getMaxEverHeight();
+					color[2] = height / (float)this.getMaxEverHeight();
+				}
+
+		        else 
+				*/
+				
+				if ( height >= 0 )
 		        {
 		        	// snowy mountains
 		        	/*
@@ -222,6 +233,22 @@ public class WorldOfTrees extends World {
 	public void addPrey(int posx, int posy, Prey prey)	{
 		prey.setPosition(posx, posy);
 		uniqueDynamicObjects.add(prey);
+	}
+
+	public void removePredator(int index) {
+		predators.remove(index);
+	}
+
+	public void removePredator(Predator p) {
+		predators.remove(p);
+	}
+
+	public void removePrey(int index) {
+		prey.remove(index);
+	}
+	
+	public void removePrey(Prey p) {
+		prey.remove(p);
 	}
 
 	public void removeAgent(Agent a)	{

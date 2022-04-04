@@ -181,6 +181,14 @@ public abstract class World {
 
 	public abstract void addPrey(int posx, int posy);
 
+	public abstract void removePredator(int index);
+
+	public abstract void removePredator(Predator p);
+
+	public abstract void removePrey(int index);
+	
+	public abstract void removePrey(Prey p);
+
 
 
 

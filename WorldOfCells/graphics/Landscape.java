@@ -458,8 +458,6 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 		                double height = _myWorld.getCellHeight(x+movingX,y+movingY);
            			 	int cellState = _myWorld.getCellValue(x+movingX,y+movingY);	
            			 	float[] color = _myWorld.getCellColorValue(x+movingX,y+movingY);
-           			 	if (height >= .5d)
-                            System.out.println("color[0] " + color[0] + " color[1] + " + color[1] + " color[2] " + color[2]);
 
 	                	// compute CA-based coloring
 

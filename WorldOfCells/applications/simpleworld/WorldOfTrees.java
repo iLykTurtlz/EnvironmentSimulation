@@ -23,34 +23,35 @@ public class WorldOfTrees extends World {
     	super.init(__dxCA, __dyCA, landscape);
     	
     	// add colors
-    	
+    	float max = 0f;
+
     	for ( int x = 0 ; x < __dxCA ; x++ )
     		for ( int y = 0 ; y < __dyCA ; y++ )
     		{
 	        	float color[] = new float[3];
 
 	        	float height = (float) this.getCellHeight(x, y);
-		    	
-				/*
-				if (height > 2.5)	
+		    	if (height > max) {
+                    max = height;
+                }
+				if (height > 0.5f)
 				{
-					color[0] = height / (float)this.getMaxEverHeight();
-					color[1] = height / (float)this.getMaxEverHeight();
-					color[2] = height / (float)this.getMaxEverHeight();
+					color[0] = 0.8f;
+					color[1] = 0.2f;
+					color[2] = 0.2f;
 				}
 
-		        else 
-				*/
-				
-				if ( height >= 0 )
-		        {
+		        else
+
+
+				if ( height >= 0 ) {
 		        	// snowy mountains
 		        	/*
 		        	color[0] = height / (float)this.getMaxEverHeight();
 					color[1] = height / (float)this.getMaxEverHeight();
 					color[2] = height / (float)this.getMaxEverHeight();
 					/**/
-		        	
+
 					// green mountains
 		        	/**/
 		        	color[0] = height / ( (float)this.getMaxEverHeight() );
@@ -73,7 +74,7 @@ public class WorldOfTrees extends World {
 		        }
 		        this.cellsColorValues.setCellState(x, y, color);
     		}
-    	
+    	System.out.println("Max height " + max);
     	// add some objects
     	for ( int i = 0 ; i < 11 ; i++ )
     	{

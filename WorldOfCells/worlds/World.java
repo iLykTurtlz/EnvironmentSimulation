@@ -145,6 +145,9 @@ public abstract class World {
     public float[] getCellColorValue(int x, int y) // used to display cell color
     {
     	float[] cellColor = this.cellsColorValues.getCellState( x%this.dxCA , y%this.dyCA );
+    	double height = getCellHeight(x, y);
+    	if (height >= .5d)
+            System.out.print("found color " + cellColor[0] + " " + cellColor[1] + " " + cellColor[2]);
 
     	float[] color  = {cellColor[0],cellColor[1],cellColor[2],1.0f};
         

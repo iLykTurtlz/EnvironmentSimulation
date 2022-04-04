@@ -31,20 +31,31 @@ public class WorldOfTrees extends World {
 	        	float color[] = new float[3];
 
 	        	float height = (float) this.getCellHeight(x, y);
+<<<<<<< HEAD
 		    	if (height > max) {
                     max = height;
                 }
 				if (height > 0.5f)
+=======
+		
+				
+				if (height > 0.4)	
+>>>>>>> 090cf96f3941664ed0abf31e8bdb2312c0970cfe
 				{
 					color[0] = 0.8f;
 					color[1] = 0.2f;
 					color[2] = 0.2f;
 				}
 
+<<<<<<< HEAD
 		        else
 
 
 				if ( height >= 0 ) {
+=======
+		        else if ( height >= 0 )
+		        {
+>>>>>>> 090cf96f3941664ed0abf31e8bdb2312c0970cfe
 		        	// snowy mountains
 		        	/*
 		        	color[0] = height / (float)this.getMaxEverHeight();

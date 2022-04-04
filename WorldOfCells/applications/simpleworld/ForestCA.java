@@ -29,14 +29,11 @@ public class ForestCA extends CellularAutomataInteger {
     		for ( int y = 0 ; y != _dy ; y++ )
     		{
 
-				/*
-				if ( _cellsHeightValuesCA.getCellState(x,y) >= 0.5 )	{
+				
+				if ( _cellsHeightValuesCA.getCellState(x,y) >= 0.3 )	{
 					this.setCellState(x, y, 0); // empty
 				}
-    			else 
-				*/
-				
-				if ( _cellsHeightValuesCA.getCellState(x,y) >= 0 )
+    			else if ( _cellsHeightValuesCA.getCellState(x,y) >= 0 )
     			{
     				if ( Math.random() < 0.53 ) // was: 0.71
     					this.setCellState(x, y, 1); // tree

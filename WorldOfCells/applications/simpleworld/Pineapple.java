@@ -21,7 +21,7 @@ public class Pineapple extends Plant {
         super.step();
     }
 
-
+    /*
 
     public void drawBottomOrTop(GL2 gl, int x2, int y2, float offset, float stepX, float stepY, float lenX, float lenY, float radius, float altitude, float h)  {
         // Draws an octagon for the bottom or top of the fruit 
@@ -166,6 +166,6 @@ public class Pineapple extends Plant {
         drawFruit(0, radius1, radius2, h1, h2, h1Norm, h2Norm, bandThickness, bandThicknessNorm, altitude,x2,y2,myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
 
     }
-    
+    */
     
 }

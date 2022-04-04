@@ -17,6 +17,9 @@ public class WorldOfTrees extends World {
     protected Landscape landscape;
     private static final int NB_CLOUDS = 30;
     public static final float WATER_LEVEL = -0.05f;
+	public static final float TREE_LINE = 0.2f;
+	public static final float SNOW_LINE = 0.3f;
+
 
     public void init ( int __dxCA, int __dyCA, double[][] landscape )
     {
@@ -33,11 +36,11 @@ public class WorldOfTrees extends World {
 	        	float height = (float) this.getCellHeight(x, y);
 		
 				
-				if (height > 0.4)	
+				if (height > SNOW_LINE)	
 				{
-					color[0] = 0.8f;
-					color[1] = 0.2f;
-					color[2] = 0.2f;
+					color[0] = 1.f;
+					color[1] = 1.f;
+					color[2] = 1.f;
 				}
 
 		        else if ( height >= 0 )

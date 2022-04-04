@@ -80,19 +80,19 @@ public abstract class Agent extends UniqueDynamicObject{
                 hThis  = this.world.getCellHeight(this.x,this.y);
 
             /* Block off water and cliffs */       
-            if ( (hAbove < WorldOfTrees.WATER_LEVEL) || (Math.abs(hAbove - hThis)) > 0.1)    {
+            if ( (hAbove < WorldOfTrees.WATER_LEVEL) || hAbove > WorldOfTrees.SNOW_LINE || (Math.abs(hAbove - hThis)) > 0.01 )    {
                 directions[0] = false;
                 accessible--;
             }
-            if ( (hRight < WorldOfTrees.WATER_LEVEL) || (Math.abs(hRight - hThis) > 0.1) )   {
+            if ( (hRight < WorldOfTrees.WATER_LEVEL) || hRight > WorldOfTrees.SNOW_LINE || (Math.abs(hRight - hThis) > 0.01) )   {
                 directions[1] = false;
                 accessible--;
             }
-            if ( (hBelow < WorldOfTrees.WATER_LEVEL) || (Math.abs(hBelow - hThis) > 0.1) )    {
+            if ( (hBelow < WorldOfTrees.WATER_LEVEL) || hBelow > WorldOfTrees.SNOW_LINE || (Math.abs(hBelow - hThis) > 0.01) )    {
                 directions[2] = false;
                 accessible--;
             }
-            if ( (hLeft < WorldOfTrees.WATER_LEVEL) || (Math.abs(hLeft - hThis) > 0.1) )      {
+            if ( (hLeft < WorldOfTrees.WATER_LEVEL) || hLeft > WorldOfTrees.SNOW_LINE || (Math.abs(hLeft - hThis) > 0.01) )      {
                 directions[3] = false;
                 accessible--;
             }

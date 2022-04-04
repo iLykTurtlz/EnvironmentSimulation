@@ -30,7 +30,7 @@ public class ForestCA extends CellularAutomataInteger {
     		{
 
 				
-				if ( _cellsHeightValuesCA.getCellState(x,y) >= 0.3 )	{
+				if ( _cellsHeightValuesCA.getCellState(x,y) >= WorldOfTrees.TREE_LINE )	{
 					this.setCellState(x, y, 0); // empty
 				}
     			else if ( _cellsHeightValuesCA.getCellState(x,y) >= 0 )

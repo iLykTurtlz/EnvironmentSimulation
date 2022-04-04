@@ -136,7 +136,7 @@ public class Weather {
         //we use sinus function since it is a growing function between 0 and pi/2
         System.out.println("Increasing the borders");
         float i = 0;
-        float max_height = 0.55f;
+        float max_height = 0.7f;
         for (int xi = x - range; xi < x + range; xi++) {
             for (int yi = y - range; yi < y + range; yi++) {
                 int xm = (xi + landscape.length) % landscape.length;
@@ -161,17 +161,25 @@ public class Weather {
 
         return landscape;
     }
-
+    private boolean flag = true;
     public boolean onVolcano(int xi, int yi) {
         double landscape[][] = world.getMap();
-        return xi <= (x + range) % landscape.length && xi >= ((x - range) + landscape.length) % landscape.length && yi >= ((y - range) + landscape[0].length) % landscape[0].length && yi <= (yi + range) % landscape.length;
+       // System.out.println("xvolcano " + x + " yvolcano " + y);
+       if (flag) {
+       System.out.println("x+range : " +  (x + range) % landscape.length);
+       System.out.println("x-range : " +  ((x - range) + landscape.length) % landscape.length);
+       System.out.println("y+range : " +  (y + range) % landscape.length);
+       System.out.println("y-range : " +  ((y - range) + landscape.length) % landscape.length);
+       flag = false;
+        }
+        return xi <= (x + range) % landscape.length && xi >= ((x - range) + landscape.length) % landscape.length && yi >= ((y - range) + landscape[0].length) % landscape[0].length && yi <= (y + range) % landscape.length;
     }
 
     public void drawVolcano(GL2 gl) {
         double[][] landscape = world.getMap();
-        float color[] = {1f, 0f, 0f};
-        for (int xi = x - 4; xi < x + 4; xi++) {
-            for (int yi = y - 4; yi < y + 4; yi++) {
+        float color[] = {0.2f, 0.2f, 0.2f};
+        for (int xi = x - range - 4; xi < x + range + 4; xi++) {
+            for (int yi = y - range - 4; yi < y + range + 4; yi++) {
                 int xm = (xi + landscape.length-1) % (landscape.length - 1);
                 int ym = (yi + landscape[0].length-1) % (landscape[0].length - 1);
                 world.setCellState(xm, ym, color);

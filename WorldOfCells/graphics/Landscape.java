@@ -736,6 +736,9 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
             case KeyEvent.VK_B:
                 DISPLAY_FPS = !DISPLAY_FPS;
                 break;
+            case KeyEvent.VK_X:
+                System.out.println("On volcano ? " + weather.onVolcano(movingX, movingY));
+                break;
             case KeyEvent.VK_H:
                 DISPLAY_HELP = !DISPLAY_HELP;
 			/*case KeyEvent.VK_H:

@@ -30,8 +30,7 @@ public class Mushroom extends Plant {
     public static void incrementColor(float color[])    {
         /* Increments the color according to the spectrum*/
         // TO DO : make this BETTER!
-
-        
+            
         for (int i=0; i<color.length; i++)  {
             if (color[i] == 0.f)  {
                 if (color[(i-1+color.length)%color.length] == 1.f && color[(i+1+color.length)%color.length] == 0.f) {

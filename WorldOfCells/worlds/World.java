@@ -201,6 +201,10 @@ public abstract class World {
         this.cellsColorValues.setCellState(x, y, color);
     }
 
+    public void setCellHeight(int x, int y, float height) {
+        this.cellsHeightValuesCA.setCellState(x, y, height);
+    }
+
 	abstract public Landscape getLandscape();
 
 	public PoolPredator getPredators()	{

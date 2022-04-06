@@ -112,9 +112,11 @@ public class PerlinNoiseLandscapeGenerator {
     ***/
     private static double interpolatedNoise(double x, double y) {
         int int_x = (int) x;
+        int_x = int_x % 5;
         x = x - int_x;
         double xs = sCurve(x);
         int int_y = (int) y;
+        int_y = int_y % 5;
         y = y - int_y;
         double ys = sCurve(y);
 

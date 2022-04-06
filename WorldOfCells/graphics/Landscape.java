@@ -194,6 +194,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
     		_myWorld.setCellState((x+1) % (landscape.length-1), y, color);
     		_myWorld.setCellState(x, (y-1 + landscape.length-1) % (landscape.length-1), color);
     		_myWorld.setCellState(x, (y+1 + landscape.length-1) % (landscape.length-1), color);
+    		landscape[x][y] = 1f;
     		
     		heightFactor = 32.0f; //64.0f; // was: 32.0f;
             heightBooster = 6.0; // default: 2.0 // 6.0 makes nice high mountains.
@@ -738,7 +739,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
                 DISPLAY_FPS = !DISPLAY_FPS;
                 break;
             case KeyEvent.VK_X:
-                System.out.println("On volcano ? " + weather.onVolcano(movingX, movingY));
+                System.out.println(movingX + ", " + movingY + " height : " + landscape[movingX % landscape.length][movingY % landscape[0].length]);
                 break;
             case KeyEvent.VK_H:
                 DISPLAY_HELP = !DISPLAY_HELP;

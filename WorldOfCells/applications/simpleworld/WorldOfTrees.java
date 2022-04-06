@@ -26,7 +26,6 @@ public class WorldOfTrees extends World {
     	super.init(__dxCA, __dyCA, landscape);
     	
     	// add colors
-    	float max = 0f;
 
     	for ( int x = 0 ; x < __dxCA ; x++ )
     		for ( int y = 0 ; y < __dyCA ; y++ )
@@ -38,19 +37,15 @@ public class WorldOfTrees extends World {
 				
 				if (height > SNOW_LINE)	
 				{
-					color[0] = 1.f;
-					color[1] = 1.f;
-					color[2] = 1.f;
+                    // snowy mountains
+                    float c = height / (float)this.getMaxEverHeight();
+		        	color[0] = c + (1-c)/2f;
+					color[1] = c + (1-c)/2f;
+					color[2] = c + (1-c)/2f;
 				}
 
 		        else if ( height >= 0 )
 		        {
-		        	// snowy mountains
-		        	/*
-		        	color[0] = height / (float)this.getMaxEverHeight();
-					color[1] = height / (float)this.getMaxEverHeight();
-					color[2] = height / (float)this.getMaxEverHeight();
-					/**/
 
 					// green mountains
 		        	/**/
@@ -68,13 +63,14 @@ public class WorldOfTrees extends World {
 		        else
 		        {
 		        	// water
-					color[0] = -height;
-					color[1] = -height;
+					color[0] = -height / ( (float)this.getMaxEverHeight() );
+					color[1] = -height / ( (float)this.getMaxEverHeight() );
 					color[2] = 0.8f;
+					if (color[0] > 1f || color[1] > 1f)
+                        System.out.println("color[0] " + color[0] + " color[1] " + color[1] + " color[2] " + color[2]);
 		        }
 		        this.cellsColorValues.setCellState(x, y, color);
     		}
-    	System.out.println("Max height " + max);
     	// add some objects
     	for ( int i = 0 ; i < 11 ; i++ )
     	{
@@ -189,9 +185,7 @@ public class WorldOfTrees extends World {
 		case 1: // trees: green, fire, burnt
 		case 2:
 		case 3:
-            if (!_myWorld.getLandscape().getWeather().onVolcano(x, y)) {
-                Tree.displayObjectAt(_myWorld,gl,cellState, x, y, height, offset, stepX, stepY, lenX, lenY, normalizeHeight);
-            }
+            Tree.displayObjectAt(_myWorld,gl,cellState, x, y, height, offset, stepX, stepY, lenX, lenY, normalizeHeight);
 		default:
 			// nothing to display at this location.
 		}

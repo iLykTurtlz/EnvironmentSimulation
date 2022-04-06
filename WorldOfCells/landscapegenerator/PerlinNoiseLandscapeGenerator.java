@@ -55,7 +55,7 @@ public class PerlinNoiseLandscapeGenerator {
     		for (int y = 0; y < dyView; y++) {
     		//perlinNoise2D(((double) x / (double) dxView * random_generation), ((double) y / (double) dyView * random_generation), 0.4d, 10);
     		//noise2D(((double) x / (double) dxView * random_generation), ((double) y / (double) dyView * random_generation))
-                landscape[x][y] = perlinNoise2D(((double) x / (double) dxView * random_generation), ((double) y / (double) dyView * random_generation), 0.4d, 10);; //low persistence for a smoother landscape (argument after random_generation (0.4d seems stable now)
+                landscape[x][y] = perlinNoise2D(((double) x / (double) dxView * random_generation), ((double) y / (double) dyView * random_generation), 0.4d, 1); //low persistence for a smoother landscape (argument after random_generation (0.4d seems stable now)
             }
         }
 
@@ -112,11 +112,9 @@ public class PerlinNoiseLandscapeGenerator {
     ***/
     private static double interpolatedNoise(double x, double y) {
         int int_x = (int) x;
-        int_x = int_x % 5;
         x = x - int_x;
         double xs = sCurve(x);
         int int_y = (int) y;
-        int_y = int_y % 5;
         y = y - int_y;
         double ys = sCurve(y);
 
@@ -134,10 +132,9 @@ public class PerlinNoiseLandscapeGenerator {
     private static double perlinNoise2D(double x, double y, double persistence, int nb_octaves) {
       double total = 0d;
       int n = nb_octaves - 1;
-      double totalAmplitude = 0;
 
       for (int i = 0; i <= n; i++) {
-          double frequency = 1/Math.pow(2, i);
+          double frequency = Math.pow(2, i);
           double amplitude = Math.pow(persistence, i);
 
           total += interpolatedNoise(x * frequency, y * frequency) * amplitude;

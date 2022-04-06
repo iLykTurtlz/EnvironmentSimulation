@@ -33,7 +33,6 @@ public class Pineapple extends Plant {
         if (fruitColor[0] > 1.f)    {
             fruitColor[0] = 1.f;
         }
-        System.out.println(fruitColor[0]);
     }
 
 

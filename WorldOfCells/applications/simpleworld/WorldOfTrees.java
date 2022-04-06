@@ -26,7 +26,6 @@ public class WorldOfTrees extends World {
     	super.init(__dxCA, __dyCA, landscape);
     	
     	// add colors
-    	float max = 0f;
 
     	for ( int x = 0 ; x < __dxCA ; x++ )
     		for ( int y = 0 ; y < __dyCA ; y++ )
@@ -68,13 +67,14 @@ public class WorldOfTrees extends World {
 		        else
 		        {
 		        	// water
-					color[0] = -height;
-					color[1] = -height;
+					color[0] = -height / ( (float)this.getMaxEverHeight() );
+					color[1] = -height / ( (float)this.getMaxEverHeight() );
 					color[2] = 0.8f;
+					if (color[0] > 1f || color[1] > 1f)
+                        System.out.println("color[0] " + color[0] + " color[1] " + color[1] + " color[2] " + color[2]);
 		        }
 		        this.cellsColorValues.setCellState(x, y, color);
     		}
-    	System.out.println("Max height " + max);
     	// add some objects
     	for ( int i = 0 ; i < 11 ; i++ )
     	{

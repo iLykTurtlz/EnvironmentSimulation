@@ -127,14 +127,14 @@ public class Weather {
         //we use sinus function since it is an increasing function between 0 and pi/2
         System.out.println("Increasing the borders");
         float i = 0;
-        float max_height = 0.2f;
+        float max_height = 0.4f;
         int step = 1;
         while (step < range) {
             for (int xi = x - step; xi < x + step; xi++) {
                 for (int yi = y - step; yi < y + step; yi++) {
                     int xm = (xi + landscape.length) % landscape.length;
                     int ym = (yi + landscape[0].length) % landscape[0].length;
-                    landscape[xm][ym] = Math.max(max_height, landscape[xm][ym] * (1f + (1 - Math.sin(i))));
+                    landscape[xm][ym] = Math.min(max_height, landscape[xm][ym] * (1f + (1 - Math.sin(i))));
                     i += 1/(((float)step));
                 }
                 i = 0;

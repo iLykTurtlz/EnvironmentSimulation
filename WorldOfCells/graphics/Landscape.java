@@ -575,9 +575,11 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 				for (int y=0; y<_myWorld.getHeight(); y++)	{
 					if (_myWorld.getCellHeight(x,y) > WorldOfTrees.WATER_LEVEL)	{
 						double dice = Math.random();
-						if (dice < INITIAL_PLANT_DENSITY && _myWorld.getCellHeight(x,y) > 0 && _myWorld.getCellHeight(x,y) < WorldOfTrees.TREE_LINE )	{
+						if (dice < INITIAL_PLANT_DENSITY/2 && _myWorld.getCellHeight(x,y) > 0 && _myWorld.getCellHeight(x,y) < WorldOfTrees.TREE_LINE )	{
 							plants.add(new Pineapple(x,y,_myWorld));
-							//plants.add(new Mushroom(x,y,_myWorld));
+						}
+						else if (dice < INITIAL_PLANT_DENSITY && _myWorld.getCellHeight(x,y) > 0 && _myWorld.getCellHeight(x,y) < WorldOfTrees.TREE_LINE )	{
+							plants.add(new Mushroom(x,y,_myWorld));
 						}
 						else if (dice < INITIAL_PLANT_DENSITY + INITIAL_PREDATOR_DENSITY && _myWorld.getCellHeight(x,y) < WorldOfTrees.TREE_LINE)	{
 							predators.add(x,y,_myWorld);

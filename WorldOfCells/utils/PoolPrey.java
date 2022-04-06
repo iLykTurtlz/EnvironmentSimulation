@@ -10,12 +10,16 @@ import applications.simpleworld.Prey;
 import applications.simpleworld.WorldOfTrees;
 
 public class PoolPrey extends Pool<Prey> {
+	public static final int MAX_NB_PREY = 400;
 
 	public PoolPrey() {
 		super();
 	}
 
 	public Prey add(int __x , int __y, WorldOfTrees __world) {
+		if (used.size() >= MAX_NB_PREY)	{
+			return null;
+		}
 		if (queue.isEmpty()) {
 			Prey prey = new Prey(__x,__y,__world); //default paramaters
 			super.used.add(prey);

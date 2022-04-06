@@ -12,7 +12,7 @@ public class Pineapple extends Plant {
 
     public Pineapple(int __x , int __y, WorldOfTrees __world)  {
         super(__x,__y,__world);
-        this.growth_rate = 999;
+        this.growth_rate = 900;
         this.nbBands = 10;
         this.baseHeight = 4.0f;
         this.fruitColor = new float[]{1.f,1.f,0.f};
@@ -32,9 +32,9 @@ public class Pineapple extends Plant {
             float x3 = (float)Math.cos(Math.PI/5*i);
             float y3 = (float)Math.sin(Math.PI/5*i);
             gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + h1);
-            gl.glVertex3f( offset+x2*stepX-lenY*width*x3, offset+y2*stepY+lenY*width*y3, altitude + h1 + h2);
+            gl.glVertex3f( offset+x2*stepX-lenY*width*x3, offset+y2*stepY+lenY*width*y3, altitude + h2);
             gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + h1);
-            gl.glVertex3f( offset+x2*stepX+lenY*width*x3, offset+y2*stepY-lenY*width*y3, altitude + h1 + h2);
+            gl.glVertex3f( offset+x2*stepX+lenY*width*x3, offset+y2*stepY-lenY*width*y3, altitude + h2);
         }
     }
 
@@ -156,7 +156,7 @@ public class Pineapple extends Plant {
         
         //leaves under the fruit
         gl.glColor3f(0,0.6f,0);     //green
-        for (int i=0; i<4; i++) {   //we deliberately let h2 pass the base height for artistic reasons
+        for (int i=0; i<8; i++) {   //we deliberately let h2 pass the base height for artistic reasons
             drawLeaves(4.f - 0.4f*i, baseHeight/9*i, baseHeight/9*(i+3), gl, x2, y2, offset, stepX, stepY, lenX, lenY, altitude);
         }
 
@@ -173,20 +173,21 @@ public class Pineapple extends Plant {
         drawBottomOrTop(gl, x2, y2, offset, stepX, stepY, lenX, lenY, calculateRadius(hNorm + bandThicknessNorm * i), altitude, baseHeight + bandThickness * i);
 
         //finally the number and size of leaves on top of the fruit depend on its size
-        float topHeight = baseHeight + bandThickness * i;  //where we left off after drawing our fruit
-        //float totalTopHeight = size/10.f;
-        float maxTopWidth = size/7.f;
-        float widthDecrement = maxTopWidth/10.f;
+        float topHeight = baseHeight + bandThickness * (i -1);  // ... * i; is the height of the top of the fruit.  Using (i-1) instead of i here is an artistic choice, to make the top leaves resemble those of a real pineapple more closely
+        //float totalTopHeight = size/8.f;                        //
+        float maxTopWidth = size/15.f;
+        float widthDecrement = maxTopWidth/12.f;
+        float heightIncrement = size/30.f;
 
         gl.glColor3f(0,0.6f,0);         //green
         
-        /*
-        for (int j=0; j<size/3; j++)  {
-            drawLeaves(maxTopWidth - widthDecrement*j, topHeight, topHeight - 1.f, gl, x2, y2, offset, stepX, stepY, lenX, lenY, altitude);
+        
+        for (int j=0; j<size/2; j++)  {
+            drawLeaves(maxTopWidth - widthDecrement*j, topHeight, topHeight + heightIncrement*j, gl, x2, y2, offset, stepX, stepY, lenX, lenY, altitude);
         }
-        */
+        
         //public void drawLeaves(float width, float h1, float h2, GL2 gl, int x2, int y2, float offset, float stepX, float stepY, float lenX, float lenY, float altitude) {
-            drawLeaves(5.f, topHeight, topHeight + 0.001f, gl, x2, y2, offset, stepX, stepY, lenX, lenY, altitude);
+            //drawLeaves(5.f, topHeight, topHeight + 0.001f, gl, x2, y2, offset, stepX, stepY, lenX, lenY, altitude);
     }
 
     public float calculateRadius(float hNorm)    {

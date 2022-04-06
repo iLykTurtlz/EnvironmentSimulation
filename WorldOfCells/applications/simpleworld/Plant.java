@@ -11,7 +11,7 @@ import worlds.World;
 public abstract class Plant extends UniqueDynamicObject {
     protected int size;
     protected int max_size;
-    protected int growth_rate;      //0-1000
+    protected int growth_rate;      //0-999: 1000 will provoke a division by zero exception
 
     public Plant(int __x , int __y, WorldOfTrees __world)  {
         super(__x,__y,__world);

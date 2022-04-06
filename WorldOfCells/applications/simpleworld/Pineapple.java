@@ -15,13 +15,25 @@ public class Pineapple extends Plant {
         this.growth_rate = 900;
         this.nbBands = 10;
         this.baseHeight = 4.0f;
-        this.fruitColor = new float[]{1.f,1.f,0.f};
+        this.fruitColor = new float[]{0.f,1.f,0.f};
         this.scalingFactor = 0.2f;
         this.max_size = 10;
     }
 
     public void step()  {
         super.step();
+        if ( world.getIteration() % (1000 - growth_rate) == 0 && size < max_size) {
+            incrementFruitColor();
+        }
+        
+    }
+
+    public void incrementFruitColor()  {
+        fruitColor[0] += 1.f/(float)max_size;       //we want the red value to max out when size == max_size
+        if (fruitColor[0] > 1.f)    {
+            fruitColor[0] = 1.f;
+        }
+        System.out.println(fruitColor[0]);
     }
 
 

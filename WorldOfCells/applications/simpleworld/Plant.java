@@ -20,7 +20,7 @@ public abstract class Plant extends UniqueDynamicObject {
 
     public void step()  {
         
-        if ( world.getIteration() % (1000 - growth_rate) == 0 && size <= max_size) {
+        if ( world.getIteration() % (1000 - growth_rate) == 0 && size < max_size) {
             incrementSize();
         }
         

@@ -30,7 +30,7 @@ public class Mushroom extends Plant {
     public static void incrementColor(float color[])    {
         /* Increments the color according to the spectrum*/
         // TO DO : make this BETTER!
-            
+
         for (int i=0; i<color.length; i++)  {
             if (color[i] == 0.f)  {
                 if (color[(i-1+color.length)%color.length] == 1.f && color[(i+1+color.length)%color.length] == 0.f) {
@@ -41,54 +41,17 @@ public class Mushroom extends Plant {
                 if (color[(i-1+color.length)%color.length] == 0.f && color[(i+1+color.length)%color.length] == 1.f) {
                     color[i] = 0.5f;
                 }
-
             }
-            else {
-                
+            else {   
                 if (color[(i-1+color.length)%color.length] == 0.f && color[(i+1+color.length)%color.length] == 1.f) {
-                    color[i] = 0.f;
-                    
+                    color[i] = 0.f; 
                 }
                 else if (color[(i-1+color.length)%color.length] == 1.f && color[(i+1+color.length)%color.length] == 0.f)   {
                     color[i] = 1.f;
-                    
- 
                 } 
-                return;
-                /*
-                
-                else {
-                    color[i] = 0.f;
-                }
-                */
-                
+                return;                
             }
         }
-        
-        /*
-        float[] rgb = new float[3];
-        for (int i=0; i<color.length; i++) {
-            if (color[i] == 0.f)   {
-                if (color[(i+1)%color.length] == 0.f)
-                    rgb[i] = 0.5f;
-                else
-                    rgb[i] = color[i];
-            }
-            else if (color[i] == 0.5f) {
-                if (color[(i+1)%color.length] == 0.f)
-                    rgb[i] = 1.f;
-                else
-                    rgb[i] = 0.f;
-            }
-            else {
-                if (color[(i+1)%color.length] == 1.f)
-                    rgb[i] = 0.5f;
-                else
-                    rgb[i] = color[i];
-            }
-        }
-        return rgb;
-        */
     }
 
 

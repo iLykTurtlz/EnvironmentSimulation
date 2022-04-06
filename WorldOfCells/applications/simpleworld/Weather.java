@@ -110,23 +110,14 @@ public class Weather {
     private int range = 25;
     private double[][] volcano_cells;
 
-    public double[][] initVolcano(double land[][]) {
+    public double[][] initVolcano(double landscape[][]) {
 
 
         //1 - look on the map a place where the volcano can spawn
-        double max = 0;
-        double landscape[][] = land;
-        for (int i = 0; i < landscape.length; i++) {
-            for (int k = 0; k < landscape[i].length; k++) {
-                if (landscape[i][k] > max) {
-                    max = landscape[i][k];
-                    x = i;
-                    y = k;
-                }
-            }
-        }
-        System.out.println("Found max height at " + x + ", " + y + " : " + max);
+        x = (int) (Math.random() * (landscape.length - 2*range + 1) + range);
+        y = (int) (Math.random() * (landscape[0].length - 2*range + 1) + range);
         System.out.println("Red point");
+        //tests
         world.getLandscape().x = x;
         world.getLandscape().y = y;
         float color[] = {1f, 0f, 0f};
@@ -137,16 +128,18 @@ public class Weather {
         System.out.println("Increasing the borders");
         float i = 0;
         float max_height = 0.7f;
-        for (int xi = x - range; xi < x + range; xi++) {
-            for (int yi = y - range; yi < y + range; yi++) {
-                int xm = (xi + landscape.length) % landscape.length;
-                int ym = (yi + landscape[0].length) % landscape[0].length;
-                landscape[xm][ym] = Math.min(max_height, landscape[xm][ym] * (1f + (1 - Math.sin(i))));
-                if (landscape[xm][ym] >= max_height)
-                    landscape[xm][ym] *= 0.8;
-                i += 1/(((float)range)*2f);
+        int step = 1;
+        while (step < range) {
+            for (int xi = x - step; xi < x + step; xi++) {
+                for (int yi = y - step; yi < y + step; yi++) {
+                    int xm = (xi + landscape.length) % landscape.length;
+                    int ym = (yi + landscape[0].length) % landscape[0].length;
+                    landscape[xm][ym] = Math.min(max_height, landscape[xm][ym] * (1f + (1 - Math.sin(i))));
+                    i += 1/(((float)range));
+                }
+                i = 0;
             }
-            i = 0;
+            step += 1;
         }
         //will keep the previous perlin noise values but only increase it => random volcano)
         //3 - add lava inside of it (the generation of the volcano will make a hollow inside of it to pop lava

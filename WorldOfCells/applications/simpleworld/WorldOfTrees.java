@@ -37,19 +37,15 @@ public class WorldOfTrees extends World {
 				
 				if (height > SNOW_LINE)	
 				{
-					color[0] = 1.f;
-					color[1] = 1.f;
-					color[2] = 1.f;
+                    // snowy mountains
+                    float c = height / (float)this.getMaxEverHeight();
+		        	color[0] = c + (1-c)/2f;
+					color[1] = c + (1-c)/2f;
+					color[2] = c + (1-c)/2f;
 				}
 
 		        else if ( height >= 0 )
 		        {
-		        	// snowy mountains
-		        	/*
-		        	color[0] = height / (float)this.getMaxEverHeight();
-					color[1] = height / (float)this.getMaxEverHeight();
-					color[2] = height / (float)this.getMaxEverHeight();
-					/**/
 
 					// green mountains
 		        	/**/
@@ -189,9 +185,7 @@ public class WorldOfTrees extends World {
 		case 1: // trees: green, fire, burnt
 		case 2:
 		case 3:
-            if (!_myWorld.getLandscape().getWeather().onVolcano(x, y)) {
-                Tree.displayObjectAt(_myWorld,gl,cellState, x, y, height, offset, stepX, stepY, lenX, lenY, normalizeHeight);
-            }
+            Tree.displayObjectAt(_myWorld,gl,cellState, x, y, height, offset, stepX, stepY, lenX, lenY, normalizeHeight);
 		default:
 			// nothing to display at this location.
 		}

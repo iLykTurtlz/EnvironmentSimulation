@@ -36,7 +36,6 @@ public class Pineapple extends Plant {
         if (fruitColor[0] > 1.f)    {               //floating addition can be imprecise, so we really want to make it bounded above by 1.f exact!
             fruitColor[0] = 1.f;
         }
-<<<<<<< HEAD
     }
 
 
@@ -143,8 +142,6 @@ public class Pineapple extends Plant {
                 }
             }
         }
-=======
->>>>>>> 0839e7b75e0da7786cf1d189ba2e02dc97db3110
     }
     
 

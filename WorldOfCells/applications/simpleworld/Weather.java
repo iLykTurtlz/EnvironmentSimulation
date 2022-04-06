@@ -110,9 +110,8 @@ public class Weather {
     private int range = 25;
     private double[][] volcano_cells;
 
-    public double[][] initVolcano(double landscape[][]) {
-
-
+    public double[][] initVolcano(double land[][]) {
+        double[][] landscape = land;
         //1 - look on the map a place where the volcano can spawn
         x = (int) (Math.random() * (landscape.length - 2*range + 1) + range);
         y = (int) (Math.random() * (landscape[0].length - 2*range + 1) + range);
@@ -127,15 +126,17 @@ public class Weather {
         //we use sinus function since it is an increasing function between 0 and pi/2
         System.out.println("Increasing the borders");
         float i = 0;
-        float max_height = 0.4f;
+        float max_height = 0.5f;
         int step = 1;
         while (step < range) {
             for (int xi = x - step; xi < x + step; xi++) {
                 for (int yi = y - step; yi < y + step; yi++) {
                     int xm = (xi + landscape.length) % landscape.length;
                     int ym = (yi + landscape[0].length) % landscape[0].length;
-                    landscape[xm][ym] = Math.min(max_height, landscape[xm][ym] * (1f + (1 - Math.sin(i))));
-                    i += 1/(((float)step));
+                    if (landscape[xm][ym] >= WorldOfTrees.WATER_LEVEL) {
+                        landscape[xm][ym] = Math.min(max_height, landscape[xm][ym] * (1f + (1 - Math.sin(i))));
+                    }
+                    i += 1/(((float)step)*2f);
                 }
                 i = 0;
             }
@@ -154,19 +155,6 @@ public class Weather {
 
         return landscape;
     }
-    private boolean flag = true;
-    public boolean onVolcano(int xi, int yi) {
-        double landscape[][] = world.getMap();
-       // System.out.println("xvolcano " + x + " yvolcano " + y);
-       if (flag) {
-       System.out.println("x+range : " +  (x + range) % landscape.length);
-       System.out.println("x-range : " +  ((x - range) + landscape.length) % landscape.length);
-       System.out.println("y+range : " +  (y + range) % landscape.length);
-       System.out.println("y-range : " +  ((y - range) + landscape.length) % landscape.length);
-       flag = false;
-        }
-        return xi <= (x + range) % landscape.length && xi >= ((x - range) + landscape.length) % landscape.length && yi >= ((y - range) + landscape[0].length) % landscape[0].length && yi <= (y + range) % landscape.length;
-    }
 
     public void drawVolcano(GL2 gl) {
         double[][] landscape = world.getMap();
@@ -175,7 +163,7 @@ public class Weather {
             for (int yi = y - range - 4; yi < y + range + 4; yi++) {
                 int xm = (xi + landscape.length-1) % (landscape.length - 1);
                 int ym = (yi + landscape[0].length-1) % (landscape[0].length - 1);
-                world.setCellState(xm, ym, color);
+                //world.setCellState(xm, ym, color);
             }
         }
     }

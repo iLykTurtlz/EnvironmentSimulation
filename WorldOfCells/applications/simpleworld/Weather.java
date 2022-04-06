@@ -201,7 +201,7 @@ public class Weather {
      */
     private void drawSphere(GL2 gl, double radiusH, double radiusV, float lats, float longs) {
         float zoff = world.getLandscape().getZOffset() + 50;
-       for (int i = 0; i <= lats; i++) {
+        for (int i = 0; i <= lats; i++) {
             double lat0 = Math.PI * (-0.5 + (double) (i - 1) / lats);
             double z0 = Math.sin(lat0) * radiusH + zoff;
             double zr0 = Math.cos(lat0) * radiusV;

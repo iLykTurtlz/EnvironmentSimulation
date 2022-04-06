@@ -12,13 +12,14 @@ import worlds.World;
  * 
  */
 
-public class DisplayToolbox {
-    
+public final class DisplayToolbox {
+
     //this class is not to be instantiated
     private DisplayToolbox()    {}
 
-    public static void incrementColorRainbow(float color[])    {
+    public static void incrementRainbow(float color[])    {
         // Increments the color, a float array of size 3 for rgb, according to the spectrum
+        // The three float values passed to the function should be permutations of the following multisets : {1.f,0,0}, {1.f,1.5f,0}, {1.f,1.f,0}
         for (int i=0; i<color.length; i++)  {
             if (color[i] == 0.f)  {
                 if (color[(i-1+color.length)%color.length] == 1.f && color[(i+1+color.length)%color.length] == 0.f) {

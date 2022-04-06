@@ -11,12 +11,17 @@ import applications.simpleworld.Predator;
 import applications.simpleworld.WorldOfTrees;
 
 public class PoolPredator extends Pool<Predator> {
+	public static final int MAX_NB_PREDATORS = 400;
+
 	public PoolPredator() {
 		super();
 	}
 
 	
 	public Predator add(int __x , int __y, WorldOfTrees __world, int[] offspringCharacters) {
+		if (used.size() >= MAX_NB_PREDATORS)	{
+			return null;
+		}
 		if (queue.isEmpty()) {
 			Predator pred = new Predator(__x,__y,__world, offspringCharacters);
 			super.used.add(pred);

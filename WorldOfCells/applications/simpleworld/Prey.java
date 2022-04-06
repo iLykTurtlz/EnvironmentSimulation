@@ -15,7 +15,7 @@ public class Prey extends Agent {
 
     public static final int MAX_LIFESPAN = 1000;
     public static final float INITIAL_HUNGER = 100.f;
-    public static final double p_reproduce = 0.05;
+    public static final double P_REPRODUCTION = 0.001;
 
     protected final int maxColorChangePeriod = 30;
     protected int colorCounter;
@@ -107,10 +107,15 @@ public class Prey extends Agent {
         return -1;
     }
     
+    private void reproduce()    {
+        world.addPrey(this.x, this.y);
+    }
 
     public void step() 
 	{
         super.step();
+
+        double dice = Math.random();
 
 		if ( world.getIteration() % (100 - speed) == 0 )
 		{
@@ -124,10 +129,13 @@ public class Prey extends Agent {
             vision.updateField();
             
 
-            int move = flee();
+            int move = flee();                  //Look for predators and flee from the nearest one
 
             if (move == -1 && hunger > 20)  {   //If there is no threat in view, the prey can look for food.
                 move = graze();
+            } else {
+                if (dice < P_REPRODUCTION)
+                    reproduce();
             }
 
             double currentHeight = world.getCellHeight(x,y);
@@ -202,7 +210,6 @@ public class Prey extends Agent {
         gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, height*normalizeHeight + zoff + 5.f);
         gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, height*normalizeHeight + zoff + 5.f);
     }
-
 
     public void reinitialize()  {
         super.reinitialize();

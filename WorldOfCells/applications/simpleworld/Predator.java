@@ -16,7 +16,7 @@ public class Predator extends Agent {
 
     public static final int MAX_LIFESPAN = 1000;
     public static final float INITIAL_HUNGER = 0.f;
-    public static final double p_reproduce = 0.01;
+    public static final double P_REPRODUCTION = 0.001;
     public static final float MAX_HUNGER = 100.f;
     protected enum Sex {MALE, FEMALE};
     protected Sex sex;
@@ -32,11 +32,11 @@ public class Predator extends Agent {
     public Predator( int __x , int __y, WorldOfTrees __world ) {
         super(__x,__y,__world, new float[] {1.f, 0.f, 0.f}, new float[] {1.f,1.f,1.f});
         this.rangeOfVision = 10;
-        this.defaultBaseSpeed = 60;
+        this.defaultBaseSpeed = 70;
         this.baseSpeed = this.defaultBaseSpeed;
         this.speed = this.baseSpeed;
         this.vision = new PredatorVision(__x,__y,rangeOfVision,orientation,__world);
-        this.bloodlustThreshold = 15;
+        this.bloodlustThreshold = 10;
         if (Math.random() < 0.5)    {
             this.sex = Sex.MALE;
         } else {
@@ -145,7 +145,7 @@ public class Predator extends Agent {
     private void reproduce(Predator mate)   {
         double dice = Math.random();
         Predator m,f;
-        if (dice > p_reproduce) {
+        if (dice > P_REPRODUCTION) {
             return;
         }
         if (this.getSex() == Sex.FEMALE)    {

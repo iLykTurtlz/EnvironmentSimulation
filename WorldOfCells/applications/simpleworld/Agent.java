@@ -154,12 +154,13 @@ public abstract class Agent extends UniqueDynamicObject{
 
         //Now we draw the head
         float baseHeight = bandThicknessNorm * scalingFactor * i;
+        float headScalingFactor = 2.f;
         gl.glColor3f(headColor[0],headColor[1],headColor[2]);
         for (int j=0; j<10; j++)    {
-            r1 = calculateSphereRadius( bandThicknessNorm * j );
-            r2 = calculateSphereRadius( bandThicknessNorm * (j+1));
+            r1 = headScalingFactor * calculateSphereRadius( bandThicknessNorm * j );
+            r2 = headScalingFactor * calculateSphereRadius( bandThicknessNorm * (j+1));
             //System.out.println(bandThicknessNorm*j);
-            DisplayToolbox.drawOctagonalPrism(r1,r2, baseHeight + bandThicknessNorm * j, baseHeight + bandThicknessNorm * (j+1), altitude,x2,y2,myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+            DisplayToolbox.drawOctagonalPrism(r1,r2, baseHeight + bandThicknessNorm * headScalingFactor * j, baseHeight + bandThicknessNorm * headScalingFactor * (j+1), altitude,x2,y2,myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
         }
 
 

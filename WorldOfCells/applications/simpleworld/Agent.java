@@ -316,7 +316,7 @@ public abstract class Agent extends UniqueDynamicObject{
 
     public float calculateRadius(float h)    {
         // takes in a float from the interval [0,1] and returns the value of sin(sqrt(3*pi*x))/10, multiplied by a scaling factor, which is used to draw the agent's body.
-        return (float)(scalingFactor * Math.sin(Math.sqrt(3*Math.PI*h))*0.1);
+        return (float)(scalingFactor * Math.sin(Math.sqrt(3*Math.PI*h))*0.3);
     }
 
     public float calculateSphereRadius(float h) {

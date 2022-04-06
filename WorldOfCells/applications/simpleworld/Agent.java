@@ -82,19 +82,19 @@ public abstract class Agent extends UniqueDynamicObject{
                 hThis  = this.world.getCellHeight(this.x,this.y);
 
             /* Block off water and cliffs */       
-            if ( (hAbove < WorldOfTrees.WATER_LEVEL) || hAbove > WorldOfTrees.SNOW_LINE || (Math.abs(hAbove - hThis)) > 0.01 )    {
+            if ( (hAbove < WorldOfTrees.WATER_LEVEL) || hAbove > WorldOfTrees.SNOW_LINE || (Math.abs(hAbove - hThis)) > 0.1 )    {
                 directions[0] = false;
                 accessible--;
             }
-            if ( (hRight < WorldOfTrees.WATER_LEVEL) || hRight > WorldOfTrees.SNOW_LINE || (Math.abs(hRight - hThis) > 0.01) )   {
+            if ( (hRight < WorldOfTrees.WATER_LEVEL) || hRight > WorldOfTrees.SNOW_LINE || (Math.abs(hRight - hThis) > 0.1) )   {
                 directions[1] = false;
                 accessible--;
             }
-            if ( (hBelow < WorldOfTrees.WATER_LEVEL) || hBelow > WorldOfTrees.SNOW_LINE || (Math.abs(hBelow - hThis) > 0.01) )    {
+            if ( (hBelow < WorldOfTrees.WATER_LEVEL) || hBelow > WorldOfTrees.SNOW_LINE || (Math.abs(hBelow - hThis) > 0.1) )    {
                 directions[2] = false;
                 accessible--;
             }
-            if ( (hLeft < WorldOfTrees.WATER_LEVEL) || hLeft > WorldOfTrees.SNOW_LINE || (Math.abs(hLeft - hThis) > 0.01) )      {
+            if ( (hLeft < WorldOfTrees.WATER_LEVEL) || hLeft > WorldOfTrees.SNOW_LINE || (Math.abs(hLeft - hThis) > 0.1) )      {
                 directions[3] = false;
                 accessible--;
             }
@@ -153,7 +153,7 @@ public abstract class Agent extends UniqueDynamicObject{
         }
 
         //Now we draw the head
-        float baseHeight = bandThicknessNorm * scalingFactor * i;
+        float baseHeight = bandThicknessNorm * scalingFactor * i;   //This allows us to continue the drawing starting from the same altitude where we stopped drawing the body (from the bottom up)
         float headScalingFactor = 2.f;
         gl.glColor3f(headColor[0],headColor[1],headColor[2]);
         for (int j=0; j<10; j++)    {
@@ -167,6 +167,7 @@ public abstract class Agent extends UniqueDynamicObject{
 
         /*
 
+        // OLD APPEARANCE OF AGENTS
         gl.glColor3f(1.f,1.f,1.f);
         gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight + zoff);
         gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight + zoff + 4.f);

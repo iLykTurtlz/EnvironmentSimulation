@@ -10,6 +10,9 @@ import worlds.World;
 
 public class ForestCA extends CellularAutomataInteger {
 
+    private static final float SPONTANEOUS_FIRE = 0.0001f;
+    private static final float SPAWN_TREE = 0.4f;
+
 	CellularAutomataDouble _cellsHeightValuesCA;
 	
 	World world;
@@ -28,14 +31,12 @@ public class ForestCA extends CellularAutomataInteger {
 		for ( int x = 0 ; x != _dx ; x++ )
     		for ( int y = 0 ; y != _dy ; y++ )
     		{
-
-				
 				if ( _cellsHeightValuesCA.getCellState(x,y) >= WorldOfTrees.TREE_LINE )	{
 					this.setCellState(x, y, 0); // empty
 				}
     			else if ( _cellsHeightValuesCA.getCellState(x,y) >= 0 )
     			{
-    				if ( Math.random() < 0.53 ) // was: 0.71
+    				if ( Math.random() < SPAWN_TREE ) // was: 0.71
     					this.setCellState(x, y, 1); // tree
     				else
     					this.setCellState(x, y, 0); // empty
@@ -70,7 +71,7 @@ public class ForestCA extends CellularAutomataInteger {
 	
 	    				}
 	    				else
-	    					if ( Math.random() < 0.00001 ) // spontaneously take fire ?
+	    					if ( Math.random() < SPONTANEOUS_FIRE ) // spontaneously take fire ?
 	    					{
 	    						this.setCellState(i,j,2);
 	    					}

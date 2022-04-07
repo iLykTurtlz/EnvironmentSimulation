@@ -15,7 +15,7 @@ public class WorldOfTrees extends World {
 
     protected ForestCA cellularAutomata;
     protected Landscape landscape;
-    private static final int NB_CLOUDS = 30;
+    private static final int NB_CLOUDS = 2;
     public static final float WATER_LEVEL = -0.05f;
 	public static final float TREE_LINE = 0.2f;
 	public static final float SNOW_LINE = 0.3f;

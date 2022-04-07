@@ -51,6 +51,7 @@ public abstract class VisionField    {
         while (  (i < field.length) && (coordinate[0] != field[i][0] || coordinate[1] != field[i][1])  )  {
             i++;
         }
+        System.err.println("End of loop, searchPredator");
         if ( i < field.length )   {
             for (int j = i+1; j<field.length; j++)    {
                 for (int k=0; k<predators.getSizeUsed(); k++)   {

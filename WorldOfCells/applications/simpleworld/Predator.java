@@ -6,6 +6,7 @@ import objects.UniqueDynamicObject;
 import applications.simpleworld.*;
 import applications.simpleworld.Weather.Time;
 import worlds.World;
+import utils.DisplayToolbox;
 import utils.Pool;
 import utils.PoolPredator;
 import utils.PoolPrey;
@@ -46,6 +47,7 @@ public class Predator extends Agent {
         this.gestationStage = 0;
         this.probablityChangeDirection = 0.1;
         this.pregnant = false;
+        this.bodyColor = new float[]{0.25f,0.25f,0.25f};
     }
 
     public Predator( int __x , int __y, WorldOfTrees __world, int[] offspringCharacters) {
@@ -74,12 +76,12 @@ public class Predator extends Agent {
 		if ( world.getIteration() % (100-speed) == 0 )
 		{
                
-            if (hunger >= MAX_HUNGER)   {
-                world.removePredator(this);
-            }
+            //if (hunger >= MAX_HUNGER)   {
+            //    world.removePredator(this);
+            //}
 
 
-            if (accessible == 0 || world.getLandscape().getWeather().getTime() == Time.NIGHT )    {   //If no direction is accessible, or if it is nighttime, the agent does not move.
+            if (accessible == 0 /*|| world.getLandscape().getWeather().getTime() == Time.NIGHT */)    {   //If no direction is accessible, or if it is nighttime, the agent does not move.
                 return;
             }
 
@@ -330,6 +332,49 @@ public class Predator extends Agent {
         }
         return -1;
     }
+
+
+    public void displayUniqueObject(World myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)
+    {
+        
+        //gl.glColor3f(0.f+(float)(0.5*Math.random()),0.f+(float)(0.5*Math.random()),0.f+(float)(0.5*Math.random()));
+        
+    	int x2 = (x-(offsetCA_x%myWorld.getWidth()));
+    	if ( x2 < 0) x2+=myWorld.getWidth();
+    	int y2 = (y-(offsetCA_y%myWorld.getHeight()));
+    	if ( y2 < 0) y2+=myWorld.getHeight();
+
+    	float height = Math.max ( 0 , (float)myWorld.getCellHeight(x, y) );
+
+    	float zoff = myWorld.getLandscape().getZOffset();
+
+        float altitude = height*normalizeHeight + zoff;
+
+
+        //Here we draw the body
+        float bandThicknessNorm = 1.f/10;
+        float r1,r2;
+        int i;
+        gl.glColor3f(bodyColor[0],bodyColor[1],bodyColor[2]);
+        for (i=0; i<10; i++)    {
+            r1 = calculateRadius(  bandThicknessNorm * (i)  );
+            r2 = calculateRadius(  bandThicknessNorm * (i+1)  );
+            DisplayToolbox.drawOctagonalPrism(r1,r2, bandThicknessNorm * scalingFactor * i, bandThicknessNorm * scalingFactor * (i+1), altitude,x2,y2,myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+            //public static void drawOctagonalPrism(float radius1, float radius2, float h1, float h2, float altitude, int x2, int y2, World myWorld, GL2 gl, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)  {
+        }
+
+        //Now we draw the head
+        float baseHeight = bandThicknessNorm * scalingFactor * i;   //This allows us to continue the drawing starting from the same altitude where we stopped drawing the body (from the bottom up)
+        float headScalingFactor = 2.f;
+        gl.glColor3f(headColor[0],headColor[1],headColor[2]);
+        for (int j=0; j<10; j++)    {
+            r1 = headScalingFactor * calculateSphereRadius( bandThicknessNorm * j );
+            r2 = headScalingFactor * calculateSphereRadius( bandThicknessNorm * (j+1));
+            DisplayToolbox.drawOctagonalPrism(r1,r2, baseHeight + bandThicknessNorm * headScalingFactor * j, baseHeight + bandThicknessNorm * headScalingFactor * (j+1), altitude,x2,y2,myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+        }
+    }
+
+
 
     public void reinitialize()  {
         int[] coord = world.getRandomLandCoordinate();      //random or default values

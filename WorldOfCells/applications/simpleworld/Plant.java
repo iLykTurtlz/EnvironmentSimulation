@@ -175,6 +175,10 @@ public abstract class Plant extends UniqueDynamicObject {
         return size;
     }
 
+    public int getMaxSize() {
+        return max_size;
+    }
+
     public void decrementSize() {
         if (size > 0)
             size--;
@@ -183,5 +187,9 @@ public abstract class Plant extends UniqueDynamicObject {
     public void incrementSize() {
         if (size < max_size)
             size++;
+    }
+
+    public void resetSize() {
+        this.size = 0;
     }
 }

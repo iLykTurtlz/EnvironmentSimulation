@@ -97,6 +97,27 @@ public abstract class VisionField    {
         return null;
     }
 
+    public Plant searchPlant(ArrayList<Plant> plants, int[] coordinate)   {
+        /* Lighter version of searchPlant that resumes the search from a particular coordinate */
+        Plant p;
+        int i=0;
+        while (  (i < field.length) && (coordinate[0] != field[i][0] || coordinate[1] != field[i][1])  )  {
+            i++;
+        }
+        if ( i < field.length )   {
+            for (int j = i+1; j<field.length; j++)    {
+                for (int k=0; k<plants.size(); k++)   {
+                    p = plants.get(k);
+                    int[] coord = p.getCoordinate();
+                    if (coord[0] == field[j][0] && coord[1] == field[j][1]) {
+                        return p;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
     /* GETTERS AND SETTERS */
 
     public void setPosition(int x, int y)   {

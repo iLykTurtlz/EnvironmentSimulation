@@ -11,7 +11,7 @@ import applications.simpleworld.Predator;
 import applications.simpleworld.WorldOfTrees;
 
 public class PoolPredator extends Pool<Predator> {
-	public static final int MAX_NB_PREDATORS = 400;
+	public static final int MAX_NB_PREDATORS = 100;
 
 	public PoolPredator() {
 		super();

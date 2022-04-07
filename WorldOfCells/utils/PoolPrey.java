@@ -10,7 +10,7 @@ import applications.simpleworld.Prey;
 import applications.simpleworld.WorldOfTrees;
 
 public class PoolPrey extends Pool<Prey> {
-	public static final int MAX_NB_PREY = 400;
+	public static final int MAX_NB_PREY = 100;
 
 	public PoolPrey() {
 		super();

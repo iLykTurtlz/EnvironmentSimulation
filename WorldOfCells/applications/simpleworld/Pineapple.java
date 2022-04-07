@@ -204,4 +204,5 @@ public class Pineapple extends Plant {
         float r = (float)( (size*scalingFactor) * (Math.sqrt(0.125 - ((hNorm-0.5)*(hNorm-0.5))/2))  );
         return r;
     }
+
 }

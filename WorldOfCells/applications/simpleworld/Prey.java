@@ -33,84 +33,9 @@ public class Prey extends Agent {
         this.baseSpeed = this.defaultBaseSpeed;
         this.speed = this.baseSpeed;
         this.vision = new PreyVision(__x,__y,rangeOfVision,__world);
-        this.probablityChangeDirection = 0.2;
+        this.probablityChangeDirection = 0.1;
     }
 
-
-    private int flee()  {
-        //local variables for use later in the method
-        PoolPredator predators = world.getPredators();
-        int height = world.getHeight();
-        int width = world.getWidth();
-
-        //search for the nearest threat
-        Predator threat = vision.searchPredator(predators);
-
-        if (threat == null) {   // no predator spotted in the field of vision -> return -1 to allow random displacement.
-            return -1;
-        }
-
-        int[] coord = threat.getCoordinate();
-        for (int i=0; i<rangeOfVision; i++) {                           //Tests of predator's location in counterclockwise sequence (to compensate for the prey's field of vision giving priority in CLOCKWISE direction)
-            
-            if ( ((x-i+width)%width) == coord[0] && directions[1] )     //predator in direction 3 -> move in direction 1 (if possible)
-                return 1;
-            
-            if ( ((y-i+height)%height) == coord[1] && directions[0] )   //predator in direction 2 -> direction 0
-                return 0;
-            
-            if ( ((x+i+width)%width) == coord[0] && directions[3] )     //predator in direction 1 -> direction 3
-                return 3;
-            
-            if ( ((y+i+height)%height) == coord[1] && directions[2] )   //predator in direction 0 -> direction 2
-                return 2; 
-        }
-        return -1;  //if the threat spotted earlier in this method has already left the prey's field of vision, return -1 to allow random displacement.
-    }
-
-    private int graze() {
-        ArrayList<Plant> plants = world.getPlants();
-        //double dice = Math.random();
-
-        Plant p = vision.searchPlant(plants);
-        if (p == null)  {
-            return -1;      //random displacement if no plant in view
-        }
-
-        int[] coord = p.getCoordinate();
-        int height = world.getHeight();
-        int width = world.getWidth();
-
-        if (Math.abs( (coord[0]-x+world.getWidth())%world.getWidth() ) < 2 &&  Math.abs( (coord[1]-y+world.getHeight())%world.getHeight() ) < 2)    {
-            //TO DO : reduce plant size and prey hunger
-            p.decrementSize();
-            hunger-=10;
-
-            this.state = State.PSYCHEDELIC;
-            colorCounter = 0;
-            bodyColor[0] = 1.f;
-            bodyColor[1] = 0.f;
-            bodyColor[2] = 0.f;
-
-            return -2;      //if the prey is eating, it stays until it is no longer hungry or the plant has been completely eaten.
-        }
-
-        for (int i=2; i<rangeOfVision; i++) {   //the case i < 2 has already been addressed
-            if (coord[1] == (y+i+height)%height && directions[0])
-                return 0;
-            if (coord[0] == (x+i+width)%width && directions[1])
-                return 1;
-            if (coord[1] == (y-i+height)%height && directions[2])
-                return 2;
-            if (coord[0] == (x-i+width)%width && directions[3])
-                return 3;
-        }
-        return -1;
-    }
-    
-    private void reproduce()    {
-        world.addPrey(this.x, this.y);
-    }
 
     public void step() 
 	{
@@ -121,7 +46,7 @@ public class Prey extends Agent {
 		if ( world.getIteration() % (100 - speed) == 0 )
 		{
             
-            if (accessible == 0 || world.getLandscape().getWeather().getTime() == Time.NIGHT )    {           //If no direction is accessible, or if it is nighttime the agent does not move.
+            if (accessible == 0 /*|| world.getLandscape().getWeather().getTime() == Time.NIGHT*/ )    {           //If no direction is accessible, or if it is nighttime the agent does not move.
                 return;
             }
 
@@ -135,16 +60,16 @@ public class Prey extends Agent {
             if (move == -1 && hunger > 20)  {   //If there is no threat in view, the prey can look for food.
                 move = graze();
             } else {
-                if (dice < P_REPRODUCTION)
-                    reproduce();
+                //if (dice < P_REPRODUCTION)
+                    //reproduce();
             }
 
             double currentHeight = world.getCellHeight(x,y);
             updatePosition(move);
             double nextHeight = world.getCellHeight(x,y);
-            updateSpeed(currentHeight, nextHeight);
+            //updateSpeed(currentHeight, nextHeight);
 
-            /* Reset the four directions to true*/
+            // Reset the four directions to true
             for (int i=0; i<directions.length; i++)    {
                 directions[i] = true;
             }
@@ -154,8 +79,6 @@ public class Prey extends Agent {
 
     public void displayUniqueObject(World myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)
     {
-        
-        //gl.glColor3f(0.f+(float)(0.5*Math.random()),0.f+(float)(0.5*Math.random()),0.f+(float)(0.5*Math.random()));
         
     	int x2 = (x-(offsetCA_x%myWorld.getWidth()));
     	if ( x2 < 0) x2+=myWorld.getWidth();
@@ -201,10 +124,114 @@ public class Prey extends Agent {
         for (int j=0; j<10; j++)    {
             r1 = headScalingFactor * calculateSphereRadius( bandThicknessNorm * j );
             r2 = headScalingFactor * calculateSphereRadius( bandThicknessNorm * (j+1));
-            //System.out.println(bandThicknessNorm*j);
             DisplayToolbox.drawOctagonalPrism(r1,r2, baseHeight + bandThicknessNorm * headScalingFactor * j, baseHeight + bandThicknessNorm * headScalingFactor * (j+1), altitude,x2,y2,myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
         }
      
+    }
+
+    private int flee()  {
+        //local variables for use later in the method
+        PoolPredator predators = world.getPredators();
+        int height = world.getHeight();
+        int width = world.getWidth();
+
+        //search for the nearest threat
+        Predator threat = vision.searchPredator(predators);
+
+        if (threat == null) {   // no predator spotted in the field of vision -> return -1 to allow random displacement.
+            return -1;
+        }
+
+        int[] coord = threat.getCoordinate();
+        for (int i=0; i<rangeOfVision; i++) {                           //Tests of predator's location in counterclockwise sequence (to compensate for the prey's field of vision giving priority in CLOCKWISE direction)
+            
+            if ( ((x-i+width)%width) == coord[0] && directions[1] )     //predator in direction 3 -> move in direction 1 (if possible)
+                return 1;
+            
+            if ( ((y-i+height)%height) == coord[1] && directions[0] )   //predator in direction 2 -> direction 0
+                return 0;
+            
+            if ( ((x+i+width)%width) == coord[0] && directions[3] )     //predator in direction 1 -> direction 3
+                return 3;
+            
+            if ( ((y+i+height)%height) == coord[1] && directions[2] )   //predator in direction 0 -> direction 2
+                return 2; 
+        }
+        return -1;  //if the threat spotted earlier in this method has already left the prey's field of vision, return -1 to allow random displacement.
+    }
+
+    private int graze() {
+        ArrayList<Plant> plants = world.getPlants();
+        int[] coord;
+
+        Plant p = vision.searchPlant(plants);
+
+        /*
+        while ( p != null && p instanceof Pineapple && p.getSize() < (p.getMaxSize() - 1) )    {  // prey should only eat RIPE pineapples
+            coord = p.getCoordinate();
+            p = vision.searchPlant(world.getPlants(), coord);
+        }
+        */
+
+        if (p == null)  {
+            return -1;      //if no plant in view, then explore
+        }
+
+        coord = p.getCoordinate();
+        int height = world.getHeight();
+        int width = world.getWidth();
+
+        //if the plant is adjacent to the prey -> eat
+        if (Math.abs( (coord[0]-x+world.getWidth())%world.getWidth() ) < 2 &&  Math.abs( (coord[1]-y+world.getHeight())%world.getHeight() ) < 2)    {  
+            /*
+            if (p instanceof Pineapple) {
+                p.resetSize();
+                hunger -= 10;
+            }
+            */
+
+            //else {                      //p is a Mushroom
+                p.decrementSize();
+                hunger-=10;
+
+                this.state = State.PSYCHEDELIC;
+                colorCounter = 0;
+                bodyColor[0] = 1.f;
+                bodyColor[1] = 0.f;
+                bodyColor[2] = 0.f;
+
+            //}
+
+            return -2;      //if the prey is eating, it stays until it is no longer hungry or the plant has been completely eaten.
+        }
+
+        int[] tab = {-1,-1};
+        int k=0;
+        
+        for (int i=1; i<rangeOfVision; i++) {   
+            if (coord[0] == (x-i+width)%width && directions[3]) {
+                tab[k++] = 3;
+            }
+            if (coord[1] == (y-i+height)%height && directions[2])   {
+                tab[k++] = 2;
+            }
+            if (coord[0] == (x+i+width)%width && directions[1]) {
+                tab[k++] = 1;
+            }
+            if (coord[1] == (y+i+height)%height && directions[0])   {
+                tab[k++] = 0;
+            }
+        }
+        
+        if (tab[1] == -1)   {
+            return tab[0];
+        } else {
+            return tab[(int)(Math.random()*2)];
+        }
+    }
+    
+    private void reproduce()    {
+        world.addPrey(this.x, this.y);
     }
 
     public void reinitialize()  {

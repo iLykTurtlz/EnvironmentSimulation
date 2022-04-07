@@ -329,7 +329,9 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 	                gl.glWindowPos2d(xoff, y - 2*yoff);
 	                glut.glutBitmapString(GLUT.BITMAP_9_BY_15, "time speed/condition : " + String.format("%.1f", getWeather().getTimeSpeed()*1000f) + "/" + getWeather().getCondition().toString());
 	                gl.glWindowPos2d(xoff, y - 3*yoff);
-	                glut.glutBitmapString(GLUT.BITMAP_9_BY_15, "predators/prey : " + _myWorld.getPredators().getSizeUsed() + "/" + _myWorld.getPrey().getSizeUsed());
+	                glut.glutBitmapString(GLUT.BITMAP_9_BY_15, "predators/prey (used) : " + _myWorld.getPredators().getSizeUsed() + "/" + _myWorld.getPrey().getSizeUsed());
+	                gl.glWindowPos2d(xoff, y - 4*yoff);
+	                glut.glutBitmapString(GLUT.BITMAP_9_BY_15, "predators/prey (queue) : " + _myWorld.getPredators().getSizeQueue() + "/" + _myWorld.getPrey().getSizeQueue());
 	                if (DISPLAY_HELP) {
                         gl.glWindowPos2d(xoff, 30);
                         glut.glutBitmapString(GLUT.BITMAP_HELVETICA_10,

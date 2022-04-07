@@ -109,6 +109,7 @@ public class Weather {
     private int x = 0, y = 0;
     private int range = 25;
     private double[][] volcano_cells;
+    private double[][] visited;
 
     public double[][] initVolcano(double land[][]) {
         double[][] landscape = land;
@@ -126,17 +127,21 @@ public class Weather {
         //we use sinus function since it is an increasing function between 0 and pi/2
         System.out.println("Increasing the borders");
         float i = 0;
-        float max_height = 0.5f;
+        float max_height = 0.549f;
         int step = 1;
+        visited = new double[landscape.length][landscape[0].length];
+
         while (step < range) {
             for (int xi = x - step; xi < x + step; xi++) {
                 for (int yi = y - step; yi < y + step; yi++) {
                     int xm = (xi + landscape.length) % landscape.length;
                     int ym = (yi + landscape[0].length) % landscape[0].length;
+                    if (visited[xm][ym] == 1) continue;
                     if (landscape[xm][ym] >= WorldOfTrees.WATER_LEVEL) {
-                        landscape[xm][ym] = Math.min(max_height, landscape[xm][ym] * (1f + (1 - Math.sin(i))));
+                        visited[xm][ym] = 1;
+                        landscape[xm][ym] *= Math.min(2.5f, 2f + (1 - Math.sin(i)));
                     }
-                    i += 1/(((float)step)*2f);
+                    i += 1/(((float)step));
                 }
                 i = 0;
             }
@@ -158,12 +163,20 @@ public class Weather {
 
     public void drawVolcano(GL2 gl) {
         double[][] landscape = world.getMap();
-        float color[] = {0.2f, 0.2f, 0.2f};
-        for (int xi = x - range - 4; xi < x + range + 4; xi++) {
-            for (int yi = y - range - 4; yi < y + range + 4; yi++) {
-                int xm = (xi + landscape.length-1) % (landscape.length - 1);
-                int ym = (yi + landscape[0].length-1) % (landscape[0].length - 1);
-                //world.setCellState(xm, ym, color);
+        float color[] = {0.4f, 0.4f, 0.4f};
+        for (int xi = x - range; xi < x + range; xi++) {
+            for (int yi = y - range; yi < y + range; yi++) {
+                int xm = (xi + landscape.length) % (landscape.length);
+                int ym = (yi + landscape[0].length) % (landscape[0].length);
+                if ((xm - x)*(xm - x) + (ym - y)*(ym - y) <= range*range) {
+                float height = (float) world.getCellHeight(xm, ym);
+                if (height >= WorldOfTrees.WATER_LEVEL) {
+                    color[0] = color[0] * height;
+                    color[1] = color[1] * height;
+                    color[2] = color[2] * height;
+                    world.setCellState(xm, ym, color);
+                }
+                }
             }
         }
     }

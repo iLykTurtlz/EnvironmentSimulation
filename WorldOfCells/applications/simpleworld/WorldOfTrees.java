@@ -50,21 +50,21 @@ public class WorldOfTrees extends World {
 					// green mountains
 		        	/**/
 		        	color[0] = height / ( (float)this.getMaxEverHeight() );
-					color[1] = 0.9f + 0.1f * height / ( (float)this.getMaxEverHeight() );
+					color[1] = 0.4f + 0.2f * height / ( (float)this.getMaxEverHeight() );
 					color[2] = height / ( (float)this.getMaxEverHeight() );
 					/**/
 		        }
 		        else if (height >= WATER_LEVEL) {
                     // sand
-                    color[0] = 0.9f;
-                    color[1] = 0.8f;
-                    color[2] = 0.7f;
+                    color[0] = 0.9f + (float)Math.random()%0.05f;
+                    color[1] = 0.8f + (float)Math.random()%0.05f;
+                    color[2] = 0.6f + (float)Math.random()%0.05f;
                 }
 		        else
 		        {
 		        	// water
-					color[0] = -height / ( (float)this.getMaxEverHeight() );
-					color[1] = -height / ( (float)this.getMaxEverHeight() );
+					color[0] = -height;
+					color[1] = -height;
 					color[2] = 0.8f;
 					if (color[0] > 1f || color[1] > 1f)
                         System.out.println("color[0] " + color[0] + " color[1] " + color[1] + " color[2] " + color[2]);

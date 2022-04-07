@@ -10,7 +10,7 @@ import com.jogamp.opengl.GL2;
 
 import applications.simpleworld.Weather.Time;
 import objects.UniqueDynamicObject;
-
+import utils.DisplayToolbox;
 import worlds.World;
 
 public abstract class Agent extends UniqueDynamicObject{
@@ -29,8 +29,9 @@ public abstract class Agent extends UniqueDynamicObject{
 
     protected boolean directions[];          // true if the direction is accessible, false otherwise : indices (0,1,2,3) = (N,E,S,W)
     protected int accessible;                // number of accessible directions
-    protected float[] headColor;             // to distinguish different types of agents
 
+    protected float scalingFactor;
+    protected float[] headColor;             // to distinguish different types of agents
     protected float[] bodyColor;            // for fun :)
 
 
@@ -48,6 +49,7 @@ public abstract class Agent extends UniqueDynamicObject{
         this.hunger = 0;
         this.headColor = headColor;
         this.bodyColor = bodyColor;
+        this.scalingFactor = 4.f;
 	}
 
 
@@ -80,19 +82,19 @@ public abstract class Agent extends UniqueDynamicObject{
                 hThis  = this.world.getCellHeight(this.x,this.y);
 
             /* Block off water and cliffs */       
-            if ( (hAbove < WorldOfTrees.WATER_LEVEL) || hAbove > WorldOfTrees.SNOW_LINE || (Math.abs(hAbove - hThis)) > 0.01 )    {
+            if ( (hAbove < WorldOfTrees.WATER_LEVEL) || hAbove > WorldOfTrees.SNOW_LINE || (Math.abs(hAbove - hThis)) > 0.1 )    {
                 directions[0] = false;
                 accessible--;
             }
-            if ( (hRight < WorldOfTrees.WATER_LEVEL) || hRight > WorldOfTrees.SNOW_LINE || (Math.abs(hRight - hThis) > 0.01) )   {
+            if ( (hRight < WorldOfTrees.WATER_LEVEL) || hRight > WorldOfTrees.SNOW_LINE || (Math.abs(hRight - hThis) > 0.1) )   {
                 directions[1] = false;
                 accessible--;
             }
-            if ( (hBelow < WorldOfTrees.WATER_LEVEL) || hBelow > WorldOfTrees.SNOW_LINE || (Math.abs(hBelow - hThis) > 0.01) )    {
+            if ( (hBelow < WorldOfTrees.WATER_LEVEL) || hBelow > WorldOfTrees.SNOW_LINE || (Math.abs(hBelow - hThis) > 0.1) )    {
                 directions[2] = false;
                 accessible--;
             }
-            if ( (hLeft < WorldOfTrees.WATER_LEVEL) || hLeft > WorldOfTrees.SNOW_LINE || (Math.abs(hLeft - hThis) > 0.01) )      {
+            if ( (hLeft < WorldOfTrees.WATER_LEVEL) || hLeft > WorldOfTrees.SNOW_LINE || (Math.abs(hLeft - hThis) > 0.1) )      {
                 directions[3] = false;
                 accessible--;
             }
@@ -136,6 +138,36 @@ public abstract class Agent extends UniqueDynamicObject{
 
     	float zoff = myWorld.getLandscape().getZOffset();
 
+        float altitude = height*normalizeHeight + zoff;
+
+
+        //Here we draw the body
+        float bandThicknessNorm = 1.f/10;
+        float r1,r2;
+        int i;
+        gl.glColor3f(1.f,1.f,1.f);
+        for (i=0; i<10; i++)    {
+            r1 = calculateRadius(  bandThicknessNorm * (i)  );
+            r2 = calculateRadius(  bandThicknessNorm * (i+1)  );
+            DisplayToolbox.drawOctagonalPrism(r1,r2, bandThicknessNorm * scalingFactor * i, bandThicknessNorm * scalingFactor * (i+1), altitude,x2,y2,myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+        }
+
+        //Now we draw the head
+        float baseHeight = bandThicknessNorm * scalingFactor * i;   //This allows us to continue the drawing starting from the same altitude where we stopped drawing the body (from the bottom up)
+        float headScalingFactor = 2.f;
+        gl.glColor3f(headColor[0],headColor[1],headColor[2]);
+        for (int j=0; j<10; j++)    {
+            r1 = headScalingFactor * calculateSphereRadius( bandThicknessNorm * j );
+            r2 = headScalingFactor * calculateSphereRadius( bandThicknessNorm * (j+1));
+            //System.out.println(bandThicknessNorm*j);
+            DisplayToolbox.drawOctagonalPrism(r1,r2, baseHeight + bandThicknessNorm * headScalingFactor * j, baseHeight + bandThicknessNorm * headScalingFactor * (j+1), altitude,x2,y2,myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+        }
+
+
+
+        /*
+
+        // OLD APPEARANCE OF AGENTS
         gl.glColor3f(1.f,1.f,1.f);
         gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight + zoff);
         gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight + zoff + 4.f);
@@ -165,6 +197,9 @@ public abstract class Agent extends UniqueDynamicObject{
         gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, height*normalizeHeight + zoff + 5.f);
         gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, height*normalizeHeight + zoff + 5.f);
         gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, height*normalizeHeight + zoff + 5.f);
+
+
+        */
     }
 
 
@@ -279,6 +314,16 @@ public abstract class Agent extends UniqueDynamicObject{
 
     public State getState()  {
         return this.state;
+    }
+
+    public float calculateRadius(float h)    {
+        // takes in a float from the interval [0,1] and returns the value of sin(sqrt(3*pi*x))/10, multiplied by a scaling factor, which is used to draw the agent's body.
+        return (float)(scalingFactor * Math.sin(Math.sqrt(3*Math.PI*h))*0.3);
+    }
+
+    public float calculateSphereRadius(float h) {
+        // takes in a float from the interval [0,1] and returns the radius of a slice of a sphere of radius 1/2
+        return (float)(Math.sqrt(0.25 - (h-0.5)*(h-0.5)));
     }
 
  

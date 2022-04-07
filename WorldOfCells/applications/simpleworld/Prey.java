@@ -8,6 +8,7 @@ import applications.simpleworld.Weather.Time;
 import objects.UniqueDynamicObject;
 
 import worlds.World;
+import utils.DisplayToolbox;
 import utils.PoolPredator;
 import utils.PreyVision;
 
@@ -165,6 +166,8 @@ public class Prey extends Agent {
 
     	float zoff = myWorld.getLandscape().getZOffset();
 
+        float altitude = height*normalizeHeight + zoff;
+
 
         if (this.state == State.PSYCHEDELIC && colorCounter < maxColorChangePeriod) {
             if (world.getIteration() % 20 == 0) {
@@ -180,35 +183,28 @@ public class Prey extends Agent {
             }
         }
 
-        gl.glColor3f(bodyColor[0],bodyColor[1],bodyColor[2]);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight + zoff);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight + zoff + 4.f);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, height*normalizeHeight  + zoff+ 4.f);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, height*normalizeHeight + zoff);
+        //Here we draw the body
+        float bandThicknessNorm = 1.f/10;
+        float r1,r2;
+        int i;
+        gl.glColor3f(bodyColor[0], bodyColor[1], bodyColor[2]);
+        for (i=0; i<10; i++)    {
+            r1 = calculateRadius(  bandThicknessNorm * (i)  );
+            r2 = calculateRadius(  bandThicknessNorm * (i+1)  );
+            DisplayToolbox.drawOctagonalPrism(r1,r2, bandThicknessNorm * scalingFactor * i, bandThicknessNorm * scalingFactor * (i+1), altitude,x2,y2,myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+        }
 
-        gl.glColor3f(bodyColor[0],bodyColor[1],bodyColor[2]);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, height*normalizeHeight + zoff);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, height*normalizeHeight + zoff + 4.f);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, height*normalizeHeight + zoff + 4.f);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, height*normalizeHeight + zoff);
-
-        gl.glColor3f(bodyColor[0],bodyColor[1],bodyColor[2]);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, height*normalizeHeight + zoff);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, height*normalizeHeight + zoff + 4.f);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, height*normalizeHeight + zoff + 4.f);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, height*normalizeHeight + zoff);
-
-        gl.glColor3f(bodyColor[0],bodyColor[1],bodyColor[2]);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, height*normalizeHeight + zoff);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, height*normalizeHeight + zoff + 4.f);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight + zoff + 4.f);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight + zoff);
-
+        //Now we draw the head
+        float baseHeight = bandThicknessNorm * scalingFactor * i;   //This allows us to continue the drawing starting from the same altitude where we stopped drawing the body (from the bottom up)
+        float headScalingFactor = 2.f;
         gl.glColor3f(headColor[0],headColor[1],headColor[2]);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight + zoff + 5.f);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, height*normalizeHeight + zoff + 5.f);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, height*normalizeHeight + zoff + 5.f);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, height*normalizeHeight + zoff + 5.f);
+        for (int j=0; j<10; j++)    {
+            r1 = headScalingFactor * calculateSphereRadius( bandThicknessNorm * j );
+            r2 = headScalingFactor * calculateSphereRadius( bandThicknessNorm * (j+1));
+            //System.out.println(bandThicknessNorm*j);
+            DisplayToolbox.drawOctagonalPrism(r1,r2, baseHeight + bandThicknessNorm * headScalingFactor * j, baseHeight + bandThicknessNorm * headScalingFactor * (j+1), altitude,x2,y2,myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+        }
+     
     }
 
     public void reinitialize()  {

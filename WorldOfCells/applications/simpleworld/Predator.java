@@ -32,7 +32,7 @@ public class Predator extends Agent {
 
     public Predator( int __x , int __y, WorldOfTrees __world ) {
         super(__x,__y,__world, new float[] {1.f, 0.f, 0.f}, new float[] {1.f,1.f,1.f});
-        this.rangeOfVision = 10;
+        this.rangeOfVision = 6;
         this.defaultBaseSpeed = 70;
         this.baseSpeed = this.defaultBaseSpeed;
         this.speed = this.baseSpeed;
@@ -76,9 +76,9 @@ public class Predator extends Agent {
 		if ( world.getIteration() % (100-speed) == 0 )
 		{
                
-            //if (hunger >= MAX_HUNGER)   {
-            //    world.removePredator(this);
-            //}
+            if (hunger >= MAX_HUNGER)   {
+                world.removePredator(this);
+            }
 
 
             if (accessible == 0 /*|| world.getLandscape().getWeather().getTime() == Time.NIGHT */)    {   //If no direction is accessible, or if it is nighttime, the agent does not move.
@@ -118,7 +118,7 @@ public class Predator extends Agent {
 
 
     private int findMate()  {
-        /* Finds the nearest opposite-sex predator, reproduces if possible, otherwise moves in the direction of the prospective mate. */
+        // Finds the nearest opposite-sex predator, reproduces if possible, otherwise returns a move in the direction of the prospective mate.
         PoolPredator predators = world.getPredators();
         Predator mate;
         boolean copulate;
@@ -179,8 +179,8 @@ public class Predator extends Agent {
    
 
     private int eatAndHunt()    {                   
-        /* Finds nearest prey, eats it if possible, 
-           otherwise returns the Predator's next move, based on the prey's location, -1 if no prey is seen. */
+        // Finds nearest prey, eats it if possible, 
+        // otherwise returns the Predator's next move, based on the prey's location, -1 if no prey is seen. */
         PoolPrey prey = world.getPrey();
         boolean dinnertime;
 

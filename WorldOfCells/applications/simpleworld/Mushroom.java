@@ -24,7 +24,7 @@ public class Mushroom extends Plant {
     }
 
     public void step()  {
-        super.step();
+        incrementSize();
     }
 
     public static void incrementColor(float color[])    {
@@ -145,10 +145,13 @@ public class Mushroom extends Plant {
         gl.glVertex3f( offset+x2*stepX+lenX*centerRadius, offset+y2*stepY-lenY*centerRadius, altitude + centerHeight);
 
         drawBands(0, 0, centerHeight, bandWidth, new float[]{1.f,0.5f,0.f}, centerRadius, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight);
-       
-
-        
-
         
     }
+
+    public void reduceSize()    {
+        decrementSize();
+    }
+
+
+
 }

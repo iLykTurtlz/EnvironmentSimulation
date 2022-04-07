@@ -6,10 +6,6 @@ import worlds.World;
 
 /*  This class contains methods useful for at least TWO classes in our program.
  *
- * 
- * 
- * 
- * 
  */
 
 public final class DisplayToolbox {

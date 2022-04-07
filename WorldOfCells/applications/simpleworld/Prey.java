@@ -28,7 +28,7 @@ public class Prey extends Agent {
 
     public Prey( int __x , int __y, WorldOfTrees __world ) {
         super(__x,__y,__world, new float[] {0.f,0.75f,1.f}, new float[] {1.f,1.f,1.f});
-        this.rangeOfVision = 5;
+        this.rangeOfVision = 4;
         this.defaultBaseSpeed = 55;
         this.baseSpeed = this.defaultBaseSpeed;
         this.speed = this.baseSpeed;
@@ -162,45 +162,33 @@ public class Prey extends Agent {
 
     private int graze() {
         ArrayList<Plant> plants = world.getPlants();
-        int[] coord;
 
         Plant p = vision.searchPlant(plants);
 
-        /*
-        while ( p != null && p instanceof Pineapple && p.getSize() < (p.getMaxSize() - 1) )    {  // prey should only eat RIPE pineapples
-            coord = p.getCoordinate();
-            p = vision.searchPlant(world.getPlants(), coord);
-        }
-        */
 
         if (p == null)  {
             return -1;      //if no plant in view, then explore
         }
 
-        coord = p.getCoordinate();
+        int[] coord = p.getCoordinate();
         int height = world.getHeight();
         int width = world.getWidth();
 
-        //if the plant is adjacent to the prey -> eat
-        if (Math.abs( (coord[0]-x+world.getWidth())%world.getWidth() ) < 2 &&  Math.abs( (coord[1]-y+world.getHeight())%world.getHeight() ) < 2)    {  
-            /*
-            if (p instanceof Pineapple) {
-                p.resetSize();
-                hunger -= 10;
-            }
-            */
+        //if the plant is adjacent to the prey (von Neumann neighborhood), then eat
+        if (  (  coord[0] == x && ( (coord[1] == y) || (coord[1] == ((y + 1 + height)%height)) || (coord[1] == ((y - 1 + height)%height)) )  )  ||
+              (  coord[1] == y && ( ( (coord[0] == (x-1+width)%width))  ||  ( (coord[0] == (x+1+width)%width)) ) )   )  {
+            
+   
+            p.reduceSize();
+            hunger-=10;
 
-            //else {                      //p is a Mushroom
-                p.decrementSize();
-                hunger-=10;
+            this.state = State.PSYCHEDELIC;
+            colorCounter = 0;
+            bodyColor[0] = 1.f;
+            bodyColor[1] = 0.f;
+            bodyColor[2] = 0.f;
 
-                this.state = State.PSYCHEDELIC;
-                colorCounter = 0;
-                bodyColor[0] = 1.f;
-                bodyColor[1] = 0.f;
-                bodyColor[2] = 0.f;
-
-            //}
+        
 
             return -2;      //if the prey is eating, it stays until it is no longer hungry or the plant has been completely eaten.
         }

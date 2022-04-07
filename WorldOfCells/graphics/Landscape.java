@@ -55,8 +55,9 @@ import landscapegenerator.PerlinNoiseLandscapeGenerator;
  */
 public class Landscape implements GLEventListener, KeyListener, MouseListener{
 	
-		private WorldOfTrees _myWorld; 
+		private WorldOfTrees _myWorld;
 		private Weather weather;
+		private Volcano volcano;
 
 		private static final double INITIAL_PREDATOR_DENSITY = 0.001;
 		private static final double INITIAL_PREY_DENSITY = 0.005;
@@ -170,7 +171,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 
 			initAgents();
         }
-        public int x, y;
+
         /**
          * 
          */
@@ -182,18 +183,10 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
     		System.out.println("Landscape contains " + dxView*dyView + " tiles. (" + dxView + "x" + dyView +")");
 
     		weather = new Weather(_myWorld);
-    		landscape = weather.initVolcano(landscape);
+    		volcano = new Volcano(_myWorld);
         	
     		_myWorld.init(dxView,dyView,landscape);
-
-
-    		float color[] = {1f, 0f, 0f};
-    		_myWorld.setCellState(x, y, color);
-    		_myWorld.setCellState((x-1 + landscape.length-1) % (landscape.length-1), y, color);
-    		_myWorld.setCellState((x+1) % (landscape.length-1), y, color);
-    		_myWorld.setCellState(x, (y-1 + landscape.length-1) % (landscape.length-1), color);
-    		_myWorld.setCellState(x, (y+1 + landscape.length-1) % (landscape.length-1), color);
-    		landscape[x][y] = 1f;
+    		volcano.initVolcano();
     		
     		heightFactor = 32.0f; //64.0f; // was: 32.0f;
             heightBooster = 6.0; // default: 2.0 // 6.0 makes nice high mountains.
@@ -285,9 +278,6 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 
                 // trucs d'alex
                 gl.glEnable(GL.GL_DITHER);
-
-        		weather.drawVolcano(gl);
-                
         }
         
         
@@ -338,6 +328,8 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 	                glut.glutBitmapString(GLUT.BITMAP_9_BY_15, "x: " + movingX +" y:" + movingY + " z:" + movingZ);
 	                gl.glWindowPos2d(xoff, y - 2*yoff);
 	                glut.glutBitmapString(GLUT.BITMAP_9_BY_15, "time speed/condition : " + String.format("%.1f", getWeather().getTimeSpeed()*1000f) + "/" + getWeather().getCondition().toString());
+	                gl.glWindowPos2d(xoff, y - 3*yoff);
+	                glut.glutBitmapString(GLUT.BITMAP_9_BY_15, "predators/prey : " + _myWorld.getPredators().getSizeUsed() + "/" + _myWorld.getPrey().getSizeUsed());
 	                if (DISPLAY_HELP) {
                         gl.glWindowPos2d(xoff, 30);
                         glut.glutBitmapString(GLUT.BITMAP_HELVETICA_10,
@@ -441,6 +433,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
             	
             	_myWorld.step();
             	weather.step();
+        		volcano.drawVolcano(gl);
 
         		// ** draw everything
 

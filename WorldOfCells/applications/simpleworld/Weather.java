@@ -1,5 +1,6 @@
 package applications.simpleworld;
 
+import java.util.*;
 import applications.simpleworld.*;
 import worlds.*;
 import com.jogamp.opengl.*;
@@ -105,80 +106,9 @@ public class Weather {
        gl.glPopMatrix();*/
     }
 
-    private boolean init = true;
-    private int x = 0, y = 0;
-    private int range = 25;
-    private double[][] volcano_cells;
-    private double[][] visited;
 
-    public double[][] initVolcano(double land[][]) {
-        double[][] landscape = land;
-        //1 - look on the map a place where the volcano can spawn
-        x = (int) (Math.random() * (landscape.length - 2*range + 1) + range);
-        y = (int) (Math.random() * (landscape[0].length - 2*range + 1) + range);
-        System.out.println("Red point");
-        //tests
-        world.getLandscape().x = x;
-        world.getLandscape().y = y;
-        float color[] = {1f, 0f, 0f};
-        //world.setCellState(x, y, color); draw Volcano
-        //make it grow or instantly spawn?
-        //2 - increase altitude based on the center thanks to sinus or cosinus or any increasing function (landscape[x][y] *= function(x/x,y)
-        //we use sinus function since it is an increasing function between 0 and pi/2
-        System.out.println("Increasing the borders");
-        float i = 0;
-        float max_height = 0.549f;
-        int step = 1;
-        visited = new double[landscape.length][landscape[0].length];
-
-        while (step < range) {
-            for (int xi = x - step; xi < x + step; xi++) {
-                for (int yi = y - step; yi < y + step; yi++) {
-                    int xm = (xi + landscape.length) % landscape.length;
-                    int ym = (yi + landscape[0].length) % landscape[0].length;
-                    if (visited[xm][ym] == 1) continue;
-                    if (landscape[xm][ym] >= WorldOfTrees.WATER_LEVEL) {
-                        visited[xm][ym] = 1;
-                        landscape[xm][ym] *= Math.min(2.5f, 2f + (1 - Math.sin(i)));
-                    }
-                    i += 1/(((float)step));
-                }
-                i = 0;
-            }
-            step += 1;
-        }
-        //will keep the previous perlin noise values but only increase it => random volcano)
-        //3 - add lava inside of it (the generation of the volcano will make a hollow inside of it to pop lava
-        //change color of cells and decrease height from center
-        /*for (int xi = x - 4; xi < x + 4; xi++) {
-            for (int yi = y - 4; yi < y + 4; yi++) {
-                int xm = (xi + landscape.length) % landscape.length;
-                int ym = (yi + landscape[0].length) % landscape[0].length;
-                landscape[xm][ym] *= 0.5;
-            }
-        }*/
-
-        return landscape;
-    }
-
-    public void drawVolcano(GL2 gl) {
-        double[][] landscape = world.getMap();
-        float color[] = {0.4f, 0.4f, 0.4f};
-        for (int xi = x - range; xi < x + range; xi++) {
-            for (int yi = y - range; yi < y + range; yi++) {
-                int xm = (xi + landscape.length) % (landscape.length);
-                int ym = (yi + landscape[0].length) % (landscape[0].length);
-                if ((xm - x)*(xm - x) + (ym - y)*(ym - y) <= range*range) {
-                float height = (float) world.getCellHeight(xm, ym);
-                if (height >= WorldOfTrees.WATER_LEVEL) {
-                    color[0] = color[0] * height;
-                    color[1] = color[1] * height;
-                    color[2] = color[2] * height;
-                    world.setCellState(xm, ym, color);
-                }
-                }
-            }
-        }
+    private static double nextGaussian(double x) {
+        return Math.exp(-4d*x*x);
     }
 
     /**
@@ -217,6 +147,7 @@ public class Weather {
             }
             gl.glEnd();
         }
+        gl.glBegin(gl.GL_QUADS);
     }
 
     //do we draw the clouds here ?

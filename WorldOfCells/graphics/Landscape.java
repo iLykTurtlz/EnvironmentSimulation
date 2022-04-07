@@ -183,7 +183,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
     		System.out.println("Landscape contains " + dxView*dyView + " tiles. (" + dxView + "x" + dyView +")");
 
     		weather = new Weather(_myWorld);
-    		volcano = new Volcano(_myWorld);
+    		volcano = new Volcano(_myWorld, dxView, dyView);
         	
     		_myWorld.init(dxView,dyView,landscape);
     		volcano.initVolcano();
@@ -435,7 +435,9 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
             	
             	_myWorld.step();
             	weather.step();
+            	//drawVolcano must be called BEFORE step !! => drawing priorities
         		volcano.drawVolcano(gl);
+            	volcano.step();
 
         		// ** draw everything
 
@@ -735,7 +737,8 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
                 DISPLAY_FPS = !DISPLAY_FPS;
                 break;
             case KeyEvent.VK_X:
-                System.out.println(movingX + ", " + movingY + " height : " + landscape[movingX % landscape.length][movingY % landscape[0].length]);
+                System.out.println("eruption");
+                volcano.erupt();
                 break;
             case KeyEvent.VK_H:
                 DISPLAY_HELP = !DISPLAY_HELP;

@@ -8,17 +8,20 @@ import com.jogamp.opengl.util.gl2.GLUT;
 
 public class Volcano {
     private WorldOfTrees world;
+    private LavaCA lava;
     private int x = 0, y = 0;
     private int range;
-    private int lava_range = 3;
+    private int LAVA_RANGE = 3;
+    private boolean erupted = false;
 
-    public Volcano(WorldOfTrees world, int range) {
+    public Volcano(WorldOfTrees world, int dxView, int dyView, int range) {
         this.world = world;
         this.range = range;
+        this.lava = new LavaCA(world, dxView, dyView);
     }
 
-    public Volcano(WorldOfTrees world) {
-        this(world, 25);
+    public Volcano(WorldOfTrees world, int dxView, int dyView) {
+        this(world, dxView, dyView, 25);
     }
 
     public void initVolcano() {
@@ -67,20 +70,69 @@ public class Volcano {
 
         //3 - add lava inside of it (the generation of the volcano will make a hollow inside of it to pop lava
         //change color of cells (done in draw Volcano) and decrease height from center
-        for (int xi = x - 4; xi < x + 4; xi++) {
-            for (int yi = y - 4; yi < y + 4; yi++) {
-                int xm = (xi + landscape.length) % landscape.length;
-                int ym = (yi + landscape[0].length) % landscape[0].length;
-                landscape[xm][ym] *= 0.95;
+        for (int xi = x - range; xi < x + range; xi++) {
+            for (int yi = y - range; yi < y + range; yi++) {
+                if ((xi - x)*(xi - x) + (yi - y)*(yi - y) <= LAVA_RANGE*LAVA_RANGE) {
+                    world.getMap()[xi][yi] *= 0.95d;
+                }
             }
         }
-    }
-    private float[] init_color = null;
 
+        //4 - init lava
+        lava.init();
+    }
+
+    private long eruption_time, elapsed_time;
+    public void erupt() {
+        eruption_time = System.currentTimeMillis();
+        for (int xi = x - range; xi < x + range; xi++) {
+            for (int yi = y - range; yi < y + range; yi++) {
+                if ((xi - x)*(xi - x) + (yi - y)*(yi - y) <= LAVA_RANGE*LAVA_RANGE) {
+                    world.getMap()[xi][yi] *= 1.05d; //tiny elevation for the lava to be able to flow
+                    lava.setCellState(xi, yi, 1); //init lava
+                }
+            }
+        }
+        erupted = true;
+    }
+
+    public void step() {
+        if (erupted) {
+            boolean done = true;
+            if ((System.currentTimeMillis() - eruption_time)/1000f >= 5f) { // check every 5 seconds if eruption is done
+                loop:
+                for (int i = 0; i < world.getMap().length; i++) {
+                    for (int y = 0; y < world.getMap()[0].length; y++) {
+                        if (lava.getCellState(i, y) == 1) {
+                            done = false;
+                            break loop;
+                        }
+                    }
+                }
+                if (done) {
+                    erupted = false;
+                    for (int xi = x - range; xi < x + range; xi++) {
+                        for (int yi = y - range; yi < y + range; yi++) {
+                            if ((xi - x)*(xi - x) + (yi - y)*(yi - y) <= LAVA_RANGE*LAVA_RANGE) {
+                                world.getMap()[xi][yi] *= 0.95d; //tiny decrementation
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (world.getIteration() % 10 == 0)
+            lava.step();
+    }
+
+    private float[] init_color = null;
+    private boolean init = true;
+    float color1[] = {0.1f, 0.1f, 0.1f};
+    float color2[] = {0.1f, 0.1f, 0.1f};
     public void drawVolcano(GL2 gl) {
         if (world.getIteration() % 10 != 0) return;
         double[][] landscape = world.getMap();
-        float color[] = {0.1f, 0.1f, 0.1f};
         for (int xi = x - range; xi < x + range; xi++) {
             for (int yi = y - range; yi < y + range; yi++) {
                 int xm = (xi + landscape.length) % (landscape.length);
@@ -88,20 +140,20 @@ public class Volcano {
                 if ((xm - x)*(xm - x) + (ym - y)*(ym - y) <= range*range) {
                     float height = (float) world.getCellHeight(xm, ym);
                     if (height >= WorldOfTrees.WATER_LEVEL) {
-                        if (world.getIteration() % 10 == 0 && (xm - x)*(xm - x) + (ym - y)*(ym - y) <= lava_range) {
+                        if (world.getIteration() % 10 == 0 && (xm - x)*(xm - x) + (ym - y)*(ym - y) <= LAVA_RANGE*LAVA_RANGE) {
                             float r = (float) Math.random();
-                            color[0] = (float) (0.8d * r);
-                            color[1] = (float) (0.3d * r);
-                            color[2] = 0f;
-                            world.setCellState(xm, ym, color);
+                            color2[0] = (float) (0.8d * r);
+                            color2[1] = (float) (0.3d * r);
+                            color2[2] = 0f;
+                            world.setCellState(xm, ym, color2);
                         } else if (height >= WorldOfTrees.SNOW_LINE) {
                             if (init_color == null) {
                                 init_color = world.getCellColorValue(xm, ym);
                             }
-                            color[0] = init_color[0]*height;
-                            color[1] = init_color[1]*height;
-                            color[2] = init_color[2]*height;
-                            world.setCellState(xm, ym, color);
+                            color1[0] = init_color[0]*height;
+                            color1[1] = init_color[1]*height;
+                            color1[2] = init_color[2]*height;
+                            world.setCellState(xm, ym, color1);
                         }
                     }
                 }

@@ -14,7 +14,6 @@ import graphics.*;
 public class WorldOfTrees extends World {
 
     protected ForestCA forest;
-    protected LavaCA lava;
     protected Landscape landscape;
     private static final int NB_CLOUDS = 30;
     public static final float WATER_LEVEL = -0.05f;
@@ -118,15 +117,13 @@ public class WorldOfTrees extends World {
     {
     	forest = new ForestCA(this,__dxCA,__dyCA,cellsHeightValuesCA);
     	forest.init();
-    	lava = new LavaCA(this,__dxCA,__dyCA,cellsHeightValuesCA);
-    	lava.init();
+
     }
     
     protected void stepCellularAutomata()
     {
     	if ( iteration%10 == 0 ) {
     		forest.step();
-    		lava.step();
         }
     }
     

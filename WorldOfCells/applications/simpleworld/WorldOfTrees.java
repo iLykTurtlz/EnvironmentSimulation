@@ -13,7 +13,8 @@ import graphics.*;
 
 public class WorldOfTrees extends World {
 
-    protected ForestCA cellularAutomata;
+    protected ForestCA forest;
+    protected LavaCA lava;
     protected Landscape landscape;
     private static final int NB_CLOUDS = 30;
     public static final float WATER_LEVEL = -0.05f;
@@ -115,14 +116,18 @@ public class WorldOfTrees extends World {
     
     protected void initCellularAutomata(int __dxCA, int __dyCA, double[][] landscape)
     {
-    	cellularAutomata = new ForestCA(this,__dxCA,__dyCA,cellsHeightValuesCA);
-    	cellularAutomata.init();
+    	forest = new ForestCA(this,__dxCA,__dyCA,cellsHeightValuesCA);
+    	forest.init();
+    	lava = new LavaCA(this,__dxCA,__dyCA,cellsHeightValuesCA);
+    	lava.init();
     }
     
     protected void stepCellularAutomata()
     {
-    	if ( iteration%10 == 0 )
-    		cellularAutomata.step();
+    	if ( iteration%10 == 0 ) {
+    		forest.step();
+    		lava.step();
+        }
     }
     
     protected void stepAgents()
@@ -167,12 +172,12 @@ public class WorldOfTrees extends World {
 
     public int getCellValue(int x, int y) // used by the visualization code to call specific object display.
     {
-    	return cellularAutomata.getCellState(x%dxCA,y%dyCA);
+    	return forest.getCellState(x%dxCA,y%dyCA);
     }
 
     public void setCellValue(int x, int y, int state)
     {
-    	cellularAutomata.setCellState( x%dxCA, y%dyCA, state);
+    	forest.setCellState( x%dxCA, y%dyCA, state);
     }
     
 	public void displayObjectAt(World _myWorld, GL2 gl, int cellState, int x,

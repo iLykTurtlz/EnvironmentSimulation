@@ -15,14 +15,18 @@ import worlds.World;
 
 public abstract class Agent extends UniqueDynamicObject{
 
+    
+    protected int age;
+    protected int orientation;                          // (0,1,2,3) = (nord,est,sud,ouest)
+    protected enum State {ALIVE, DEAD, ON_FIRE, IRRADIATED, PSYCHEDELIC, TROPICAL};
+    protected State state;
+    protected int hunger;
+    protected int fatigue;
+
+
     protected int defaultBaseSpeed;
     protected int baseSpeed;                
     protected int speed;                    // between 0 and 100, varies relative to base speed as a function of the terrain
-    protected int age;
-    protected int orientation;                          // (0,1,2,3) = (nord,est,sud,ouest)
-    protected enum State {ALIVE, DEAD, ON_FIRE, PSYCHEDELIC};
-    protected State state;
-    protected int hunger;
     protected double probablityChangeDirection;         //probability of random movement in the case where there are no threats or food nearby, otherwise the agents move straight ahead.
 
 
@@ -47,6 +51,7 @@ public abstract class Agent extends UniqueDynamicObject{
         this.age = 0;
         this.state = State.ALIVE;
         this.hunger = 0;
+        this.fatigue = 0;
         this.headColor = headColor;
         this.bodyColor = bodyColor;
         this.scalingFactor = 4.f;
@@ -82,19 +87,19 @@ public abstract class Agent extends UniqueDynamicObject{
                 hThis  = this.world.getCellHeight(this.x,this.y);
 
             /* Block off water and cliffs */       
-            if ( (hAbove < WorldOfTrees.WATER_LEVEL) || hAbove > WorldOfTrees.SNOW_LINE || (Math.abs(hAbove - hThis)) > 0.1 )    {
+            if ( (hAbove < WorldOfTrees.WATER_LEVEL) || (Math.abs(hAbove - hThis)) > 0.1 )    {
                 directions[0] = false;
                 accessible--;
             }
-            if ( (hRight < WorldOfTrees.WATER_LEVEL) || hRight > WorldOfTrees.SNOW_LINE || (Math.abs(hRight - hThis) > 0.1) )   {
+            if ( (hRight < WorldOfTrees.WATER_LEVEL) || (Math.abs(hRight - hThis) > 0.1) )   {
                 directions[1] = false;
                 accessible--;
             }
-            if ( (hBelow < WorldOfTrees.WATER_LEVEL) || hBelow > WorldOfTrees.SNOW_LINE || (Math.abs(hBelow - hThis) > 0.1) )    {
+            if ( (hBelow < WorldOfTrees.WATER_LEVEL) || (Math.abs(hBelow - hThis) > 0.1) )    {
                 directions[2] = false;
                 accessible--;
             }
-            if ( (hLeft < WorldOfTrees.WATER_LEVEL) || hLeft > WorldOfTrees.SNOW_LINE || (Math.abs(hLeft - hThis) > 0.1) )      {
+            if ( (hLeft < WorldOfTrees.WATER_LEVEL) || (Math.abs(hLeft - hThis) > 0.1) )      {
                 directions[3] = false;
                 accessible--;
             }
@@ -107,7 +112,7 @@ public abstract class Agent extends UniqueDynamicObject{
 	
 
             
-/*          //OLD MOVEMENT - Agents move randomly, including on water
+/*          //OLD MOVEMENT IN THE FUNCTION step() - Agents move randomly, including on water
             this.world.getCellHeight(this.x + 1, this.y);
 			if ( dice < 0.25 )
 				this.x = ( this.x + 1 ) % this.world.getWidth() ;
@@ -124,88 +129,14 @@ public abstract class Agent extends UniqueDynamicObject{
 */    
 
 
-    public void displayUniqueObject(World myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)
-    {
-        
-        //gl.glColor3f(0.f+(float)(0.5*Math.random()),0.f+(float)(0.5*Math.random()),0.f+(float)(0.5*Math.random()));
-        
-    	int x2 = (x-(offsetCA_x%myWorld.getWidth()));
-    	if ( x2 < 0) x2+=myWorld.getWidth();
-    	int y2 = (y-(offsetCA_y%myWorld.getHeight()));
-    	if ( y2 < 0) y2+=myWorld.getHeight();
-
-    	float height = Math.max ( 0 , (float)myWorld.getCellHeight(x, y) );
-
-    	float zoff = myWorld.getLandscape().getZOffset();
-
-        float altitude = height*normalizeHeight + zoff;
-
-
-        //Here we draw the body
-        float bandThicknessNorm = 1.f/10;
-        float r1,r2;
-        int i;
-        gl.glColor3f(1.f,1.f,1.f);
-        for (i=0; i<10; i++)    {
-            r1 = calculateRadius(  bandThicknessNorm * (i)  );
-            r2 = calculateRadius(  bandThicknessNorm * (i+1)  );
-            DisplayToolbox.drawOctagonalPrism(r1,r2, bandThicknessNorm * scalingFactor * i, bandThicknessNorm * scalingFactor * (i+1), altitude,x2,y2,myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
-        }
-
-        //Now we draw the head
-        float baseHeight = bandThicknessNorm * scalingFactor * i;   //This allows us to continue the drawing starting from the same altitude where we stopped drawing the body (from the bottom up)
-        float headScalingFactor = 2.f;
-        gl.glColor3f(headColor[0],headColor[1],headColor[2]);
-        for (int j=0; j<10; j++)    {
-            r1 = headScalingFactor * calculateSphereRadius( bandThicknessNorm * j );
-            r2 = headScalingFactor * calculateSphereRadius( bandThicknessNorm * (j+1));
-            //System.out.println(bandThicknessNorm*j);
-            DisplayToolbox.drawOctagonalPrism(r1,r2, baseHeight + bandThicknessNorm * headScalingFactor * j, baseHeight + bandThicknessNorm * headScalingFactor * (j+1), altitude,x2,y2,myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
-        }
-
-
-
-        /*
-
-        // OLD APPEARANCE OF AGENTS
-        gl.glColor3f(1.f,1.f,1.f);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight + zoff);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight + zoff + 4.f);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, height*normalizeHeight  + zoff+ 4.f);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, height*normalizeHeight + zoff);
-
-        gl.glColor3f(1.f,1.f,1.f);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, height*normalizeHeight + zoff);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, height*normalizeHeight + zoff + 4.f);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, height*normalizeHeight + zoff + 4.f);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, height*normalizeHeight + zoff);
-
-        gl.glColor3f(1.f,1.f,1.f);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, height*normalizeHeight + zoff);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, height*normalizeHeight + zoff + 4.f);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, height*normalizeHeight + zoff + 4.f);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, height*normalizeHeight + zoff);
-
-        gl.glColor3f(1.f,1.f,1.f);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, height*normalizeHeight + zoff);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, height*normalizeHeight + zoff + 4.f);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight + zoff + 4.f);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight + zoff);
-
-        gl.glColor3f(headColor[0],headColor[1],headColor[2]);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY-lenY, height*normalizeHeight + zoff + 5.f);
-        gl.glVertex3f( offset+x2*stepX-lenX, offset+y2*stepY+lenY, height*normalizeHeight + zoff + 5.f);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY+lenY, height*normalizeHeight + zoff + 5.f);
-        gl.glVertex3f( offset+x2*stepX+lenX, offset+y2*stepY-lenY, height*normalizeHeight + zoff + 5.f);
-
-
-        */
-    }
-
 
     public void reinitialize()  {
         this.age = 0;
         this.state = State.ALIVE;
+        this.orientation = (int)(4*Math.random());
+        this.hunger = 0;
+        this.fatigue = 0;
+        this.scalingFactor = 4.f;
     }
 
 

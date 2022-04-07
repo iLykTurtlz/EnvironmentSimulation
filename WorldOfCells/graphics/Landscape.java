@@ -702,10 +702,10 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 					heightBooster--;
 				break;
             case KeyEvent.VK_L:
-                movingZ += 1;
+                movingZ += 4;
                 break;
             case KeyEvent.VK_M:
-                movingZ -= 1;
+                movingZ -= 4;
                 break;
 			case KeyEvent.VK_UP:
 				movingX = ( movingX + 1 ) % (dxView-1);

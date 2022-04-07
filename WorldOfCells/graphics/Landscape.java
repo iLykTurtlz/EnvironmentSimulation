@@ -304,14 +304,14 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
         			
         			lastFpsValue = fps;
         		}
-        		
+
         		// ** clean screen
-        		
+
         		final GL2 gl = gLDrawable.getGL().getGL2();
                 gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
                 gl.glLoadIdentity();
                 // ** display FPS on screen
-                
+
                 if ( DISPLAY_FPS )
                 {
 	                gl.glPushMatrix();

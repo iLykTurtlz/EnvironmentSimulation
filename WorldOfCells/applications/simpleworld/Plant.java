@@ -20,7 +20,7 @@ public abstract class Plant extends UniqueDynamicObject {
 
     public abstract void step();
 
-    public abstract void reduceSize();
+    public abstract void reduceSize();  //call this method when the plant gets eaten
  
 
     public void reinitialize()  {

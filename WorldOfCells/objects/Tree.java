@@ -33,6 +33,17 @@ public class Tree extends CommonObject {
         if ( cellState > 0 )
         {
     		float altitude = (float)height * normalizeHeight + myWorld.getLandscape().getZOffset();
+
+            //Draw the leaves
+            for (int i=0; i<4; i++) {
+                DisplayToolbox.drawLeaves2(4, 2.f - 0.4f*i, 1.f + 0.6f*i,  2.5f + 0.4f*i, gl, x, y, offset, stepX, stepY, lenX, lenY, altitude);
+            }
+            //Draw the trunk
+            if ( cellState == 3)
+                gl.glColor3f(0.2f,0.2f,0.2f);
+            else 
+                gl.glColor3f(0.514f,0.263f,0.2f);
+            DisplayToolbox.drawOctagonalPrism(0.5f, 0.5f, 0, 1.f, altitude, (int)x, (int)y, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
     		
     		//float heightFactor, double heightBooster, float smoothFactor[]
     		
@@ -48,12 +59,6 @@ public class Tree extends CommonObject {
             gl.glVertex3f( offset+x*stepX, offset+y*stepY, altitude + 4.f );
             gl.glVertex3f( offset+x*stepX+lenY/2.f, offset+y*stepY-lenY/16.f, altitude );
             */
-            for (int i=0; i<4; i++) {
-                DisplayToolbox.drawLeaves2(4, 2.f - 0.4f*i, 1.f + 0.6f*i,  2.5f + 0.4f*i, gl, x, y, offset, stepX, stepY, lenX, lenY, altitude);
-            }
-            gl.glColor3f(0.514f,0.263f,0.2f);
-            DisplayToolbox.drawOctagonalPrism(0.5f, 0.5f, 0, 1.f, altitude, (int)x, (int)y, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
-            
         }
     }
 

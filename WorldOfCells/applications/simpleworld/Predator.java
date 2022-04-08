@@ -177,6 +177,7 @@ public class Predator extends Agent {
             world.addPredator(this.x, this.y, offspringCharacters);      //TO DO : add arguments to combine traits from both parents.
             this.gestationStage = 0;
             this.pregnant = false;
+            System.out.println("A birth has occurred");
             return -2;
         }
         return -1;

@@ -5,30 +5,39 @@ import javax.lang.model.util.ElementScanner14;
 
 import com.jogamp.opengl.GL2;
 
+import utils.DisplayToolbox;
+
 public class Mushroom extends Plant {
-    protected float[] stemColor;
+    private float[] stemColor;
+    private float[] bandColor;
     private float centerRadius;
     private float centerHeight;
     private float curvature;
     private float bandWidth;
+    private float scalingFactor;
+    private float capHeight;
 
     public Mushroom(int __x , int __y, WorldOfTrees __world)   {
         super(__x,__y,__world);
-        this.stemColor = new float[] {1.f,0.f,1.f};
-        this.centerRadius = 0.2f;
-        this.centerHeight = 2.0f;
-        this.bandWidth = 0.2f;    
-        this.max_size = 11;
-        this.curvature = 0.015f;     //needs to be a small value.  The height delta for each band is equal to curvature*(2^x) with x in [0,size], so its growth is exponential.
-        this.growth_rate = 900;
+        stemColor = new float[] {1.f,0.f,1.f};
+        bandColor = new float[] {1.f,0.f,0.f};
+        centerRadius = 0.2f;
+        centerHeight = 3.0f;
+        //this.bandWidth = 0.2f;    
+        //bandWidth = 
+        //capHeight = 
+        max_size = 11;
+        curvature = 0.015f;     //needs to be a small value.  The height delta for each band is equal to curvature*(2^x) with x in [0,size], so its growth is exponential.
+        growth_rate = 900;
+        scalingFactor = 1.f;
     }
 
     public void step()  {
         incrementSize();
     }
-
+/*
     public static void incrementColor(float color[])    {
-        /* Increments the color according to the spectrum*/
+        // Increments the color according to the spectrum
         // TO DO : make this BETTER!
 
         for (int i=0; i<color.length; i++)  {
@@ -53,7 +62,7 @@ public class Mushroom extends Plant {
             }
         }
     }
-
+*/
 
     public void drawBands(int nbBands, float heightDecrement, float h, float bandWidth, float[] bandColor, float radius, int x2, int y2, float height, float altitude, GL2 gl,int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)  {
         /* This method recursively adds colored bands to the mushroom, incrementing its radius */
@@ -107,7 +116,7 @@ public class Mushroom extends Plant {
     
         //recursive call limited by size which represents the plant's current growth state.
         if (nbBands < size)   {
-            incrementColor(bandColor);
+            DisplayToolbox.incrementRainbow(bandColor);
             drawBands(++nbBands, heightDecrement + curvature,h - heightDecrement, bandWidth, bandColor, radius+bandWidth, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight); 
         }
     }
@@ -126,17 +135,29 @@ public class Mushroom extends Plant {
         
         //stems
         gl.glColor3f(stemColor[0],stemColor[1],stemColor[2]);
-        gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude );
-        gl.glVertex3f( offset+x2*stepX-lenY/16.f, offset+y2*stepY+lenY/2.f, altitude + centerHeight );
-        gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude );
-        gl.glVertex3f( offset+x2*stepX+lenY/16.f, offset+y2*stepY-lenY/2.f, altitude + centerHeight );
+        gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + centerHeight );
+        gl.glVertex3f( offset+x2*stepX-lenY/16.f, offset+y2*stepY+lenY/2.f, altitude );
+        gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + centerHeight );
+        gl.glVertex3f( offset+x2*stepX+lenY/16.f, offset+y2*stepY-lenY/2.f, altitude );
         
-    	gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude );
-        gl.glVertex3f( offset+x2*stepX-lenY/2.f, offset+y2*stepY+lenY/16.f, altitude + centerHeight );
-        gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude );
-        gl.glVertex3f( offset+x2*stepX+lenY/2.f, offset+y2*stepY-lenY/16.f, altitude + centerHeight );
+    	gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + centerHeight );
+        gl.glVertex3f( offset+x2*stepX-lenY/2.f, offset+y2*stepY+lenY/16.f, altitude );
+        gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + centerHeight );
+        gl.glVertex3f( offset+x2*stepX+lenY/2.f, offset+y2*stepY-lenY/16.f, altitude );
         
+        float hNorm = 0.f;
+        float bandThicknessNorm = 1.f/max_size;
+        float r1,r2;
+        for (int i=0; i<size; i++)  {
+            DisplayToolbox.incrementRainbow(bandColor);
+            gl.glColor3f(bandColor[0],bandColor[1],bandColor[2]);
+            r1 = calculateRadius( hNorm + bandThicknessNorm * (i+1) );
+            r2 = calculateRadius( hNorm + bandThicknessNorm * i );
+            DisplayToolbox.drawOctagonalPrism(r1, r2, centerHeight - scalingFactor*bandThicknessNorm * (i+1), centerHeight - scalingFactor * bandThicknessNorm * i, altitude, x2, y2, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
 
+        }
+
+/*
         //center disc
         gl.glColor3f(1.f,0.f,0.f);
         gl.glVertex3f( offset+x2*stepX-lenX*centerRadius, offset+y2*stepY-lenY*centerRadius, altitude + centerHeight);
@@ -145,7 +166,7 @@ public class Mushroom extends Plant {
         gl.glVertex3f( offset+x2*stepX+lenX*centerRadius, offset+y2*stepY-lenY*centerRadius, altitude + centerHeight);
 
         drawBands(0, 0, centerHeight, bandWidth, new float[]{1.f,0.5f,0.f}, centerRadius, x2, y2, height, altitude, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight);
-        
+ */       
     }
 
     public void reduceSize()    {
@@ -153,6 +174,12 @@ public class Mushroom extends Plant {
         decrementSize();
     }
 
+    
+    public float calculateRadius(float h)  {
+        //We will use the values on the interval [0,1] for a certain ellipse
+        return (float)(scalingFactor*Math.sqrt(4-4*(h-1)*(h-1)));
+    }
+    
 
 
 }

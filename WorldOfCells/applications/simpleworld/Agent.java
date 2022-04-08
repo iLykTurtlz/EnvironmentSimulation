@@ -71,22 +71,22 @@ public abstract class Agent extends UniqueDynamicObject{
 
             this.accessible = 4;
 
-            /* Indices of squares in four directions relative to the agent's orientation */
+            // Indices of squares in four directions relative to the agent's orientation 
             int right = (this.x + 1 + this.world.getWidth()) % this.world.getWidth();
             int left = (this.x - 1 + this.world.getWidth()) % this.world.getWidth();
             int above = (this.y + 1 + this.world.getHeight()) % this.world.getHeight();
             int below = (this.y - 1 + this.world.getHeight()) % this.world.getHeight();
 
             
-            /* Block off directions that are impassable or dangerous */
-            /* And determine the number of remaining accessible directions */
+            // Block off directions that are impassable or dangerous 
+            // And determine the number of remaining accessible directions 
             double hAbove = this.world.getCellHeight(this.x, above), 
                 hRight = this.world.getCellHeight(right, this.y),
                 hBelow = this.world.getCellHeight(this.x, below), 
                 hLeft  = this.world.getCellHeight(left, this.y),
                 hThis  = this.world.getCellHeight(this.x,this.y);
 
-            /* Block off water and cliffs */       
+            // Block off water and cliffs      
             if ( (hAbove < WorldOfTrees.WATER_LEVEL) || (Math.abs(hAbove - hThis)) > 0.1 )    {
                 directions[0] = false;
                 accessible--;

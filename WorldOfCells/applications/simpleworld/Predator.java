@@ -97,7 +97,7 @@ public class Predator extends Agent {
             if (sex == Sex.FEMALE && pregnant)  {
                 move = gestate();
             } 
-            else if (move == -1 && age > 100) {
+            else if (move == -1 && age > 1) {
                 move = findMate();
             }
             
@@ -129,8 +129,8 @@ public class Predator extends Agent {
         while (mate != null && mate.sex == this.sex) {                                     //Find the nearest predator of the opposite sex
             coord = mate.getCoordinate(); 
             mate = vision.searchPredator(predators, coord);
+            System.err.println("Appel de searchPredator a deux parametres");
         }
-        
         
         if (mate != null)   {                                                                //in this case mate is of the opposite sex
             coord = mate.getCoordinate();      

@@ -38,7 +38,7 @@ public class Tree extends CommonObject {
     		
     		// maj: 2020-02-13
     		/*
-    		gl.glVertex3f( offset+x*stepX, offset+y*stepY, altitude + 4.f);
+    		gl.glVertex3f( offset+x*stepX, offset+y*stepY, altitude + 4.f);                 //Old tree display
             gl.glVertex3f( offset+x*stepX-lenY/16.f, offset+y*stepY+lenY/2.f, altitude  );
             gl.glVertex3f( offset+x*stepX, offset+y*stepY, altitude + 4.f );
             gl.glVertex3f( offset+x*stepX+lenY/16.f, offset+y*stepY-lenY/2.f, altitude );
@@ -48,7 +48,8 @@ public class Tree extends CommonObject {
             gl.glVertex3f( offset+x*stepX, offset+y*stepY, altitude + 4.f );
             gl.glVertex3f( offset+x*stepX+lenY/2.f, offset+y*stepY-lenY/16.f, altitude );
             */
-            DisplayToolbox.drawLeaves2(4, 2.f, 0,  4.f, gl, x, y, offset, stepX, stepY, lenX, lenY, altitude);
+            
+            //DisplayToolbox.drawLeaves2(4, 2.f, 0,  4.f, gl, x, y, offset, stepX, stepY, lenX, lenY, altitude);
             
         }
     }

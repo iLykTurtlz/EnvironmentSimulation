@@ -82,6 +82,7 @@ public class Predator extends Agent {
 
 
             if (accessible == 0 /*|| world.getLandscape().getWeather().getTime() == Time.NIGHT */)    {   //If no direction is accessible, or if it is nighttime, the agent does not move.
+                System.err.println("I can't move.  Help me!");
                 return;
             }
 
@@ -105,7 +106,7 @@ public class Predator extends Agent {
             move = updatePosition(move);
             setOrientation(move);
             double nextHeight = world.getCellHeight(x,y);
-            updateSpeed(currentHeight, nextHeight);
+            //updateSpeed(currentHeight, nextHeight);
 
             
             for (int i=0; i<directions.length; i++)    {        //reinitialize the four directions to true, making them all accessible 
@@ -126,11 +127,13 @@ public class Predator extends Agent {
         mate = vision.searchPredator(predators);
         int[] coord;
 
+        /*
         while (mate != null && mate.sex == this.sex) {                                     //Find the nearest predator of the opposite sex
             coord = mate.getCoordinate(); 
             mate = vision.searchPredator(predators, coord);
             System.err.println("Appel de searchPredator a deux parametres");
         }
+        */
         
         if (mate != null)   {                                                                //in this case mate is of the opposite sex
             coord = mate.getCoordinate();      

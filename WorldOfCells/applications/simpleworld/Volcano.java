@@ -84,6 +84,7 @@ public class Volcano {
 
     private long eruption_time, elapsed_time;
     public void erupt() {
+        if (erupted) return;
         eruption_time = System.currentTimeMillis();
         for (int xi = x - range; xi < x + range; xi++) {
             for (int yi = y - range; yi < y + range; yi++) {
@@ -93,6 +94,7 @@ public class Volcano {
                 }
             }
         }
+        lava.swapBuffer(); // buffer has been changed by the previous call we need to come back to it
         erupted = true;
     }
 
@@ -103,7 +105,7 @@ public class Volcano {
                 loop:
                 for (int i = 0; i < world.getMap().length; i++) {
                     for (int y = 0; y < world.getMap()[0].length; y++) {
-                        if (lava.getCellState(i, y) == 1) {
+                        if (lava.getCellState(i, y) == 1 || lava.getCellState(i, y) >= 3) { // if there is any lava then cannot erupt again
                             done = false;
                             break loop;
                         }
@@ -159,5 +161,9 @@ public class Volcano {
                 }
             }
         }
+    }
+
+    public boolean isLava(int x, int y) {
+        return lava.getCellState(x, y) == 1 || lava.getCellState(x, y) >= 3;
     }
 }

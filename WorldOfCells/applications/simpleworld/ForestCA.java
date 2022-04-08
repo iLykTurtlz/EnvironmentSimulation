@@ -6,18 +6,18 @@ package applications.simpleworld;
 
 import cellularautomata.CellularAutomataDouble;
 import cellularautomata.CellularAutomataInteger;
-import worlds.World;
+import applications.simpleworld.WorldOfTrees;
 
 public class ForestCA extends CellularAutomataInteger {
 
-    private static final float SPONTANEOUS_FIRE = 0.0001f;
+    private static final float SPONTANEOUS_FIRE = 0.000001f;
     private static final float SPAWN_TREE = 0.4f;
 
 	CellularAutomataDouble _cellsHeightValuesCA;
 	
-	World world;
+	WorldOfTrees world;
 	
-	public ForestCA ( World __world, int __dx , int __dy, CellularAutomataDouble cellsHeightValuesCA )
+	public ForestCA ( WorldOfTrees __world, int __dx , int __dy, CellularAutomataDouble cellsHeightValuesCA )
 	{
 		super(__dx,__dy,true ); // buffering must be true.
 		
@@ -124,6 +124,4 @@ public class ForestCA extends CellularAutomataInteger {
     		}
     	this.swapBuffer();
 	}
-
-	
 }

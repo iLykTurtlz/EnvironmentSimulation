@@ -66,19 +66,17 @@ public class WorldOfTrees extends World {
 					color[0] = -height;
 					color[1] = -height;
 					color[2] = 0.8f;
-					if (color[0] > 1f || color[1] > 1f)
-                        System.out.println("color[0] " + color[0] + " color[1] " + color[1] + " color[2] " + color[2]);
 		        }
 		        this.cellsColorValues.setCellState(x, y, color);
     		}
     	// add some objects
-    	for ( int i = 0 ; i < 11 ; i++ )
+    	/*for ( int i = 0 ; i < 11 ; i++ )
     	{
     		if ( i%10 == 0 )
     			uniqueObjects.add(new Monolith(110,110+i,this));
     		else
     			uniqueObjects.add(new BridgeBlock(110,110+i,this));
-    	}
+    	}*/
         //add clouds
 
         for (int i = 0; i < NB_CLOUDS; i++)
@@ -129,7 +127,6 @@ public class WorldOfTrees extends World {
     
     protected void stepAgents()
     {
-    	// nothing to do.
 		/*
     	for ( int i = 0 ; i < this.uniqueDynamicObjects.size() ; i++ )
     	{ 
@@ -172,6 +169,14 @@ public class WorldOfTrees extends World {
     	return forest.getCellState(x%dxCA,y%dyCA);
     }
 
+    public Landscape getLandscape() {
+        return landscape;
+    }
+
+    public ForestCA getForest() {
+        return forest;
+    }
+
     public void setCellValue(int x, int y, int state)
     {
     	forest.setCellState( x%dxCA, y%dyCA, state);
@@ -210,8 +215,6 @@ public class WorldOfTrees extends World {
 	public void setLandscape(Landscape l) {
         this.landscape = l;
     }
-
-    public Landscape getLandscape() { return landscape; }
 
 	public void addPredator(int x, int y)	{
 		predators.add(x,y,this);

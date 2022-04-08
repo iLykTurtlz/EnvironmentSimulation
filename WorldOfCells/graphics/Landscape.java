@@ -560,6 +560,8 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 
         public Weather getWeather() { return weather; }
 
+        public Volcano getVolcano() { return volcano; }
+
 		public void initAgents()	{
 
 			//_myWorld.displayHeightValues();		//Just testing

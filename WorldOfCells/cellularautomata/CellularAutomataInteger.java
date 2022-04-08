@@ -53,7 +53,7 @@ public class CellularAutomataInteger extends CellularAutomata {
 	public void setCellState ( int __x, int __y, int __value )
 	{
 		checkBounds (__x,__y);
-		
+
 		if ( buffering == false )
 		{
 			Buffer0[__x][__y] = __value;

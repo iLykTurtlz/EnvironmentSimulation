@@ -11,7 +11,7 @@ public class Volcano {
     private LavaCA lava;
     private int x = 0, y = 0;
     private int range;
-    private int LAVA_RANGE = 3;
+    private int LAVA_RANGE = 4;
     private boolean erupted = false;
 
     public Volcano(WorldOfTrees world, int dxView, int dyView, int range) {

@@ -149,6 +149,7 @@ public class Mushroom extends Plant {
     }
 
     public void reduceSize()    {
+        // This method is called when a prey eats the plant.
         decrementSize();
     }
 

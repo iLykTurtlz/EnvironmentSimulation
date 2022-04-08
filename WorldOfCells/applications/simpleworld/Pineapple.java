@@ -88,7 +88,9 @@ public class Pineapple extends Plant {
     }
 
     public void reduceSize()    {
+        // This method is called when a prey eats the plant.
         this.size = 0;
+        this.fruitColor[0] = 0;
     }
 
     public void incrementFruitColor()  {

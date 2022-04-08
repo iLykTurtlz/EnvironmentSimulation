@@ -168,7 +168,7 @@ public class Predator extends Agent {
 
     private int gestate()  {
         this.gestationStage++;
-        if (gestationStage == gestationPeriod)  {
+        if (gestationStage >= gestationPeriod)  {
             world.addPredator(this.x, this.y, offspringCharacters);      //TO DO : add arguments to combine traits from both parents.
             this.gestationStage = 0;
             this.pregnant = false;

@@ -53,6 +53,20 @@ public final class DisplayToolbox {
         }
     }
 
+    public static void drawLeaves2(int nbLeaves, float width, float h1, float h2, GL2 gl, float x2, float y2, float offset, float stepX, float stepY, float lenX, float lenY, float altitude) {
+        // This is a similar to drawLeaves(), but x2,y2 are floats now and the shape has been inverted so that the pointy end is up.
+        // instead of 4 leaves 90 degrees apart, this function will display nbLeaves*2 leaves, evenly spaced around a central axis.
+        // N.B. gl.glColor3f() should be called before this function to set the color.
+        for (int i=0; i<nbLeaves; i++)    {
+            float x3 = (float)Math.cos(Math.PI/nbLeaves*i);
+            float y3 = (float)Math.sin(Math.PI/nbLeaves*i);
+            gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + h2);
+            gl.glVertex3f( offset+x2*stepX-lenY*width*x3, offset+y2*stepY+lenY*width*y3, altitude + h1);
+            gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + h2);
+            gl.glVertex3f( offset+x2*stepX+lenY*width*x3, offset+y2*stepY-lenY*width*y3, altitude + h1);
+        }
+    }
+
     public static void drawOctagon(GL2 gl, int x2, int y2, float offset, float stepX, float stepY, float lenX, float lenY, float radius, float altitude, float h)  {
         // Draws a horizontal octagon centered  at (x2,y2,altitude + h)  
         // Since we're using opengl : GL_QUADS, a polygon can't have more than four sides.

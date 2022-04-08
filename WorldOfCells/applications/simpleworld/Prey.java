@@ -94,7 +94,7 @@ public class Prey extends Agent {
 
         if (this.state == State.PSYCHEDELIC && colorCounter < maxColorChangePeriod) {
             if (world.getIteration() % 20 == 0) {
-                Mushroom.incrementColor(bodyColor);
+                DisplayToolbox.incrementRainbow(bodyColor);
                 colorCounter++;
             }
         }
@@ -182,11 +182,13 @@ public class Prey extends Agent {
             p.reduceSize();
             hunger-=10;
 
-            this.state = State.PSYCHEDELIC;
-            colorCounter = 0;
-            bodyColor[0] = 1.f;
-            bodyColor[1] = 0.f;
-            bodyColor[2] = 0.f;
+            if (p.getClass() ==  Mushroom.class)  {
+                this.state = State.PSYCHEDELIC;
+                colorCounter = 0;
+                bodyColor[0] = 1.f;
+                bodyColor[1] = 0.f;
+                bodyColor[2] = 0.f;
+            }
 
         
 

@@ -82,6 +82,7 @@ public class Predator extends Agent {
 
 
             if (accessible == 0 /*|| world.getLandscape().getWeather().getTime() == Time.NIGHT */)    {   //If no direction is accessible, or if it is nighttime, the agent does not move.
+                System.err.println("I can't move.  Help me!");
                 return;
             }
 
@@ -93,11 +94,10 @@ public class Predator extends Agent {
             if (hunger > bloodlustThreshold) {
                 move = eatAndHunt();    //move in the direction of the prey (0,1,2,3) = (N,E,S,W), -1 if no prey in view
             }
-
             if (sex == Sex.FEMALE && pregnant)  {
                 move = gestate();
             } 
-            else if (move == -1 && age > 100) {
+            else if (move == -1 && age > 1) {
                 move = findMate();
             }
             
@@ -105,7 +105,7 @@ public class Predator extends Agent {
             move = updatePosition(move);
             setOrientation(move);
             double nextHeight = world.getCellHeight(x,y);
-            updateSpeed(currentHeight, nextHeight);
+            //updateSpeed(currentHeight, nextHeight);
 
             
             for (int i=0; i<directions.length; i++)    {        //reinitialize the four directions to true, making them all accessible 
@@ -124,19 +124,24 @@ public class Predator extends Agent {
         boolean copulate;
 
         mate = vision.searchPredator(predators);
-        int[] coord;
 
+        /*
         while (mate != null && mate.sex == this.sex) {                                     //Find the nearest predator of the opposite sex
             coord = mate.getCoordinate(); 
             mate = vision.searchPredator(predators, coord);
+            System.err.println("Appel de searchPredator a deux parametres");
         }
+        */
         
-        
-        if (mate != null)   {                                                                //in this case mate is of the opposite sex
-            coord = mate.getCoordinate();      
+        if (mate != null && mate.sex != this.sex)   {                                                                //in this case mate is of the opposite sex
+            int[] coord = mate.getCoordinate();    
+            
+            //System.err.println("mate at x = "+coord[0]+", y = "+coord[1]);    
+            //System.err.println("x = "+x+",y = "+y);
             copulate = isHere((Agent)mate);
             if (copulate)  {
                 this.reproduce(mate);
+                System.out.println("a mating has occurred");
                 return -2;                                                                      //In this case, they should probably hold still for a moment
             }
             return moveToward(coord, 1.f);
@@ -168,7 +173,7 @@ public class Predator extends Agent {
 
     private int gestate()  {
         this.gestationStage++;
-        if (gestationStage == gestationPeriod)  {
+        if (gestationStage >= gestationPeriod)  {
             world.addPredator(this.x, this.y, offspringCharacters);      //TO DO : add arguments to combine traits from both parents.
             this.gestationStage = 0;
             this.pregnant = false;

@@ -94,7 +94,6 @@ public class Predator extends Agent {
             if (hunger > bloodlustThreshold) {
                 move = eatAndHunt();    //move in the direction of the prey (0,1,2,3) = (N,E,S,W), -1 if no prey in view
             }
-
             if (sex == Sex.FEMALE && pregnant)  {
                 move = gestate();
             } 
@@ -125,7 +124,6 @@ public class Predator extends Agent {
         boolean copulate;
 
         mate = vision.searchPredator(predators);
-        int[] coord;
 
         /*
         while (mate != null && mate.sex == this.sex) {                                     //Find the nearest predator of the opposite sex
@@ -135,11 +133,15 @@ public class Predator extends Agent {
         }
         */
         
-        if (mate != null)   {                                                                //in this case mate is of the opposite sex
-            coord = mate.getCoordinate();      
+        if (mate != null && mate.sex != this.sex)   {                                                                //in this case mate is of the opposite sex
+            int[] coord = mate.getCoordinate();    
+            
+            //System.err.println("mate at x = "+coord[0]+", y = "+coord[1]);    
+            //System.err.println("x = "+x+",y = "+y);
             copulate = isHere((Agent)mate);
             if (copulate)  {
                 this.reproduce(mate);
+                System.out.println("a mating has occurred");
                 return -2;                                                                      //In this case, they should probably hold still for a moment
             }
             return moveToward(coord, 1.f);

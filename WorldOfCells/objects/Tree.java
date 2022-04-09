@@ -45,10 +45,12 @@ public class Tree extends CommonObject {
 
 
             //Draw the leaves
-            for (int i=0; i<2; i++) {
-                DisplayToolbox.drawLeaves2(3, 2.f - 0.6f*i, 0.5f + 0.8f*i,  2.5f + 0.6f*i, gl, x, y, offset, stepX, stepY, lenX, lenY, altitude);
-                //DisplayToolbox.drawLeaves2(nbLeaves, width, h1, h2, gl, x2, y2, offset, stepX, stepY, lenX, lenY, altitude);
-            }
+            
+            DisplayToolbox.drawLeaves2(4, 1.5f, 0.4f,  3.5f, gl, x, y, offset, stepX, stepY, lenX, lenY, altitude);
+
+            DisplayToolbox.drawLeaves2(3, 1.f, 2.f, 4.f, gl, x, y, offset, stepX, stepY, lenX, lenY, altitude);
+            //DisplayToolbox.drawLeaves2(nbLeaves, width, h1, h2, gl, x2, y2, offset, stepX, stepY, lenX, lenY, altitude);
+            
 
             //Draw the trunk
             if ( cellState == 3)    {
@@ -57,9 +59,8 @@ public class Tree extends CommonObject {
             else   {
                 gl.glColor3f(0.514f,0.263f,0.2f);
             }
-            DisplayToolbox.drawX(0.5f, 0.5f, 0, 0.5f, altitude, (int)x, (int)y, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
-
-
+            DisplayToolbox.drawX(0.5f, 0.5f, -5.f, 0.5f, altitude, (int)x, (int)y, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+  
  //END NEW TREE CODE
 
 

@@ -60,7 +60,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 		private Volcano volcano;
 
 		private static final double INITIAL_PREDATOR_DENSITY = 0.001;
-		private static final double INITIAL_PREY_DENSITY = 0;
+		private static final double INITIAL_PREY_DENSITY = 0.001;
 		private static final double INITIAL_PLANT_DENSITY = 0.005;
 	
 		private static GLCapabilities caps;  // GO FAST ???

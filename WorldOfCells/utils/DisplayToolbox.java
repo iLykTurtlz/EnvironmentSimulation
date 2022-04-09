@@ -4,7 +4,7 @@ import com.jogamp.opengl.GL2;
 
 import worlds.World;
 
-/*  This class contains methods useful for at least TWO classes in our program.
+/*  This class contains methods useful for display in various classes.
  *
  */
 
@@ -93,7 +93,7 @@ public final class DisplayToolbox {
         // Draws an octagonal prism of height h2-h1 with top and bottom open.  The bottom octagon's in circle radius (apothem) is radius1 whereas the top otagon's in circle radius is radius2.
         // The 16 vertices of this shape are selected by a sequence of 8 quadruplets defined as a function of i, as shown.
         // N.B. gl.glColor3f() should be called before this function to set the color.
-        int[] sequence = new int[4];
+        int[] sequence = {-1,-1,-1,-1}; //Maybe this is less costly than  = new int[4]; ???
 
         for (int i=0; i<8; i++) {
             sequence[0] = i;
@@ -157,6 +157,51 @@ public final class DisplayToolbox {
             }
         }
     }
+
+    public static void drawSquarePrism(float radius1, float radius2, float h1, float h2, float altitude, int x2, int y2, World myWorld, GL2 gl, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)    {
+        // This method is a less costly version of drawOctogonalPrism(), written for drawing tree trunks, which are small and therefore do not require such high resolution
+        // N.B. gl.glColor3f() should be called before this function to set the color.
+        int[] sequence = {-1,-1,-1,-1};
+
+        for (int i=0; i<4; i++) {
+            sequence[0] = i;
+            sequence[1] = i+4;
+            sequence[2] = ( (i+1)%4 ) + 4;
+            sequence[3] = (i+1)%4;
+
+            for (int j=0; j<sequence.length; j++)   {
+                switch (sequence[j])    {
+                    case 0:
+                        gl.glVertex3f( offset+x2*stepX-lenX*radius1, offset+y2*stepY-lenY*radius1, altitude + h1 );
+                        break;
+                    case 1:
+                        gl.glVertex3f( offset+x2*stepX-lenX*radius1, offset+y2*stepY+lenY*radius1, altitude + h1 );
+                        break;
+                    case 2:
+                        gl.glVertex3f( offset+x2*stepX+lenX*radius1, offset+y2*stepY+lenY*radius1, altitude + h1 );
+                        break;
+                    case 3:
+                        gl.glVertex3f( offset+x2*stepX+lenX*radius1, offset+y2*stepY-lenY*radius1, altitude + h1 );
+                        break;
+                    case 4:
+                        gl.glVertex3f( offset+x2*stepX-lenX*radius2, offset+y2*stepY-lenY*radius2, altitude + h2 );
+                        break;
+                    case 5:
+                        gl.glVertex3f( offset+x2*stepX-lenX*radius2, offset+y2*stepY+lenY*radius2, altitude + h2 );
+                        break;
+                    case 6:
+                        gl.glVertex3f( offset+x2*stepX+lenX*radius2, offset+y2*stepY+lenY*radius2, altitude + h2 );
+                        break;
+                    case 7:
+                        gl.glVertex3f( offset+x2*stepX+lenX*radius2, offset+y2*stepY-lenY*radius2, altitude + h2 );
+                        break;
+                    default:
+                        System.err.println("Erreur : DisplayToolbox.drawSquarePrism");
+                }
+            }
+        }
+    }
+
 
 
 

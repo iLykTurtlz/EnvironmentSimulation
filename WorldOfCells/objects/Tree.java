@@ -4,6 +4,8 @@
 
 package objects;
 
+import javax.swing.DefaultRowSorter;
+
 import com.jogamp.opengl.GL2;
 
 import utils.DisplayToolbox;
@@ -39,8 +41,6 @@ public class Tree extends CommonObject {
 
 
 
-
-
 //BEGIN NEW TREE CODE
 /*
 
@@ -48,14 +48,17 @@ public class Tree extends CommonObject {
             for (int i=0; i<2; i++) {
                 DisplayToolbox.drawLeaves2(3, 2.f - 0.4f*i, 1.f + 0.6f*i,  2.5f + 0.4f*i, gl, x, y, offset, stepX, stepY, lenX, lenY, altitude);
             }
-            //Draw the trunk
-            if ( cellState == 3)
-                gl.glColor3f(0.2f,0.2f,0.2f);
-            else 
-                gl.glColor3f(0.514f,0.263f,0.2f);
-            DisplayToolbox.drawOctagonalPrism(0.5f, 0.5f, 0, 1.f, altitude, (int)x, (int)y, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
 
+            //Draw the trunk
+            if ( cellState == 3)    {
+                gl.glColor3f(0.2f,0.2f,0.2f);
+            }
+            else   {
+                gl.glColor3f(0.514f,0.263f,0.2f);
+            }
+            DisplayToolbox.drawOctagonalPrism(0.5f, 0.5f, 0, 1.f, altitude, (int)x, (int)y, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
 */
+
  //END NEW TREE CODE
 
 
@@ -66,7 +69,7 @@ public class Tree extends CommonObject {
 
 
  //BEGIN COMPROMISE - OPTIMIZED NEW TREE CODE
-
+/*
             //Draw the leaves
             DisplayToolbox.drawLeaves2(2, 2.f, 1.f,  5.f, gl, x, y, offset, stepX, stepY, lenX, lenY, altitude);
             
@@ -75,10 +78,35 @@ public class Tree extends CommonObject {
                 gl.glColor3f(0.2f,0.2f,0.2f);
             else 
                 gl.glColor3f(0.514f,0.263f,0.2f);
+<<<<<<< HEAD
            // DisplayToolbox.drawSquarePrism(0.5f, 0.5f, 0, 1.f, altitude, (int)x, (int)y, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
 
+=======
+            DisplayToolbox.drawSquarePrism(0.5f, 0.5f, 0, 1.f, altitude, (int)x, (int)y, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+*/
+>>>>>>> ebde1beba573156733f82a473c62afb6ca2621d1
 
  //END COMPROMISE - OPTIMIZED NEW TREE CODE
+
+
+
+ //BEGIN FOURTH OPTION - trees are prisms
+ 
+            
+            //Draw the leaves
+            DisplayToolbox.drawSquarePrism(1.f, 0, 1.f, 5.f, altitude, (int)x, (int)y, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+            
+            //Draw the trunk
+            if ( cellState == 3)
+                gl.glColor3f(0.2f,0.2f,0.2f);
+            else 
+                gl.glColor3f(0.514f,0.263f,0.2f);
+            DisplayToolbox.drawSquarePrism(0.5f, 0.5f, 0, 1.f, altitude, (int)x, (int)y, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+
+
+ //END FOURTH OPTION
+
+
 
 
 

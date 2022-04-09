@@ -16,22 +16,28 @@ public final class DisplayToolbox {
     public static void incrementRainbow(float color[])    {
         // Increments the color, a float array of size 3 for rgb, according to the spectrum
         // The three float values passed to the function should be permutations of the following multisets : {1.f,0,0}, {1.f,1.5f,0}, {1.f,1.f,0}
+        float epsilon = 0.001f;
+        float before, after;
+
         for (int i=0; i<color.length; i++)  {
-            if (color[i] == 0.f)  {
-                if (color[(i-1+color.length)%color.length] == 1.f && color[(i+1+color.length)%color.length] == 0.f) {
+            before = color[(i-1+color.length)%color.length];
+            after = color[(i+1+color.length)%color.length];
+
+            if (  (0.f-epsilon) < color[i] && color[i] < (0.f+epsilon)  )  {
+                if (  ( (1.f-epsilon) < before && before < (1.f+epsilon) ) && ( (0.f-epsilon) < after && after < (0.f+epsilon) )  ) {
                     color[i] = 0.5f;
                 }
             }
             else if (color[i] == 1.f)    {
-                if (color[(i-1+color.length)%color.length] == 0.f && color[(i+1+color.length)%color.length] == 1.f) {
+                if (  ( (0.f-epsilon) < before && before < (0.f+epsilon) ) && ( (1.f-epsilon) < after && after < (1.f+epsilon) )  ) {
                     color[i] = 0.5f;
                 }
             }
             else {   
-                if (color[(i-1+color.length)%color.length] == 0.f && color[(i+1+color.length)%color.length] == 1.f) {
+                if (  ( (0.f-epsilon) < before && before < (0.f+epsilon) ) && ( (1.f-epsilon) < after && after < (1.f+epsilon) )  ) {
                     color[i] = 0.f; 
                 }
-                else if (color[(i-1+color.length)%color.length] == 1.f && color[(i+1+color.length)%color.length] == 0.f)   {
+                if (  ( (1.f-epsilon) < before && before < (1.f+epsilon) ) && ( (0.f-epsilon) < after && after < (0.f+epsilon) )  ) {
                     color[i] = 1.f;
                 } 
                 return;     //this return is NOT optional : it affects the result.                

@@ -12,6 +12,7 @@ public class ForestCA extends CellularAutomataInteger {
 
     private static final float SPONTANEOUS_FIRE = 0.000001f;
     private static final float SPAWN_TREE = 0.4f;
+    private static final float EXTENDED_RANGE = 0.4f;
 
 	CellularAutomataDouble _cellsHeightValuesCA;
 	
@@ -68,13 +69,21 @@ public class ForestCA extends CellularAutomataInteger {
 	    					)
 	    				{
 	    					this.setCellState(i,j,2);
-	
 	    				}
 	    				else
 	    					if ( Math.random() < SPONTANEOUS_FIRE ) // spontaneously take fire ?
 	    					{
 	    						this.setCellState(i,j,2);
 	    					}
+	    					else if (Math.random() < EXTENDED_RANGE) {
+	    						if (this.getCellState( (i+_dx-2)%(_dx) , j ) == 2 ||
+	    						this.getCellState( (i+_dx+2)%(_dx) , j ) == 2 ||
+	    						this.getCellState( i , (j+_dy+2)%(_dy) ) == 2 ||
+	    						this.getCellState( i , (j+_dy-2)%(_dy) ) == 2) {
+                            System.out.print("burning");
+                                    this.setCellState(i, j, 2);
+                                }
+                            }
 	    					else
 	    					{
 	    						this.setCellState(i,j,1); // copied unchanged
@@ -93,33 +102,34 @@ public class ForestCA extends CellularAutomataInteger {
 	    			}
 	    			
 	    			float color[] = new float[3];
-	    			switch ( this.getCellState(i, j) )
+	    			if (this.getCellState(i, j) == 1)
 	    			{
-	    				case 0:
-	    					break;
-	    				case 1:
-	    					color[0] = 0.f;
-	    					color[1] = 0.3f;
-	    					color[2] = 0.f;
-	    					break;
-	    				case 2: // burning tree
-	    					color[0] = 1.f;
-	    					color[1] = 0.f;
-	    					color[2] = 0.f;
-	    					break;
-	    				case 3: // burnt tree
-	    					color[0] = 0.f;
-	    					color[1] = 0.f;
-	    					color[2] = 0.f;
-	    					break;
-	    				default:
-	    					color[0] = 0.5f;
-	    					color[1] = 0.5f;
-	    					color[2] = 0.5f;
-	    					System.out.print("cannot interpret CA state: " + this.getCellState(i, j));
-	    					System.out.println(" (at: " + i + "," + j + " -- height: " + this.world.getCellHeight(i,j) + " )");
-	    			}	   
-	    			this.world.cellsColorValues.setCellState(i, j, color);
+                        color[0] = 0.f;
+                        color[1] = 0.3f;
+                        color[2] = 0.f;
+                        this.world.cellsColorValues.setCellState(i, j, color);
+                    }
+                    else if (this.getCellState(i, j) == 2) { // burning tree
+                        color[0] = 1.f;
+                        color[1] = 0.f;
+                        color[2] = 0.f;
+                        this.world.cellsColorValues.setCellState(i, j, color);
+                    }
+                    else if (this.getCellState(i, j) == 3) { // burnt tree
+                        if (!world.getLandscape().getVolcano().isStone(i, j)) {
+                            color[0] = 0.f;
+                            color[1] = 0.f;
+                            color[2] = 0.f;
+                            this.world.cellsColorValues.setCellState(i, j, color);
+                        }
+                    } else {
+                        color[0] = 0.5f;
+                        color[1] = 0.5f;
+                        color[2] = 0.5f;
+                        System.out.print("cannot interpret CA state: " + this.getCellState(i, j));
+                        System.out.println(" (at: " + i + "," + j + " -- height: " + this.world.getCellHeight(i,j) + " )");
+                        this.world.cellsColorValues.setCellState(i, j, color);
+	    			}
     			}
     		}
     	this.swapBuffer();

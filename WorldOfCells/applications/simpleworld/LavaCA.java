@@ -27,6 +27,9 @@ public class LavaCA extends CellularAutomataInteger {
       * the lava will flow until reaching a stable height (neighborrs at same level). Up to a certain point the
       * lava itself will turn into stone (lava lifespan). The lava will directly turn into stone if it reaches water.
       * The lava lifespan is ROCK_TIME, it decreases with time and with world iterations % 10.
+      *
+      * The Lava is guaranteed to flow on the cell at the lowest height among its neighbors and has a probability (SPREAD_CHANCE)
+      * to flow onto other neighbors that are at a lower height.
       */
 	public void step()
 	{
@@ -51,12 +54,10 @@ public class LavaCA extends CellularAutomataInteger {
                         int dstate = this.getCellState( i , (j+_dy-1)%(_dy) );
 
                         //look for the minimum height among neighbors
-                        int x, y;
-                        float min = left;
-                        int mini = 0;
-                        int state = lstate;
-                        int count = 0;
-                        float[][] dir = new float[4][3];
+                        float min = left; //track variable to find the minimum
+                        int mini = 0; //index for the minimum height
+                        int count = 0; //count the number of neighbors who are at a lower height
+                        float[][] dir = new float[4][3]; //save information for each cell : x, y, height
 
                         if (left < height) {
                             count++;
@@ -124,7 +125,7 @@ public class LavaCA extends CellularAutomataInteger {
                             x = i;
                             y = (j+_dy-1)%(_dy);
                         }*/
-                        state = this.getCellState((int) dir[mini][0], (int) dir[mini][1]);
+                        int state = this.getCellState((int) dir[mini][0], (int) dir[mini][1]);
                         if ((state == 0 || state == 2) && count > 0) {
                             world.getForest().swapBuffer(); // buffer has been changed by the previous call we need to come back to it
                             flowLava((int) dir[mini][0], (int) dir[mini][1], dir[mini][2]);

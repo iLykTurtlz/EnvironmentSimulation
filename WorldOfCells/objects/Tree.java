@@ -75,7 +75,7 @@ public class Tree extends CommonObject {
                 gl.glColor3f(0.2f,0.2f,0.2f);
             else 
                 gl.glColor3f(0.514f,0.263f,0.2f);
-            DisplayToolbox.drawSquarePrism(0.5f, 0.5f, 0, 1.f, altitude, (int)x, (int)y, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+           // DisplayToolbox.drawSquarePrism(0.5f, 0.5f, 0, 1.f, altitude, (int)x, (int)y, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
 
 
  //END COMPROMISE - OPTIMIZED NEW TREE CODE

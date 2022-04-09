@@ -89,7 +89,7 @@ public class Volcano {
         for (int xi = x - range; xi < x + range; xi++) {
             for (int yi = y - range; yi < y + range; yi++) {
                 if ((xi - x)*(xi - x) + (yi - y)*(yi - y) <= LAVA_RANGE*LAVA_RANGE) {
-                    world.getMap()[xi][yi] *= 1.05d; //tiny elevation for the lava to be able to flow
+                    world.getMap()[xi][yi] /= 0.95d; //tiny elevation for the lava to be able to flow
                     lava.setCellState(xi, yi, 1); //init lava
                 }
             }
@@ -116,7 +116,7 @@ public class Volcano {
                     for (int xi = x - range; xi < x + range; xi++) {
                         for (int yi = y - range; yi < y + range; yi++) {
                             if ((xi - x)*(xi - x) + (yi - y)*(yi - y) <= LAVA_RANGE*LAVA_RANGE) {
-                                world.getMap()[xi][yi] *= 0.95d; //tiny decrementation
+                                world.getMap()[xi][yi] *= 0.95d; //tiny decrementation return to initial state
                             }
                         }
                     }
@@ -165,5 +165,9 @@ public class Volcano {
 
     public boolean isLava(int x, int y) {
         return lava.getCellState(x, y) == 1 || lava.getCellState(x, y) >= 3;
+    }
+
+    public boolean isStone(int x, int y) {
+        return lava.getCellState(x, y) == 2;
     }
 }

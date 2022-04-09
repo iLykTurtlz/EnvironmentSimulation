@@ -117,6 +117,7 @@ public class Volcano {
                         for (int yi = y - range; yi < y + range; yi++) {
                             if ((xi - x)*(xi - x) + (yi - y)*(yi - y) <= LAVA_RANGE*LAVA_RANGE) {
                                 world.getMap()[xi][yi] *= 0.95d; //tiny decrementation return to initial state
+                                lava.setCellState(xi, yi, 1);
                             }
                         }
                     }

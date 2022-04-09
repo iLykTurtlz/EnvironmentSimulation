@@ -7,7 +7,7 @@ import applications.simpleworld.WorldOfTrees;
 public class LavaCA extends CellularAutomataInteger {
 
 	private WorldOfTrees world;
-	private static final int ROCK_TIME = 50; //basically 50 world iterations
+	private static final int ROCK_TIME = 100; //basically 100 world iterations
 	private static final double SPREAD_CHANCE = 0.5d;
 
 	public LavaCA ( WorldOfTrees __world, int __dx , int __dy )
@@ -128,12 +128,14 @@ public class LavaCA extends CellularAutomataInteger {
                         int state = this.getCellState((int) dir[mini][0], (int) dir[mini][1]);
                         if ((state == 0 || state == 2) && count > 0) {
                             world.getForest().swapBuffer(); // buffer has been changed by the previous call we need to come back to it
-                            flowLava((int) dir[mini][0], (int) dir[mini][1], dir[mini][2]);
+                            flowLava((((int) dir[mini][0]) + _dx) %_dx, (((int) dir[mini][1]) + _dy) % _dy, dir[mini][2]);
                             double r = Math.random();
-                            while (r < SPREAD_CHANCE) {
+                            int max_it = 3;
+                            while (r < SPREAD_CHANCE && max_it > 0) {
                                 int ind = (int)(Math.random()*count);
-                                flowLava((int) dir[ind][0], (int) dir[ind][1], dir[ind][2]);
+                                flowLava((((int) dir[mini][0]) + _dx) %_dx, (((int) dir[mini][1]) + _dy) % _dy, dir[ind][2]);
                                 r = Math.random();
+                                max_it--;
                             }
                         }
 

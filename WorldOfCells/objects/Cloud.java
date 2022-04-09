@@ -1,7 +1,3 @@
-// ### WORLD OF CELLS ###
-// created by nicolas.bredeche(at)upmc.fr
-// date of creation: 2013-1-12
-
 package objects;
 
 import com.jogamp.opengl.GL2;
@@ -28,7 +24,7 @@ public class Cloud extends UniqueObject{
 
     public void displayUniqueObject(World myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)
     {
-		speed = myWorld.getLandscape().getWeather().getTimeSpeed()*((float) (Math.random() * 100f + 25f)); //update speed
+		speed = myWorld.getLandscape().getWeather().getTimeSpeed()*((float) (Math.random() * 100f + 25f)); //update speed according to time speed
         x = (x + speed) % (myWorld.getWidth());
 
     	float x2 = (x-(offsetCA_x%myWorld.getWidth()));

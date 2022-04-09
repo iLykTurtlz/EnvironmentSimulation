@@ -9,6 +9,7 @@ import com.jogamp.opengl.GL2;
 
 import applications.simpleworld.Agent;
 import applications.simpleworld.Plant;
+import objects.Rain;
 import utils.PoolPredator;
 import utils.PoolPrey;
 import applications.simpleworld.Predator;
@@ -26,6 +27,7 @@ public abstract class World {
 	protected int iteration = 0;
 
 	protected ArrayList<UniqueObject> uniqueObjects = new ArrayList<UniqueObject>();
+	protected ArrayList<Rain> raindrops = new ArrayList<Rain>();
 	protected ArrayList<Agent> uniqueDynamicObjects = new ArrayList<Agent>();
 	protected PoolPrey prey = new PoolPrey();
 	protected PoolPredator predators = new PoolPredator();
@@ -166,6 +168,10 @@ public abstract class World {
             if (object instanceof Cloud && _myWorld.getLandscape().VIEW_FROM_ABOVE) continue;
     		uniqueObjects.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
         }
+        gl.glEnd(); // raindrops use gl.glBegin(gl.GL_LINES)
+        for ( int i = 0; i < raindrops.size(); i++ )
+            raindrops.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
+        gl.glBegin(GL2.GL_QUADS); // we start drawing quads back again
     	for ( int i = 0 ; i < uniqueDynamicObjects.size(); i++ )
     		uniqueDynamicObjects.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
 		

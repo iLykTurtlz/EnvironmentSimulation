@@ -42,11 +42,12 @@ public class Tree extends CommonObject {
 
 
 //BEGIN NEW TREE CODE
-/*
+
 
             //Draw the leaves
             for (int i=0; i<2; i++) {
-                DisplayToolbox.drawLeaves2(3, 2.f - 0.4f*i, 1.f + 0.6f*i,  2.5f + 0.4f*i, gl, x, y, offset, stepX, stepY, lenX, lenY, altitude);
+                DisplayToolbox.drawLeaves2(3, 2.f - 0.6f*i, 0.5f + 0.8f*i,  2.5f + 0.6f*i, gl, x, y, offset, stepX, stepY, lenX, lenY, altitude);
+                //DisplayToolbox.drawLeaves2(nbLeaves, width, h1, h2, gl, x2, y2, offset, stepX, stepY, lenX, lenY, altitude);
             }
 
             //Draw the trunk
@@ -56,8 +57,8 @@ public class Tree extends CommonObject {
             else   {
                 gl.glColor3f(0.514f,0.263f,0.2f);
             }
-            DisplayToolbox.drawOctagonalPrism(0.5f, 0.5f, 0, 1.f, altitude, (int)x, (int)y, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
-*/
+            DisplayToolbox.drawX(0.5f, 0.5f, 0, 0.5f, altitude, (int)x, (int)y, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+
 
  //END NEW TREE CODE
 
@@ -78,7 +79,7 @@ public class Tree extends CommonObject {
                 gl.glColor3f(0.2f,0.2f,0.2f);
             else 
                 gl.glColor3f(0.514f,0.263f,0.2f);
-            DisplayToolbox.drawSquarePrism(0.5f, 0.5f, 0, 1.f, altitude, (int)x, (int)y, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+            DisplayToolbox.drawX(0.5f, 0.5f, 0, 1.f, altitude, (int)x, (int)y, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
 */
 
  //END COMPROMISE - OPTIMIZED NEW TREE CODE
@@ -86,7 +87,7 @@ public class Tree extends CommonObject {
 
 
  //BEGIN FOURTH OPTION - trees are prisms
- 
+ /*
             
             //Draw the leaves
             DisplayToolbox.drawSquarePrism(1.f, 0, 1.f, 5.f, altitude, (int)x, (int)y, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
@@ -96,8 +97,8 @@ public class Tree extends CommonObject {
                 gl.glColor3f(0.2f,0.2f,0.2f);
             else 
                 gl.glColor3f(0.514f,0.263f,0.2f);
-            DisplayToolbox.drawSquarePrism(0.5f, 0.5f, 0, 1.f, altitude, (int)x, (int)y, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
-
+            DisplayToolbox.drawX(0.5f, 0.5f, 0, 1.f, altitude, (int)x, (int)y, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+*/
 
  //END FOURTH OPTION
 

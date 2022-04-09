@@ -208,6 +208,24 @@ public final class DisplayToolbox {
         }
     }
 
+    public static void drawX(float radius1, float radius2, float h1, float h2, float altitude, int x2, int y2, World myWorld, GL2 gl, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)    {
+        // This function draws an X with height h2-h1.  The top X has radius radius2 and the bottom X has radius radius1.
+        // Its purpose is to further simplify the tree trunks so that they cost less.
+        // N.B. gl.glColor3f() should be called before this function to set the color.
+
+        gl.glVertex3f( offset+x2*stepX-lenX*radius1, offset+y2*stepY, altitude + h1 );
+        gl.glVertex3f( offset+x2*stepX-lenX*radius2, offset+y2*stepY, altitude + h2 );
+        gl.glVertex3f( offset+x2*stepX+lenX*radius2, offset+y2*stepY, altitude + h2 );
+        gl.glVertex3f( offset+x2*stepX+lenX*radius1, offset+y2*stepY, altitude + h1 );
+
+        gl.glVertex3f( offset+x2*stepX, offset+y2*stepY-lenY*radius1, altitude + h1 );
+        gl.glVertex3f( offset+x2*stepX, offset+y2*stepY-lenY*radius2, altitude + h2 );
+        gl.glVertex3f( offset+x2*stepX, offset+y2*stepY+lenY*radius2, altitude + h2 );
+        gl.glVertex3f( offset+x2*stepX, offset+y2*stepY+lenY*radius1, altitude + h1 );
+
+
+    }
+
 
 
 

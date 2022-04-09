@@ -20,13 +20,19 @@ public class Mushroom extends Plant {
         centerHeight = 3.0f;
 
         max_size = 11;
-        growth_rate = 100;
+        growth_rate = 300;
         scalingFactor = 1.f;
     }
 
     public void step()  {
-        incrementSize();
+        if ( world.getIteration() % (1000 - growth_rate) == 0 && size < max_size) {
+            incrementSize();
+        }
+        
     }
+
+
+   
 
 
 

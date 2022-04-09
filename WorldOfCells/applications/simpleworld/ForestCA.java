@@ -12,7 +12,7 @@ public class ForestCA extends CellularAutomataInteger {
 
     private static final float SPONTANEOUS_FIRE = 0.000001f;
     private static final float SPAWN_TREE = 0.4f;
-    private static final float EXTENDED_RANGE = 0.4f;
+    private static final float EXTENDED_RANGE = 0.7f;
 
 	CellularAutomataDouble _cellsHeightValuesCA;
 	
@@ -80,7 +80,6 @@ public class ForestCA extends CellularAutomataInteger {
 	    						this.getCellState( (i+_dx+2)%(_dx) , j ) == 2 ||
 	    						this.getCellState( i , (j+_dy+2)%(_dy) ) == 2 ||
 	    						this.getCellState( i , (j+_dy-2)%(_dy) ) == 2) {
-                            System.out.print("burning");
                                     this.setCellState(i, j, 2);
                                 }
                             }

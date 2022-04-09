@@ -84,7 +84,6 @@ public class Tree extends CommonObject {
 =======
             DisplayToolbox.drawSquarePrism(0.5f, 0.5f, 0, 1.f, altitude, (int)x, (int)y, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
 */
->>>>>>> ebde1beba573156733f82a473c62afb6ca2621d1
 
  //END COMPROMISE - OPTIMIZED NEW TREE CODE
 

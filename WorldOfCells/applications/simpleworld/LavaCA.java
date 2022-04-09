@@ -7,8 +7,8 @@ import applications.simpleworld.WorldOfTrees;
 public class LavaCA extends CellularAutomataInteger {
 
 	private WorldOfTrees world;
-	private static final int ROCK_TIME = 30;
-	private static final double SPREAD_CHANCE = 0.3d;
+	private static final int ROCK_TIME = 50; //basically 50 world iterations
+	private static final double SPREAD_CHANCE = 0.5d;
 
 	public LavaCA ( WorldOfTrees __world, int __dx , int __dy )
 	{

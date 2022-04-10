@@ -24,6 +24,7 @@ public class Pineapple extends Plant {
     }
 
     public void step()  {
+        super.step();
         if ( world.getIteration() % (1000 - growth_rate) == 0 && size < max_size) {
             incrementFruitColor();
             incrementSize();

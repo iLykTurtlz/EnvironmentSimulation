@@ -26,9 +26,9 @@ public class Mushroom extends Plant {
     }
 
     public void step()  {
+        super.step();
         if ( world.getIteration() % (1000 - growth_rate) == 0 && size < MAX_SIZE) {
             incrementSize();
-            System.err.println("The mushroom has grown, size = "+ size);
         }
         
     }

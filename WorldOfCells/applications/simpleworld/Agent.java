@@ -4,6 +4,8 @@
 
 package applications.simpleworld;
 
+import java.util.ArrayList;
+
 import javax.lang.model.util.ElementScanner14;
 
 import com.jogamp.opengl.GL2;
@@ -11,6 +13,8 @@ import com.jogamp.opengl.GL2;
 import applications.simpleworld.Weather.Time;
 import objects.UniqueDynamicObject;
 import utils.DisplayToolbox;
+import utils.PoolPredator;
+import utils.PoolPrey;
 import worlds.World;
 
 public abstract class Agent extends UniqueDynamicObject{
@@ -18,8 +22,7 @@ public abstract class Agent extends UniqueDynamicObject{
     
     protected int age;
     protected int orientation;                                              // (0,1,2,3) = (N,E,S,W)
-    protected enum State {ALIVE, DEAD, ON_FIRE, IRRADIATED, PSYCHEDELIC};   
-    protected State state;
+    protected int remainingBurnTime;
     protected int hunger;                                                   // This value increases to motivate the agent to look for food, but it rarely results in the death of the agent.  They usually die from old age or from being eaten.
     protected int fatigue;                                                  // This motivates the agent to rest
     protected UniqueDynamicObject destination;                              // This serves as the Agent's memory.  Without storing the destination, the agents would have looping behavior as they shift back and forth between two or more target destinations.
@@ -47,13 +50,14 @@ public abstract class Agent extends UniqueDynamicObject{
         age = 0;
         orientation = (int)(4*Math.random());      //random orientation by default
         state = State.ALIVE;
+        remainingBurnTime = 50;
         hunger = 0;
         fatigue = 0;
         destination = null;
 
         probablityChangeDirection = 0.1;
 
-        directions = new boolean[4];    // above, right, below, left; in that order
+        directions = new boolean[4];    // indices (0,1,2,3) = (N,E,S,W)
         for (int i=0; i<directions.length; i++) {
             directions[i] = true;
         }
@@ -69,8 +73,8 @@ public abstract class Agent extends UniqueDynamicObject{
 
         if ( world.getIteration() % (100 - speed) == 0 )   {
 
-            
-            if ( state != State.ON_FIRE && (world.getLandscape().getVolcano().isLava(x,y) || world.getForest().getCellState(x,y) == 2) ) {        //if the agent is touched by fire or lava (and not already on fire) it catches fire.
+            //if the agent is touched by fire or lava (and not already on fire) it catches fire.
+            if ( state != State.ON_FIRE && (world.getLandscape().getVolcano().isLava(x,y) || world.getForest().getCellState(x,y) == 2) ) { 
                 bodyColor[0] = 1.f;
                 bodyColor[1] = 0.5f;
                 bodyColor[2] = 0;
@@ -78,12 +82,10 @@ public abstract class Agent extends UniqueDynamicObject{
                 speed = baseSpeed + 20;
             } 
 
-            if ( state == State.ON_FIRE )   {    // if the agent who is on fire touches a tree, it burns
-                if (world.getForest().getCellState(x,y) == 1)
-                    world.getForest().setCellState(x,y,2);
-                
+            //if the agent is on fire, adjacent UniqueDynamicObjects will catch fire too.
+            if ( state == State.ON_FIRE )   {
+                spreadFire(); 
             }
-
             
             if (world.getLandscape().getWeather().getTime() == Time.DAY)    {   
                 this.updateAge();
@@ -132,23 +134,6 @@ public abstract class Agent extends UniqueDynamicObject{
 
     }
 	
-
-            
-/*          //OLD MOVEMENT IN THE FUNCTION step() - Agents move randomly, including on water
-            this.world.getCellHeight(this.x + 1, this.y);
-			if ( dice < 0.25 )
-				this.x = ( this.x + 1 ) % this.world.getWidth() ;
-			else
-				if ( dice < 0.5 )
-					this.x = ( this.x - 1 +  this.world.getWidth() ) % this.world.getWidth() ;
-				else
-					if ( dice < 0.75 )
-						this.y = ( this.y + 1 ) % this.world.getHeight() ;
-					else
-						this.y = ( this.y - 1 +  this.world.getHeight() ) % this.world.getHeight() ;
-		}
-	}
-*/    
 
 
 
@@ -261,13 +246,21 @@ public abstract class Agent extends UniqueDynamicObject{
         return move;
     }
 
-    public int getAge()    {
-        return this.age;
+    public void catchFire() {
+        state = State.ON_FIRE;
     }
 
-    public State getState()  {
-        return this.state;
+    public void burnDown()  {
+        // This function will first test if the Agent is on fire, so it can be called with every step()
+        if (state == State.ON_FIRE)  {
+            if (remainingBurnTime > 0)  {
+                remainingBurnTime--;
+            } else {
+                state = State.DEAD;
+            }
+        }    
     }
+
 
     public float calculateRadius(float h)    {
         // takes in a float from the interval [0,1] and returns the value of sin(sqrt(3*pi*x))/10, multiplied by a scaling factor, which is used to draw the agent's body.
@@ -277,6 +270,14 @@ public abstract class Agent extends UniqueDynamicObject{
     public float calculateSphereRadius(float h) {
         // takes in a float from the interval [0,1] and returns the radius of a slice of a sphere of radius 1/2
         return (float)(Math.sqrt(0.25 - (h-0.5)*(h-0.5)));
+    }
+
+    public int getAge()    {
+        return this.age;
+    }
+
+    public State getState()  {
+        return this.state;
     }
     
 

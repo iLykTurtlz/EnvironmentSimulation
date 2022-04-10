@@ -6,7 +6,7 @@ package applications.simpleworld;
 
 import com.jogamp.opengl.GL2;
 
-import applications.simpleworld.Agent.State;
+import objects.UniqueDynamicObject.State;
 import objects.*;
 import worlds.World;
 import graphics.*;

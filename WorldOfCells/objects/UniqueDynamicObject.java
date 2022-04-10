@@ -20,7 +20,7 @@ abstract public class UniqueDynamicObject // UniqueObject are object defined wit
 {
 	protected int x,y;
 	protected WorldOfTrees world;
-	protected enum State {ALIVE, DEAD, ON_FIRE, IRRADIATED, PSYCHEDELIC};   
+	public enum State {ALIVE, DEAD, ON_FIRE, IRRADIATED, PSYCHEDELIC};   
     protected State state;
 	
 	public UniqueDynamicObject(int __x, int __y, WorldOfTrees __world)

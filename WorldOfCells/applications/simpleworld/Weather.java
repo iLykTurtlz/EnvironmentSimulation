@@ -12,7 +12,8 @@ public class Weather {
     private WorldOfTrees world;
     private float elapsed_time = 0;
     private long last_checked = 0;
-    private static final float WEATHER_UPDATE_DELAY = 60f; //60 seconds
+    private static final float WEATHER_UPDATE_DELAY = 30f; //30 seconds
+    private static final double RAIN_CHANCE = .2d;
     private Time time;
     private Condition weather = Condition.SUNNY; //sunny default
     private static float time_speed = 0.001f; //0.001 is good
@@ -24,10 +25,16 @@ public class Weather {
         glut = new GLUT();
     }
 
+    /*
+     * Updates time according to elapsed time.
+     * The time value is based on cosinus which values are between -1 and 1.
+     * The time schedule is : from -1 to -.75 is night and from -.75 to 1 is day.
+     * This choice is a consequence of the agents who are active mainly at day time.
+     */
     public void step() {
         updateWeather();
-        float time_value = getTimeValue();
-        if (time_value >= .5f) {
+        double time_value = Math.cos(elapsed_time);
+        if (time_value >= -.75d) {
             if (time != Time.DAY)
                 setTime(Time.DAY);
         } else {
@@ -37,12 +44,21 @@ public class Weather {
         elapsed_time += time_speed;
     }
 
+    /*
+     * The weather is auto-updated,
+     * it changes its condition each WEATHER_UPDATE_DELAY seconds.
+     */
     public void updateWeather() {
         //check every 10 seconds to update the weather
         long current_time = System.currentTimeMillis();
         if ((current_time - last_checked)/1000f >= WEATHER_UPDATE_DELAY) {
-            int random = (int) (Math.random() * Condition.values().length); //between 2 and 0 by default
-            setCondition(Condition.values()[random]);
+            double random = Math.random();
+            if (random < RAIN_CHANCE)
+                setCondition(Condition.RAINY);
+            else if (random < (1d-RAIN_CHANCE)/2d) //snowing and sunny have the same probability to be set
+                setCondition(Condition.SNOWING);
+            else
+                setCondition(Condition.SUNNY);
             last_checked = current_time;
         }
     }
@@ -53,8 +69,6 @@ public class Weather {
 
     public void setTime(Time time) {
         this.time = time;
-        //float time_value = getTimeValue();
-        //if (
     }
 
     public void setTimeSpeed(float speed) {
@@ -82,12 +96,14 @@ public class Weather {
         return weather;
     }
 
+    /*
+     * Drawing the sun
+     */
     public void drawSky(GL2 gl) { //draw(GL2 gl)
-        //Math.sin simulates the weather condition as the function is perodically repeated and corresponds to the schedule of day to night
-        //Math.sin simulates the weather conditions as the function is perodically repeated and corresponds to the schedule of day to night
+        //Math.sin simulates the time as the function is perodically repeated and corresponds to the schedule of day to night
         float time = getElapsedTime();
         float time_value = getTimeValue();
-        gl.glClearColor(0.3f, time_value/2f, time_value, 0.5f); //sunset -> day
+        gl.glClearColor(0.3f, time_value/1.5f, time_value, 0.5f); //sunset -> day
         //gl.glLoadIdentity();
         gl.glPushMatrix();
 
@@ -112,6 +128,7 @@ public class Weather {
 
     /**
      * Method to draw a sphere in OpenGL.
+     * Note : this function is not used for now.
      *
      * Source taken from: http://ozark.hendrix.edu/~burch/cs/490/sched/feb8/
      *
@@ -148,7 +165,4 @@ public class Weather {
         }
         gl.glBegin(gl.GL_QUADS);
     }
-
-    //do we draw the clouds here ?
-    //public void draw(GL2 gl);
 }

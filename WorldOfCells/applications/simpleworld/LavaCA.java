@@ -3,12 +3,13 @@ package applications.simpleworld;
 import cellularautomata.CellularAutomataDouble;
 import cellularautomata.CellularAutomataInteger;
 import applications.simpleworld.WorldOfTrees;
+import applications.simpleworld.Weather.*;
 
 public class LavaCA extends CellularAutomataInteger {
 
 	private WorldOfTrees world;
 	private static final int ROCK_TIME = 100; //basically 100 world iterations
-	private static final double SPREAD_CHANCE = 0.5d;
+	private static final double SPREAD_CHANCE = 1d;
 
 	public LavaCA ( WorldOfTrees __world, int __dx , int __dy )
 	{
@@ -30,6 +31,10 @@ public class LavaCA extends CellularAutomataInteger {
       *
       * The Lava is guaranteed to flow on the cell at the lowest height among its neighbors and has a probability (SPREAD_CHANCE)
       * to flow onto other neighbors that are at a lower height.
+      *
+      * States : 1 - lava
+      *          2 - stone
+      *          between 3 and ROCK_TIME - lava at 2 nd state (increments until reaching ROCK_TIME)
       */
 	public void step()
 	{
@@ -99,32 +104,6 @@ public class LavaCA extends CellularAutomataInteger {
                             }
                         }
 
-                        /*if (min > right) {
-                            min = right;
-                            state = rstate;
-                        }
-                        if (min > up) {
-                            min = up;
-                            state = ustate;
-                        }
-                        if (min > down) {
-                            min = down;
-                            state = dstate;
-                        }
-
-                        if (min == left) {
-                            x = (i+_dx-1)%(_dx);
-                            y = j;
-                        } else if (min == right) {
-                            x = (i+_dx+1)%(_dx);
-                            y = j;
-                        } else if (min == up) {
-                            x = i;
-                            y = (j+_dy+1)%(_dy);
-                        } else {
-                            x = i;
-                            y = (j+_dy-1)%(_dy);
-                        }*/
                         int state = this.getCellState((int) dir[mini][0], (int) dir[mini][1]);
                         if ((state == 0 || state == 2) && count > 0) {
                             world.getForest().swapBuffer(); // buffer has been changed by the previous call we need to come back to it
@@ -137,25 +116,21 @@ public class LavaCA extends CellularAutomataInteger {
                                 r = Math.random();
                                 max_it--;
                             }
+                            world.getForest().swapBuffer(); // swap back
                         }
 
-                        /*if ((state == 0 || state == -1 || state == 2) && min < height) {
-                            if (min >= WorldOfTrees.WATER_LEVEL) {
-                                this.setCellState(x, y, 1); //set lava
-                                if (world.getCellValue(x, y) == 1) { // if lava is flowing on tree then it burns
-                                    world.getForest().swapBuffer(); // buffer has been changed by the previous call we need to come back to it
-                                    world.setCellValue(x, y, 2);
-                                }
-                            } else
-                                this.setCellState(x, y, 2); //set rock
-                        }*/
                         this.setCellState(i, j, 3); //set current cell to 2 nd lava state
 	    			}
 	    			else
 	    			{
 	        				if ( this.getCellState(i, j) >= 3 && this.getCellState(i, j) < ROCK_TIME) // if is lava at 2 nd state
 	        				{
-	        					this.setCellState(i,j, this.getCellState(i,j) + 1); // decrement lava life span
+                                if (world.getLandscape().getWeather().getCondition() == Condition.RAINY) {
+                                    if (Math.random() < .3d) {
+                                        this.setCellState(i, j, 2); //there is less than half a chance the lava becomes stone because of the rain
+                                    }
+                                } else
+                                    this.setCellState(i,j, this.getCellState(i,j) + 1); // decrement lava life span
 	        				}
 	        				else
 	        				{
@@ -187,6 +162,12 @@ public class LavaCA extends CellularAutomataInteger {
 	}
 
     private void flowLava(int x, int y, float height) {
+        if (world.getLandscape().getWeather().getCondition() == Condition.RAINY) {
+            if (Math.random() < .3d) {
+                this.setCellState(x, y, 2); //there is less than half a chance the lava becomes stone because of the rain
+                return;
+            }
+        }
         if (height >= WorldOfTrees.WATER_LEVEL) {
             this.setCellState(x, y, 1); //set lava
             if (world.getCellValue(x, y) == 1) { // if lava is flowing on tree then it burns

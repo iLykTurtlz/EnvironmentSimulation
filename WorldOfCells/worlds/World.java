@@ -9,6 +9,7 @@ import com.jogamp.opengl.GL2;
 
 import applications.simpleworld.Agent;
 import applications.simpleworld.Plant;
+import applications.simpleworld.Weather.*;
 import objects.Rain;
 import utils.PoolPredator;
 import utils.PoolPrey;
@@ -28,6 +29,7 @@ public abstract class World {
 
 	protected ArrayList<UniqueObject> uniqueObjects = new ArrayList<UniqueObject>();
 	protected ArrayList<Rain> raindrops = new ArrayList<Rain>();
+	protected ArrayList<Snow> snow = new ArrayList<Snow>();
 	protected ArrayList<Agent> uniqueDynamicObjects = new ArrayList<Agent>();
 	protected PoolPrey prey = new PoolPrey();
 	protected PoolPredator predators = new PoolPredator();
@@ -169,8 +171,15 @@ public abstract class World {
     		uniqueObjects.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
         }
         gl.glEnd(); // raindrops use gl.glBegin(gl.GL_LINES)
-        for ( int i = 0; i < raindrops.size(); i++ )
-            raindrops.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
+        if (_myWorld.getLandscape().getWeather().getCondition() == Condition.RAINY) {
+            for ( int i = 0; i < raindrops.size(); i++ )
+                raindrops.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
+        }
+
+        if (_myWorld.getLandscape().getWeather().getCondition() == Condition.SNOWING) {
+            for ( int i = 0; i < snow.size(); i++ )
+                snow.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
+        }
         gl.glBegin(GL2.GL_QUADS); // we start drawing quads back again
     	for ( int i = 0 ; i < uniqueDynamicObjects.size(); i++ )
     		uniqueDynamicObjects.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);

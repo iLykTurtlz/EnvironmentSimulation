@@ -18,6 +18,7 @@ import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.gl2.GLUT;
 
 import applications.simpleworld.*;
+import applications.simpleworld.Weather.*;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GLAutoDrawable;
@@ -333,7 +334,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 	                gl.glWindowPos2d(xoff, y - 4*yoff);
 	                glut.glutBitmapString(GLUT.BITMAP_9_BY_15, "predators/prey (queue) : " + _myWorld.getPredators().getSizeQueue() + "/" + _myWorld.getPrey().getSizeQueue());
 	                if (DISPLAY_HELP) {
-                        gl.glWindowPos2d(xoff, 30);
+                        gl.glWindowPos2d(xoff, 50);
                         glut.glutBitmapString(GLUT.BITMAP_HELVETICA_10,
                             "           [b] toggle display info\t" +
                             "           [h] toggle help\t" +
@@ -341,13 +342,18 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
                             "           [o] objects display on/off\t" +
                             "           [z] decrease altitude booster\t" +
                             "           [a] increase altitude booster\t");
-                        gl.glWindowPos2d(xoff, 10);
+                        gl.glWindowPos2d(xoff, 30);
                         glut.glutBitmapString(GLUT.BITMAP_HELVETICA_10,
                             "           [l/m] increase/decrease z-axis\t" +
                             "           [u/i] increase/decrase speed time\n" +
                             " [cursor keys] navigate in the landscape\n" +
                             "         [q/d] rotation with landscape\n" +
                             " [cursor keys] navigate\n");
+                        gl.glWindowPos2d(xoff, 10);
+                        glut.glutBitmapString(GLUT.BITMAP_HELVETICA_10,
+                            "           [y] set time raining\t" +
+                            "           [t] set time snowy\n" +
+                            "           [j] set time sunny\n");
                     }
 	                gl.glPopMatrix();
 	            }
@@ -739,8 +745,19 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
                 DISPLAY_FPS = !DISPLAY_FPS;
                 break;
             case KeyEvent.VK_X:
-                System.out.println("eruption");
                 volcano.erupt();
+                break;
+            case KeyEvent.VK_T:
+                System.out.println("Snowing");
+                weather.setCondition(Condition.SNOWING);
+                break;
+            case KeyEvent.VK_Y:
+                System.out.println("Raining");
+                weather.setCondition(Condition.RAINY);
+                break;
+            case KeyEvent.VK_J:
+                System.out.println("Sunny");
+                weather.setCondition(Condition.SUNNY);
                 break;
             case KeyEvent.VK_H:
                 DISPLAY_HELP = !DISPLAY_HELP;

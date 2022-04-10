@@ -53,9 +53,10 @@ public abstract class CellularAutomata {
 			swapBuffer();
 	}
 	
-	public void swapBuffer() // should be used carefully (except for initial step)
+	public void swapBuffer() // should be used carefully (except for initial step) note : added if ( buffering )
 	{
-		activeIndex = ( activeIndex+1 ) % 2;
+        if ( buffering )
+            activeIndex = ( activeIndex+1 ) % 2;
 	}
 	
 }

@@ -17,6 +17,7 @@ public class WorldOfTrees extends World {
     protected Landscape landscape;
     private static final int NB_CLOUDS = 2;
     private static final int NB_RAIN = 100;
+    private static final int NB_SNOW = 100;
     public static final float WATER_LEVEL = -0.05f;
 	public static final float TREE_LINE = 0.2f;
 	public static final float SNOW_LINE = 0.3f;
@@ -86,6 +87,10 @@ public class WorldOfTrees extends World {
         //add rain
         for (int i = 0; i < NB_RAIN; i++)
             raindrops.add(new Rain((int) (Math.random() * landscape.length), (int) (Math.random() * landscape[0].length), this));
+
+        //add snow
+        for (int i = 0; i < NB_SNOW; i++)
+            snow.add(new Snow((int) (Math.random() * landscape.length), (int) (Math.random() * landscape[0].length), this));
 		/*
 		for (int i=0; i<40; i++)	{
 			int posx = (int)(Math.random()*__dxCA);

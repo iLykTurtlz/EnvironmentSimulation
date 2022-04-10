@@ -12,7 +12,7 @@ public class Weather {
     private WorldOfTrees world;
     private float elapsed_time = 0;
     private long last_checked = 0;
-    private static final float WEATHER_UPDATE_DELAY = 10f; //10 seconds
+    private static final float WEATHER_UPDATE_DELAY = 60f; //60 seconds
     private Time time;
     private Condition weather = Condition.SUNNY; //sunny default
     private static float time_speed = 0.001f; //0.001 is good
@@ -25,7 +25,7 @@ public class Weather {
     }
 
     public void step() {
-        //updateWeather();
+        updateWeather();
         float time_value = getTimeValue();
         if (time_value >= .5f) {
             if (time != Time.DAY)
@@ -38,13 +38,12 @@ public class Weather {
     }
 
     public void updateWeather() {
-        //calculus...
         //check every 10 seconds to update the weather
         long current_time = System.currentTimeMillis();
-        if ((last_checked - current_time)/1000f >= WEATHER_UPDATE_DELAY) {
+        if ((current_time - last_checked)/1000f >= WEATHER_UPDATE_DELAY) {
             int random = (int) (Math.random() * Condition.values().length); //between 2 and 0 by default
             setCondition(Condition.values()[random]);
-            System.out.println("[DEBUG] Weather updated to " + getCondition().toString());
+            last_checked = current_time;
         }
     }
 

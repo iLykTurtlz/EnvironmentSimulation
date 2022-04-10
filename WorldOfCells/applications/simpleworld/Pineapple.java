@@ -11,15 +11,16 @@ public class Pineapple extends Plant {
     private float baseHeight;
     private float[] fruitColor;
     private float scalingFactor;
+    private int max_size;
 
     public Pineapple(int __x , int __y, WorldOfTrees __world)  {
         super(__x,__y,__world);
-        this.growth_rate = 900;
-        this.nbBands = 10;
-        this.baseHeight = 4.0f;
-        this.fruitColor = new float[]{0.f,1.f,0.f};
-        this.scalingFactor = 0.2f;
-        this.max_size = 10;
+        growth_rate = 900;
+        nbBands = 10;
+        baseHeight = 4.0f;
+        fruitColor = new float[]{0.f,1.f,0.f};
+        scalingFactor = 0.2f;
+        max_size = 10;
     }
 
     public void step()  {
@@ -92,6 +93,16 @@ public class Pineapple extends Plant {
         this.size = 0;
         this.fruitColor[0] = 0;
     }
+
+    public void incrementSize() {
+        if (size < max_size)
+            size++;
+    }
+    
+    public int getMaxSize() {
+        return max_size;
+    }
+
 
     public void incrementFruitColor()  {
         // This function increments the red in the fruit color, which starts at (r,g,b) = (0,1,0), so that the fruit becomes more yellow as it grows and ripens.

@@ -31,23 +31,23 @@ public class Predator extends Agent {
 
 
     public Predator( int __x , int __y, WorldOfTrees __world ) {
-        super(__x,__y,__world, new float[] {1.f, 0.f, 0.f}, new float[] {1.f,1.f,1.f});
-        this.rangeOfVision = 6;
-        this.defaultBaseSpeed = 70;
-        this.baseSpeed = this.defaultBaseSpeed;
-        this.speed = this.baseSpeed;
-        this.vision = new PredatorVision(__x,__y,rangeOfVision,orientation,__world);
-        this.bloodlustThreshold = 10;
+        super(__x,__y,__world, new float[] {1.f, 0.f, 0.f}, new float[] {0.25f,0.25f,0.25f});   // new Agent with red head and gray body
+        rangeOfVision = 6;
+        
+        defaultBaseSpeed = 70;
+        baseSpeed = defaultBaseSpeed;
+        speed = baseSpeed;
+
+        vision = new PredatorVision(__x,__y,rangeOfVision,orientation,__world);
+        bloodlustThreshold = 10;
         if (Math.random() < 0.5)    {
-            this.sex = Sex.MALE;
+            sex = Sex.MALE;
         } else {
-            this.sex = Sex.FEMALE;
+            sex = Sex.FEMALE;
         }
-        this.gestationPeriod = 100;
-        this.gestationStage = 0;
-        this.probablityChangeDirection = 0.1;
-        this.pregnant = false;
-        this.bodyColor = new float[]{0.25f,0.25f,0.25f};
+        gestationPeriod = 10;
+        gestationStage = 0;                             //for the males this value will always be 0, for the females it will increment to gestationPeriod during pregnancy
+        pregnant = false;
     }
 
     public Predator( int __x , int __y, WorldOfTrees __world, int[] offspringCharacters) {
@@ -155,7 +155,7 @@ public class Predator extends Agent {
         if (dice > P_REPRODUCTION) {
             return;
         }
-        if (this.getSex() == Sex.FEMALE)    {
+        if (this.sex == Sex.FEMALE)    {
             m = mate;
             f = this;
         } else {
@@ -343,8 +343,6 @@ public class Predator extends Agent {
     public void displayUniqueObject(World myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)
     {
         
-        //gl.glColor3f(0.f+(float)(0.5*Math.random()),0.f+(float)(0.5*Math.random()),0.f+(float)(0.5*Math.random()));
-        
     	int x2 = (x-(offsetCA_x%myWorld.getWidth()));
     	if ( x2 < 0) x2+=myWorld.getWidth();
     	int y2 = (y-(offsetCA_y%myWorld.getHeight()));
@@ -366,7 +364,6 @@ public class Predator extends Agent {
             r1 = calculateRadius(  bandThicknessNorm * (i)  );
             r2 = calculateRadius(  bandThicknessNorm * (i+1)  );
             DisplayToolbox.drawOctagonalPrism(r1,r2, bandThicknessNorm * scalingFactor * i, bandThicknessNorm * scalingFactor * (i+1), altitude,x2,y2,myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
-            //public static void drawOctagonalPrism(float radius1, float radius2, float h1, float h2, float altitude, int x2, int y2, World myWorld, GL2 gl, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)  {
         }
 
         //Now we draw the head
@@ -424,10 +421,6 @@ public class Predator extends Agent {
     }
 
     /* GETTERS AND SETTERS */
-
-    public Sex getSex() {
-        return sex;
-    }
 
     public int getRangeOfVision()   {
         return rangeOfVision;

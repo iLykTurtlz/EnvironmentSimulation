@@ -15,7 +15,6 @@ import utils.PreyVision;
 public class Prey extends Agent {
 
     public static final int MAX_LIFESPAN = 1000;
-    public static final float INITIAL_HUNGER = 100.f;
     public static final double P_REPRODUCTION = 0.001;
 
     protected final int maxColorChangePeriod = 30;
@@ -27,13 +26,16 @@ public class Prey extends Agent {
     
 
     public Prey( int __x , int __y, WorldOfTrees __world ) {
-        super(__x,__y,__world, new float[] {0.f,0.75f,1.f}, new float[] {1.f,1.f,1.f});
-        this.rangeOfVision = 4;
-        this.defaultBaseSpeed = 55;
-        this.baseSpeed = this.defaultBaseSpeed;
-        this.speed = this.baseSpeed;
-        this.vision = new PreyVision(__x,__y,rangeOfVision,__world);
-        this.probablityChangeDirection = 0.1;
+        super(__x,__y,__world, new float[] {0.f,0.75f,1.f}, new float[] {1.f,1.f,1.f});     // new Agent with azure head and white body
+
+        defaultBaseSpeed = 55;
+        baseSpeed = defaultBaseSpeed;
+        speed = baseSpeed;
+
+        rangeOfVision = 4;
+        vision = new PreyVision(__x,__y,rangeOfVision,__world);
+        probablityChangeDirection = 0.1;
+
     }
 
 

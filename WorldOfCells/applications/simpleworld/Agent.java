@@ -17,44 +17,50 @@ public abstract class Agent extends UniqueDynamicObject{
 
     
     protected int age;
-    protected int orientation;                          // (0,1,2,3) = (nord,est,sud,ouest)
-    protected enum State {ALIVE, DEAD, ON_FIRE, IRRADIATED, PSYCHEDELIC, TROPICAL};
+    protected int orientation;                                              // (0,1,2,3) = (N,E,S,W)
+    protected enum State {ALIVE, DEAD, ON_FIRE, IRRADIATED, PSYCHEDELIC};   
     protected State state;
-    protected int hunger;
-    protected int fatigue;
+    protected int hunger;                                                   // This value increases to motivate the agent to look for food, but it rarely results in the death of the agent.  They usually die from old age or from being eaten.
+    protected int fatigue;                                                  // This motivates the agent to rest
+    protected UniqueDynamicObject destination;                              // This serves as the Agent's memory.  Without storing the destination, the agents would have looping behavior as they shift back and forth between two or more target destinations.
 
 
-    protected int defaultBaseSpeed;
+    protected int defaultBaseSpeed;                                         
     protected int baseSpeed;                
-    protected int speed;                    // between 0 and 100, varies relative to base speed as a function of the terrain
-    protected double probablityChangeDirection;         //probability of random movement in the case where there are no threats or food nearby, otherwise the agents move straight ahead.
+    protected int speed;                                                    // between 0 and 100, varies relative to base speed (varying the speed without this point of reference would lead to )
+    protected double probablityChangeDirection;                             //probability of random movement in the case where there are no threats or food nearby, otherwise the agents move straight ahead.
 
 
+    protected boolean directions[];                                         // true if the direction is accessible, false otherwise : indices (0,1,2,3) = (N,E,S,W)
+    protected int accessible;                                               // number of accessible directions
 
-    protected boolean directions[];          // true if the direction is accessible, false otherwise : indices (0,1,2,3) = (N,E,S,W)
-    protected int accessible;                // number of accessible directions
 
-    protected float scalingFactor;
-    protected float[] headColor;             // to distinguish different types of agents
-    protected float[] bodyColor;            // for fun :)
+    protected float scalingFactor;                                          // the original agents in this program had a body height of 4.  We have kept this the same.
+    protected float[] headColor;                                            // to distinguish different types of agents, their heads and bodies are diffent colors.
+    protected float[] bodyColor;                                       
 
 
 	
     public Agent ( int __x , int __y, WorldOfTrees __world, float[] headColor, float[] bodyColor )
 	{
 		super(__x,__y,__world);
+        age = 0;
+        orientation = (int)(4*Math.random());      //random orientation by default
+        state = State.ALIVE;
+        hunger = 0;
+        fatigue = 0;
+        destination = null;
+
+        probablityChangeDirection = 0.1;
+
         directions = new boolean[4];    // above, right, below, left; in that order
         for (int i=0; i<directions.length; i++) {
             directions[i] = true;
         }
-        this.orientation = (int)(4*Math.random());      //random orientation by default
-        this.age = 0;
-        this.state = State.ALIVE;
-        this.hunger = 0;
-        this.fatigue = 0;
+ 
         this.headColor = headColor;
         this.bodyColor = bodyColor;
-        this.scalingFactor = 4.f;
+        scalingFactor = 4.f;
 	}
 
 
@@ -63,6 +69,22 @@ public abstract class Agent extends UniqueDynamicObject{
 
         if ( world.getIteration() % (100 - speed) == 0 )   {
 
+            
+            if ( state != State.ON_FIRE && (world.getLandscape().getVolcano().isLava(x,y) || world.getForest().getCellState(x,y) == 2) ) {        //if the agent is touched by fire or lava (and not already on fire) it catches fire.
+                bodyColor[0] = 1.f;
+                bodyColor[1] = 0.5f;
+                bodyColor[2] = 0;
+                state = State.ON_FIRE;
+                speed = baseSpeed + 20;
+            } 
+
+            if ( state == State.ON_FIRE )   {    // if the agent who is on fire touches a tree, it burns
+                if (world.getForest().getCellState(x,y) == 1)
+                    world.getForest().setCellState(x,y,2);
+                if ()
+            }
+
+            
             if (world.getLandscape().getWeather().getTime() == Time.DAY)    {   
                 this.updateAge();
                 this.updateHunger();
@@ -256,6 +278,7 @@ public abstract class Agent extends UniqueDynamicObject{
         // takes in a float from the interval [0,1] and returns the radius of a slice of a sphere of radius 1/2
         return (float)(Math.sqrt(0.25 - (h-0.5)*(h-0.5)));
     }
+    
 
  
 }

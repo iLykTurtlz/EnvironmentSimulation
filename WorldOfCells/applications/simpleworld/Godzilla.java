@@ -72,4 +72,24 @@ public class Godzilla extends Agent {
         gl.glVertex3f( offset+x2*stepX+lenX*scalingFactor, offset+y2*stepY+lenY*scalingFactor, height*normalizeHeight + zoff + 5.f*scalingFactor);
         gl.glVertex3f( offset+x2*stepX+lenX*scalingFactor, offset+y2*stepY-lenY*scalingFactor, height*normalizeHeight + zoff + 5.f*scalingFactor);
     }
+
+
+
+    public float calculateSlopeRadius(float h, float scale, float minRadius, boolean increasing)    {
+        // Calculates the radii needed to draw a gentle slope, whose values we will consider on the interval 0 <= h <= 1.
+        // Lower scale makes the slope less steep but also lowers the values overall; minRadius is a constant added to the output to prevent the slope from decreasing below a certain value (hence it should NOT be negative).
+        // If increasing is true, the slope is increasing; otherwise it is decreasing.
+        if (increasing)
+            return scale * 1.f / (h + 1.f);
+        else
+            return scale * 1.f / -(h - 2.f);
+    }
+
+    public float calculateSphereRadius(float h) {
+        // takes in a float from the interval [0,1] and returns the radius of a slice of a sphere of radius 1/2
+        return (float)(Math.sqrt(0.25 - (h-0.5)*(h-0.5)));
+    }
+    
 }
+
+    

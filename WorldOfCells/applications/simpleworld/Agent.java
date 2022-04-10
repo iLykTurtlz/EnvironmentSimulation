@@ -81,7 +81,7 @@ public abstract class Agent extends UniqueDynamicObject{
             if ( state == State.ON_FIRE )   {    // if the agent who is on fire touches a tree, it burns
                 if (world.getForest().getCellState(x,y) == 1)
                     world.getForest().setCellState(x,y,2);
-                if ()
+                
             }
 
             

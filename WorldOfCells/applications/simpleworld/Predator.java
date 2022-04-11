@@ -16,18 +16,21 @@ import utils.PredatorVision;
 public class Predator extends Agent {
 
     public static final int MAX_LIFESPAN = 1000;
-    public static final float INITIAL_HUNGER = 0.f;
     public static final double P_REPRODUCTION = 0.001;
-    public static final float MAX_HUNGER = 100.f;
+    public static final int MAX_HUNGER = 1000;
+    public static final int MAX_FATIGUE = 1000;
+    
     protected enum Sex {MALE, FEMALE};
     protected Sex sex;
     private PredatorVision vision;
     private int rangeOfVision;
+    protected Predator mate;         // food and mate serve as the Predator's memory.  Without storing the destination, the Predators would have looping behavior as they shift back and forth between two or more target destinations.
+    protected Prey food;
     protected int bloodlustThreshold;
     private int gestationPeriod;
     private int gestationStage;
     private boolean pregnant;
-    private int offspringCharacters[]; // (rangeOfVision, baseSpeed, bloodlustThreshold, gestationPeriod)
+    private int offspringTraits[]; // (rangeOfVision, baseSpeed, bloodlustThreshold, gestationPeriod)
 
 
     public Predator( int __x , int __y, WorldOfTrees __world ) {
@@ -48,22 +51,26 @@ public class Predator extends Agent {
         gestationPeriod = 10;
         gestationStage = 0;                             //for the males this value will always be 0, for the females it will increment to gestationPeriod during pregnancy
         pregnant = false;
+        mate = null;
+        food = null;
     }
 
-    public Predator( int __x , int __y, WorldOfTrees __world, int[] offspringCharacters) {
+    public Predator( int __x , int __y, WorldOfTrees __world, int[] offspringTraits) {
         super(__x,__y,__world, new float[] {1.f, 0.f, 0.f}, new float[] {1.f,1.f,1.f});
         this.orientation = (int)(4*Math.random());      //random orientation by default
-        this.rangeOfVision = offspringCharacters[0];
-        this.speed = offspringCharacters[1];
+        this.rangeOfVision = offspringTraits[0];
+        this.speed = offspringTraits[1];
         this.vision = new PredatorVision(__x,__y,rangeOfVision,orientation,__world);
-        this.bloodlustThreshold = offspringCharacters[2];
+        this.bloodlustThreshold = offspringTraits[2];
         if (Math.random() < 0.5)    {
             this.sex = Sex.MALE;
         } else {
             this.sex = Sex.FEMALE;
         }
-        this.gestationPeriod = offspringCharacters[3];
+        this.gestationPeriod = offspringTraits[3];
         this.gestationStage = 0;
+        mate = null;
+        food = null;
     }
 
     
@@ -75,47 +82,155 @@ public class Predator extends Agent {
         super.step();
 		if ( world.getIteration() % (100-speed) == 0 )
 		{
-               
-            if (hunger >= MAX_HUNGER)   {
-                world.removePredator(this);
+
+            //If the predator is too old or too hungry, it dies
+            if (hunger >= MAX_HUNGER || age >= MAX_LIFESPAN)   {
+                state = State.DEAD;
+            }
+
+            //If the predator is dead, remove it
+            if (state == State.DEAD)    {
+                world.getPredators().remove(this);
             }
 
 
-            if (accessible == 0 /*|| world.getLandscape().getWeather().getTime() == Time.NIGHT */)    {   //If no direction is accessible, or if it is nighttime, the agent does not move.
-                System.err.println("I can't move.  Help me!");
-                return;
-            }
+            //this variable stores a value that will ultimately determine the Predator's next move
+            // (0,1,2,3) = (N,E,S,W)
+            // -1 = not yet determined
+            // -2 = stay in place
+            int move = -1;
 
-            vision.setOrientation(orientation);
-            vision.setPosition(x, y);
-            vision.updateField();
-
-            int move = -1;      //default value
-            if (hunger > bloodlustThreshold) {
-                move = eatAndHunt();    //move in the direction of the prey (0,1,2,3) = (N,E,S,W), -1 if no prey in view
-            }
+            //If the Predator is female and pregnant, we need to call gestate() to increment gestationStage, and possibly not move
             if (sex == Sex.FEMALE && pregnant)  {
-                move = gestate();
-            } 
-            else if (move == -1 && age > 1) {
-                move = findMate();
+                move = gestate();   //returns -2 if the Predator is giving birth, -1 otherwise
             }
-            
-            double currentHeight = world.getCellHeight(x,y);
+
+            //If no direction is accessible the agent does not move.
+            if (accessible == 0)    { 
+                move = -2;
+            }
+
+            //If the predator is on fire, it rampages, regardless of fatigue or the time of day
+            if (move == -1 && state == State.ON_FIRE) {
+                rampage();
+                return; //nothing else to do in this case.
+            }
+
+            //If the predator is too tired to move AND it is nighttime, the predator does not move.
+            if (  move == -1 && (fatigue == MAX_FATIGUE && world.getLandscape().getWeather().getTime() == Time.NIGHT)  )    {
+                move = -2;
+            }
+
+            //If the predator has already found food ( a side effect of calling findFood() ), it hunts.
+            if (move == -1 && food != null)  {
+                move = hunt();     // returns (0,1,2,3) or -1 if the destination is out of range or inaccessible
+            }
+
+            //If the predator is pursuing a mate
+            if (move == -1 && mate != null) {
+                move = pursueMate();
+            }
+
+            //If move is still -1, the predator looks for something to do.
+            if (move == -1)  {
+
+                //First update the vision field, which will be used for the search
+                vision.setOrientation(orientation);
+                vision.setPosition(x, y);
+                vision.updateField();
+
+                //if the predator is hungry ENOUGH, it must look for food; otherwise it can look for a mate
+                if (hunger >= bloodlustThreshold) {
+
+                    findFood();    
+                    if (food != null)   {
+                        move = hunt();  //returns (0,1,2,3) or -1 if no prey in view
+                    } 
+
+
+                } else {
+
+                    findMate();
+                    if (mate != null)   {
+                        move = pursueMate(); //returns (0,1,2,3) or -1 if no mate in view
+                    }
+                    
+                }
+            }
+
+        
+
+            //Update position based on the value of move.  That means explore if move is still -1.
             move = updatePosition(move);
-            setOrientation(move);
-            double nextHeight = world.getCellHeight(x,y);
-            //updateSpeed(currentHeight, nextHeight);
-
+            setOrientation(move);   //the Predator's orientation matches its direction of movement.
             
-            for (int i=0; i<directions.length; i++)    {        //reinitialize the four directions to true, making them all accessible 
-                directions[i] = true;
-            }
-
+            reinitializeDirections();
+            
         }
     }
 
 
+    private void findFood()   {
+        // This function searches the field of vision for a Prey.
+        PoolPrey prey = world.getPrey();
+        food = vision.searchPrey(prey);      //find nearest prey, null if no prey in field of vision                
+    }
+
+    private void findMate() {
+        // This function searches the field of vision for a Predator of the opposite sex.
+        PoolPredator predators = world.getPredators();
+        Predator prospectiveMate = vision.searchPredator(predators);
+        if (prospectiveMate != null && prospectiveMate.sex != this.sex) {
+            mate = prospectiveMate;
+        }
+    }
+
+    private int pursueMate()    {
+        // This function should be called AFTER verifying that mate is not null.
+        // 
+        if (mate == null)   {
+            System.err.println("Erreur : pursueMate, mate est null.");
+        }
+
+        int[] coord = mate.getCoordinate();
+
+        //If the mate is within reach, the Predator reproduces.
+        if ( isAdjacent(coord) )  {
+            reproduce();
+            return -2;
+        }
+
+        //Otherwise the Predator pursues its prospective mate, picking up speed.
+        speed = baseSpeed + 20;
+        int height = world.getHeight();
+        int width = world.getWidth();
+    
+        //We want to return the direction encountered first as we traverse the x and y coordinates from the maximum distance the prey could have been spotted (x +/- rangeOfVision, y +/- rangeOfVision) to the von Neumann neighborhood.
+        //We first test the direction : if it is inaccessible, there is no reason to test the equality of the x- or y-coordinate.
+        for (int i=rangeOfVision; i>0; i--)    {
+            if ( directions[0] && coord[1] == (y+i+height)%height )   {
+                return 0;
+            }
+            if ( directions[1] && coord[0] == (x+i+width)%width )  {
+                return 1;
+            }
+            if ( directions[2] && coord[1] == (y-i+height)%height )  {
+                return 2;
+            }
+            if ( directions[3] && coord[0] == (x-i+width)%width )    {
+                return 3;
+            }
+        }
+
+        //the prospective mate is either too far away or inaccessible due to an obstacle; it should therefore be abandoned.
+        mate = null; 
+        speed = baseSpeed;
+        return -1;
+    
+    }
+
+
+    /*
 
     private int findMate()  {
         // Finds the nearest opposite-sex predator, reproduces if possible, otherwise returns a move in the direction of the prospective mate.
@@ -125,13 +240,7 @@ public class Predator extends Agent {
 
         mate = vision.searchPredator(predators);
 
-        /*
-        while (mate != null && mate.sex == this.sex) {                                     //Find the nearest predator of the opposite sex
-            coord = mate.getCoordinate(); 
-            mate = vision.searchPredator(predators, coord);
-            System.err.println("Appel de searchPredator a deux parametres");
-        }
-        */
+  
         
         if (mate != null && mate.sex != this.sex)   {                                                                //in this case mate is of the opposite sex
             int[] coord = mate.getCoordinate();    
@@ -148,8 +257,16 @@ public class Predator extends Agent {
         }
         return -1;
     }
+    */
 
-    private void reproduce(Predator mate)   {
+    private void reproduce()   {
+        // The attribute mate must not be null.
+        // This function begins the gestation period for the female Predator and sets the future offspring's traits.
+        // TO DO : genetics
+        if (mate == null)   {
+            System.err.println("Erreur : Predator reproduce, mate est null");
+            return;
+        }
         double dice = Math.random();
         Predator m,f;
         if (dice > P_REPRODUCTION) {
@@ -163,9 +280,9 @@ public class Predator extends Agent {
             f = mate;
         }
         f.pregnant = true;
-        f.offspringCharacters = new int[4];
+        f.offspringTraits = new int[4];
         //  TO DO recombine characteristics of both parents
-        f.setOffspringCharacters((m.getRangeOfVision() + f.getRangeOfVision())/2, (m.getSpeed() + f.getSpeed())/2, (m.getBloodlustThreshold() + f.getBloodlustThreshold())/2, (m.getGestationPeriod() + f.getGestationPeriod())/2);
+        f.setOffspringTraits((m.getRangeOfVision() + f.getRangeOfVision())/2, (m.getSpeed() + f.getSpeed())/2, (m.getBloodlustThreshold() + f.getBloodlustThreshold())/2, (m.getGestationPeriod() + f.getGestationPeriod())/2);
         //  TO DO mutation
 
 
@@ -174,19 +291,20 @@ public class Predator extends Agent {
     private int gestate()  {
         this.gestationStage++;
         if (gestationStage >= gestationPeriod)  {
-            world.addPredator(this.x, this.y, offspringCharacters);      //TO DO : add arguments to combine traits from both parents.
-            this.gestationStage = 0;
-            this.pregnant = false;
+            world.addPredator(this.x, this.y, offspringTraits);      //TO DO : add arguments to combine traits from both parents.
+            gestationStage = 0;
+            pregnant = false;
+            speed = baseSpeed;
             System.out.println("A birth has occurred");
             return -2;
         }
         return -1;
     }
    
-
+/*
     private int eatAndHunt()    {                   
         // Finds nearest prey, eats it if possible, 
-        // otherwise returns the Predator's next move, based on the prey's location, -1 if no prey is seen. */
+        // otherwise returns the Predator's next move, based on the prey's location, -1 if no prey is seen. 
         PoolPrey prey = world.getPrey();
         boolean dinnertime;
 
@@ -209,9 +327,10 @@ public class Predator extends Agent {
 
     
     
+    
     private boolean isHere(Agent a) {
-        /* Returns true if the Agent, Predator or Prey (requires cast), is directly in front or on the same space.
-           Otherwise returns false. */
+        // Returns true if the Agent, Predator or Prey (requires cast), is directly in front or on the same space.
+        // Otherwise returns false. 
         int[] coord = a.getCoordinate();
         int height = world.getHeight();
         int width = world.getWidth();
@@ -244,12 +363,70 @@ public class Predator extends Agent {
         }
         return false;                                                                           //Otherwise false
     }
+    */
+
+    private void eat()  {
+        //The attribute food must not be null
+        //This function kills the Predator's victim and resets hunger, speed and the Predator's memory : the attribute, food.
+        if (food == null)   {
+            System.err.println("Erreur : Predator eat(), food est null");
+            return;
+        }
+        food.setState(State.DEAD);
+        hunger = 0;
+        speed = baseSpeed;
+        food = null;
+    }
+
+
+    private int hunt() {
+        //This function should be called AFTER testing that the attribute food is not null.
+        //The Predator eats food, if possible, otherwise moves toward it.
+        if (food == null)    {
+            System.err.println("Erreur: moveTowardDestination, food est null");
+            return -1;
+        }
+
+        int[] coord = food.getCoordinate();
+
+        //If food is within reach, the predator eats.
+        if ( isAdjacent(coord) )  {
+            eat();
+            return -2;
+        }
+
+        
+        //Otherwise the predator pursues food.
+        int height = world.getHeight();
+        int width = world.getWidth();
     
+        //We want to return the direction encountered first as we traverse the x and y coordinates from the maximum distance the prey could have been spotted (x +/- rangeOfVision, y +/- rangeOfVision) to the von Neumann neighborhood.
+        //We first test the direction : if it is inaccessible, there is no reason to test the equality of the x- or y-coordinate.
+        for (int i=rangeOfVision; i>0; i--)    {
+            if ( directions[0] && coord[1] == (y+i+height)%height )   {
+                return 0;
+            }
+            if ( directions[1] && coord[0] == (x+i+width)%width )  {
+                return 1;
+            }
+            if ( directions[2] && coord[1] == (y-i+height)%height )  {
+                return 2;
+            }
+            if ( directions[3] && coord[0] == (x-i+width)%width )    {
+                return 3;
+            }
+        }
 
+        //the food is either too far away or inaccessible due to an obstacle; it should therefore be abandoned.
+        food = null; 
+        speed = baseSpeed;
+        return -1;
+    }
 
-    private int moveToward(int[] coord, float p_rightOrLeft)    {
-        /* This function takes in a target coordinate and a probability of moving right or left if the target is NOT directly ahead.
-           Returns the int corresponding to the direction of movement or -1 for random displacement. */
+/*
+    private int moveToward(Agent a, float p_rightOrLeft)    {
+        // This function takes in a target coordinate and a probability of moving right or left if the target is NOT directly ahead.
+        //   Returns the int corresponding to the direction of movement or -1 for random displacement. 
         int height = world.getHeight();
         int width = world.getWidth();
         int right = (orientation + 1 + 4) % 4;
@@ -339,7 +516,7 @@ public class Predator extends Agent {
         return -1;
     }
 
-
+*/
     public void displayUniqueObject(World myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)
     {
         
@@ -354,6 +531,11 @@ public class Predator extends Agent {
 
         float altitude = height*normalizeHeight + zoff;
 
+        if (state == State.ON_FIRE)  {
+            bodyColor[0] = 1.f;
+            bodyColor[1] = 0.5f;
+            bodyColor[2] = 0;
+        }
 
         //Here we draw the body
         float bandThicknessNorm = 1.f/10;
@@ -400,25 +582,27 @@ public class Predator extends Agent {
         this.gestationStage = 0;
     }
 
-    public void reinitialize(int x, int y, int[] offspringCharacters) {      
+    public void reinitialize(int x, int y, int[] offspringTraits) {      
         this.x = x;
         this.y = y;
         this.orientation = (int)(4*Math.random());           
-        this.rangeOfVision = offspringCharacters[0];                           
-        this.baseSpeed = offspringCharacters[1];
+        this.rangeOfVision = offspringTraits[0];                           
+        this.baseSpeed = offspringTraits[1];
         this.speed = baseSpeed;
         this.vision.setOrientation(this.orientation);
         this.vision.setPosition(this.x, this.y);
         this.vision.updateField();
-        this.bloodlustThreshold = offspringCharacters[2];
+        this.bloodlustThreshold = offspringTraits[2];
         if (Math.random() < 0.5)    {
             this.sex = Sex.MALE;
         } else {
             this.sex = Sex.FEMALE;
         }
-        this.gestationPeriod = offspringCharacters[3];
+        this.gestationPeriod = offspringTraits[3];
         this.gestationStage = 0;
     }
+
+
 
     /* GETTERS AND SETTERS */
 
@@ -442,13 +626,6 @@ public class Predator extends Agent {
         return gestationPeriod;
     }
 
-    public void setOrientation(int move) {
-        /* sets predator orientation based on direction of movement:
-            -2 -> no change
-        */
-        if (move != -2)
-            this.orientation = move;
-    }
 
     public void setRangeOfVision(int rangeOfVision)   {
         this.rangeOfVision = rangeOfVision;
@@ -466,11 +643,11 @@ public class Predator extends Agent {
         this.gestationPeriod = gestationPeriod;
     }
 
-    public void setOffspringCharacters(int rangeOfVision, int speed, int bloodlustThreshold, int gestationPeriod)    {
-        offspringCharacters[0] = rangeOfVision;
-        offspringCharacters[1] = speed;
-        offspringCharacters[2] = bloodlustThreshold;
-        offspringCharacters[3] = gestationPeriod;
+    public void setOffspringTraits(int rangeOfVision, int speed, int bloodlustThreshold, int gestationPeriod)    {
+        offspringTraits[0] = rangeOfVision;
+        offspringTraits[1] = speed;
+        offspringTraits[2] = bloodlustThreshold;
+        offspringTraits[3] = gestationPeriod;
     }
 
 }

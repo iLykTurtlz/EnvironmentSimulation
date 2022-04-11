@@ -10,6 +10,7 @@ import javax.lang.model.util.ElementScanner14;
 
 import com.jogamp.opengl.GL2;
 
+import applications.simpleworld.Weather.Condition;
 import applications.simpleworld.Weather.Time;
 import objects.UniqueDynamicObject;
 import utils.DisplayToolbox;
@@ -25,7 +26,7 @@ public abstract class Agent extends UniqueDynamicObject{
     protected int remainingBurnTime;
     protected int hunger;                                                   // This value increases to motivate the agent to look for food, but it rarely results in the death of the agent.  They usually die from old age or from being eaten.
     protected int fatigue;                                                  // This motivates the agent to rest
-    protected UniqueDynamicObject destination;                              // This serves as the Agent's memory.  Without storing the destination, the agents would have looping behavior as they shift back and forth between two or more target destinations.
+    
 
 
     protected int defaultBaseSpeed;                                         
@@ -40,7 +41,8 @@ public abstract class Agent extends UniqueDynamicObject{
 
     protected float scalingFactor;                                          // the original agents in this program had a body height of 4.  We have kept this the same.
     protected float[] headColor;                                            // to distinguish different types of agents, their heads and bodies are diffent colors.
-    protected float[] bodyColor;                                       
+    protected float[] bodyColor;  
+                                   
 
 
 	
@@ -53,9 +55,9 @@ public abstract class Agent extends UniqueDynamicObject{
         remainingBurnTime = 50;
         hunger = 0;
         fatigue = 0;
-        destination = null;
+        
 
-        probablityChangeDirection = 0.1;
+        probablityChangeDirection = 0.25;
 
         directions = new boolean[4];    // indices (0,1,2,3) = (N,E,S,W)
         for (int i=0; i<directions.length; i++) {
@@ -73,6 +75,9 @@ public abstract class Agent extends UniqueDynamicObject{
 
         if ( world.getIteration() % (100 - speed) == 0 )   {
 
+            updateAge();
+            updateHunger();
+
             //if the agent is touched by fire or lava (and not already on fire) it catches fire.
             if ( state != State.ON_FIRE && (world.getLandscape().getVolcano().isLava(x,y) || world.getForest().getCellState(x,y) == 2) ) { 
                 bodyColor[0] = 1.f;
@@ -82,15 +87,28 @@ public abstract class Agent extends UniqueDynamicObject{
                 speed = baseSpeed + 20;
             } 
 
-            //if the agent is on fire, adjacent UniqueDynamicObjects will catch fire too.
+
             if ( state == State.ON_FIRE )   {
-                spreadFire(); 
+                //if the agent is on fire, trees with same same position as well as adjacent UniqueDynamicObjects will catch fire too.
+                spreadFire();   
+
+                //if it is raining or snowing, there's a good chance the agent will be doused
+                if (world.getLandscape().getWeather().getCondition() == Condition.RAINY || world.getLandscape().getWeather().getCondition() == Condition.SNOWING )  {
+                    if (Math.random() < 0.2)    {
+                        state = State.ALIVE;
+                    }
+                }
+
+                //if time runs out, the agent dies
+                if (remainingBurnTime > 0)  {
+                    remainingBurnTime--;
+                } else {
+                    state = State.DEAD;
+                }
+
             }
             
-            if (world.getLandscape().getWeather().getTime() == Time.DAY)    {   
-                this.updateAge();
-                this.updateHunger();
-            }
+            
             
 
             this.accessible = 4;
@@ -147,7 +165,6 @@ public abstract class Agent extends UniqueDynamicObject{
     }
 
 
-
     /* GETTERS AND SETTERS */
 
     public void updateAge()   {
@@ -181,6 +198,15 @@ public abstract class Agent extends UniqueDynamicObject{
             speed = baseSpeed -10;
     }
 
+    public void rampage()    {
+        speed = baseSpeed + 20;
+        int move = updatePosition(-1);
+        setOrientation(move);
+        reinitializeDirections();
+    }
+
+
+
     public int updatePosition(int move)    {
         /* Updates the agent's position based on an int value:
             -1 -> 
@@ -195,10 +221,13 @@ public abstract class Agent extends UniqueDynamicObject{
         double dice = Math.random();
         if (move == -1) {   
 
-            if (dice > probablityChangeDirection && directions[orientation]) {          //straight ahead
-                move = orientation;
+            if ( directions[orientation] && dice > probablityChangeDirection ) {        //straight ahead
+                       
+                    move = orientation;
 
-            } else {
+            }                                 
+            else {
+
 
                 int j=0;                                                                //random displacement
                 double partition_size = 1/((double)accessible);
@@ -222,6 +251,12 @@ public abstract class Agent extends UniqueDynamicObject{
                 }
             }
 
+        }
+
+        if ( dice < 0.6 && !directions[orientation] && directions[(orientation + 2)%4]) {        //when an Agent hits an obstacle, they have a tendency to get stuck.  To avoid this nuisance, we send them in the opposite direction, if possible.
+            if (directions[(orientation + 2)%4])    {
+                move = (orientation + 2)%4;
+            }   
         }
 
         //Having determined the direction we now set the agent's position
@@ -261,6 +296,12 @@ public abstract class Agent extends UniqueDynamicObject{
         }    
     }
 
+    public void reinitializeDirections()    {
+        //This function reinitializes the four directions to true, making them all accessible 
+        for (int i=0; i<directions.length; i++)    {
+            directions[i] = true;
+        }
+    }
 
     public float calculateRadius(float h)    {
         // takes in a float from the interval [0,1] and returns the value of sin(sqrt(3*pi*x))/10, multiplied by a scaling factor, which is used to draw the agent's body.
@@ -278,6 +319,13 @@ public abstract class Agent extends UniqueDynamicObject{
 
     public State getState()  {
         return this.state;
+    }
+
+    public void setOrientation(int move) {
+        // sets orientation based on direction of movement:
+        // -2 -> no change
+        if (move != -2)
+            this.orientation = move;
     }
     
 

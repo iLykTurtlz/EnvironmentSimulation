@@ -28,8 +28,7 @@ public class Tree extends CommonObject {
         		gl.glColor3f(1.f-(float)(0.2*Math.random()),(float)(0.2*Math.random()),0.f);       //flaming trees can still shimmer, but we adjusted it for artistic reasons
         		break;
         	case 3:
-        		//gl.glColor3f(0.f+(float)(0.2*Math.random()),0.f+(float)(0.2*Math.random()),0.f+(float)(0.2*Math.random()));  //dead trees don't shimmer
-                gl.glColor3f(0.1f,0.1f,0.1f);
+        		gl.glColor3f(0.f+(float)(0.2*Math.random()),0.f+(float)(0.2*Math.random()),0.f+(float)(0.2*Math.random()));
         		break;
         }
         

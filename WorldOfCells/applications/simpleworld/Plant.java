@@ -21,7 +21,11 @@ public abstract class Plant extends UniqueDynamicObject {
     }
 
     public void step() {
-        burnDown();
+        if ( world.getIteration() % (1000 - growth_rate) == 0)  {
+            if (state == State.ON_FIRE) {
+                burnDown();
+            }
+        }
     }
 
     public abstract void displayUniqueObject(World myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight );
@@ -33,14 +37,13 @@ public abstract class Plant extends UniqueDynamicObject {
     }
 
     public void burnDown()  {
-        // This function will first test if the plant is on fire, so it can be called with every step()
-        if (state == State.ON_FIRE)  {
-            if (remainingBurnTime > 0)  {
-                remainingBurnTime--;
-            } else {
-                state = State.DEAD;
-            }
-        }    
+        // This function decrements the remainingBurnTime counter, killing the plant when it reaches 0.
+        if (remainingBurnTime > 0)  {
+            remainingBurnTime--;
+        } else {
+            state = State.DEAD;
+        }
+        
     }
  
 

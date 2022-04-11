@@ -15,7 +15,7 @@ public final class DisplayToolbox {
 
     public static void incrementRainbow(float color[])    {
         // Increments the color, a float array of size 3 for rgb, according to the spectrum
-        // The three float values passed to the function should be permutations of the following multisets : {1.f,0,0}, {1.f,1.5f,0}, {1.f,1.f,0}
+        // The three float values passed to the function should be permutations of the following tuples : (1.f,0,0), (1.f,1.5f,0), (1.f,1.f,0)
         float epsilon = 0.001f;
         float before, after;
 

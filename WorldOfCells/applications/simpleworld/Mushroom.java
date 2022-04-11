@@ -27,8 +27,23 @@ public class Mushroom extends Plant {
 
     public void step()  {
         super.step();
-        if ( world.getIteration() % (1000 - growth_rate) == 0 && size < MAX_SIZE) {
-            incrementSize();
+        if ( world.getIteration() % (1000 - growth_rate) == 0) {
+            //if the Mushroom is touched by fire or lava (and not already on fire) it catches fire.
+            if ( state != State.ON_FIRE && (world.getLandscape().getVolcano().isLava(x,y) || world.getForest().getCellState(x,y) == 2) ) { 
+                stemColor[0] = bandColor[0] = 1.f;
+                stemColor[1] = bandColor[1] = 0.5f;
+                stemColor[2] = bandColor[2] = 0;
+                state = State.ON_FIRE;
+            } 
+
+            //if the mushroom is on fire, trees with same same position as well as adjacent UniqueDynamicObjects will catch fire too.
+            if ( state == State.ON_FIRE )   {
+                spreadFire(); 
+            }
+
+            if (size < MAX_SIZE && state == State.ALIVE) {
+                incrementSize();
+            }
         }
         
     }
@@ -49,35 +64,69 @@ public class Mushroom extends Plant {
     	if ( x2 < 0) x2+=myWorld.getWidth();
     	int y2 = (y-(offsetCA_y%myWorld.getHeight()));
     	if ( y2 < 0) y2+=myWorld.getHeight();
-        
-        //Draw the stems
-        gl.glColor3f(stemColor[0],stemColor[1],stemColor[2]);
-        gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + centerHeight );
-        gl.glVertex3f( offset+x2*stepX-lenY/16.f, offset+y2*stepY+lenY/2.f, altitude );
-        gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + centerHeight );
-        gl.glVertex3f( offset+x2*stepX+lenY/16.f, offset+y2*stepY-lenY/2.f, altitude );
-        
-    	gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + centerHeight );
-        gl.glVertex3f( offset+x2*stepX-lenY/2.f, offset+y2*stepY+lenY/16.f, altitude );
-        gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + centerHeight );
-        gl.glVertex3f( offset+x2*stepX+lenY/2.f, offset+y2*stepY-lenY/16.f, altitude );
 
-        //Draw the mushroom cap.  Colors cycle through the rainbow iff size = MAX_SIZE.
-        float hNorm = 0.f;
-        float bandThicknessNorm = 1.f/MAX_SIZE;
-        float r1,r2;
-        if (size < MAX_SIZE)    {
-            bandColor[0] = startingBandColor[0];
-            bandColor[1] = startingBandColor[1];
-            bandColor[2] = startingBandColor[2];
+        if (state == State.ALIVE)  {
+
+            //Draw the stems
+            gl.glColor3f(stemColor[0],stemColor[1],stemColor[2]);
+            gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + centerHeight );
+            gl.glVertex3f( offset+x2*stepX-lenY/16.f, offset+y2*stepY+lenY/2.f, altitude );
+            gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + centerHeight );
+            gl.glVertex3f( offset+x2*stepX+lenY/16.f, offset+y2*stepY-lenY/2.f, altitude );
+            
+            gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + centerHeight );
+            gl.glVertex3f( offset+x2*stepX-lenY/2.f, offset+y2*stepY+lenY/16.f, altitude );
+            gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + centerHeight );
+            gl.glVertex3f( offset+x2*stepX+lenY/2.f, offset+y2*stepY-lenY/16.f, altitude );
+
+            //Draw the mushroom cap.  Colors cycle through the rainbow iff size = MAX_SIZE.
+            float hNorm = 0.f;
+            float bandThicknessNorm = 1.f/MAX_SIZE;
+            float r1,r2;
+            if (size < MAX_SIZE)    {
+                bandColor[0] = startingBandColor[0];
+                bandColor[1] = startingBandColor[1];
+                bandColor[2] = startingBandColor[2];
+            }
+            for (int i=0; i<size; i++)  {
+                DisplayToolbox.incrementRainbow(bandColor);
+                gl.glColor3f(bandColor[0],bandColor[1],bandColor[2]);
+                r1 = calculateRadius( hNorm + bandThicknessNorm * (i+1) );
+                r2 = calculateRadius( hNorm + bandThicknessNorm * i );
+                DisplayToolbox.drawOctagonalPrism(r1, r2, centerHeight - scalingFactor*bandThicknessNorm * (i+1), centerHeight - scalingFactor * bandThicknessNorm * i, altitude, x2, y2, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+            }
         }
-        for (int i=0; i<size; i++)  {
-            DisplayToolbox.incrementRainbow(bandColor);
-            gl.glColor3f(bandColor[0],bandColor[1],bandColor[2]);
-            r1 = calculateRadius( hNorm + bandThicknessNorm * (i+1) );
-            r2 = calculateRadius( hNorm + bandThicknessNorm * i );
-            DisplayToolbox.drawOctagonalPrism(r1, r2, centerHeight - scalingFactor*bandThicknessNorm * (i+1), centerHeight - scalingFactor * bandThicknessNorm * i, altitude, x2, y2, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
 
+
+        else if (state == State.ON_FIRE || state == State.DEAD) {
+
+            //Set the color
+            if (state == State.ON_FIRE) {
+                gl.glColor3f(1.f,0.5f + (float)(Math.random()*0.2),0);
+            } else {
+                gl.glColor3f(0.f+(float)(0.2*Math.random()),0.f+(float)(0.2*Math.random()),0.f+(float)(0.2*Math.random()));
+            }
+
+            //Stems
+            gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + centerHeight );
+            gl.glVertex3f( offset+x2*stepX-lenY/16.f, offset+y2*stepY+lenY/2.f, altitude );
+            gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + centerHeight );
+            gl.glVertex3f( offset+x2*stepX+lenY/16.f, offset+y2*stepY-lenY/2.f, altitude );
+            
+            gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + centerHeight );
+            gl.glVertex3f( offset+x2*stepX-lenY/2.f, offset+y2*stepY+lenY/16.f, altitude );
+            gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + centerHeight );
+            gl.glVertex3f( offset+x2*stepX+lenY/2.f, offset+y2*stepY-lenY/16.f, altitude );
+
+            //Mushroom cap
+            float hNorm = 0.f;
+            float bandThicknessNorm = 1.f/MAX_SIZE;
+            float r1,r2;
+            for (int i=0; i<size; i++)  {
+                r1 = calculateRadius( hNorm + bandThicknessNorm * (i+1) );
+                r2 = calculateRadius( hNorm + bandThicknessNorm * i );
+                DisplayToolbox.drawOctagonalPrism(r1, r2, centerHeight - scalingFactor*bandThicknessNorm * (i+1), centerHeight - scalingFactor * bandThicknessNorm * i, altitude, x2, y2, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+            }
         }
     }
 

@@ -48,7 +48,7 @@ abstract public class UniqueDynamicObject // UniqueObject are object defined wit
 	abstract public void displayUniqueObject(World myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight );
 
 	public boolean isAdjacent(UniqueDynamicObject udo)  {
-        // Returns true if udo is adjacent to the one calling the function, otherwise false.
+        // Returns true if udo is adjacent (von Neumann neighborhood) to or on the same spot as the one calling the function, otherwise false.
         int[] coord = udo.getCoordinate();
         int width = world.getWidth();
         int height = world.getHeight();
@@ -57,9 +57,17 @@ abstract public class UniqueDynamicObject // UniqueObject are object defined wit
                (  coord[1] == y && ( ( (coord[0] == (x-1+width)%width))  ||  ( (coord[0] == (x+1+width)%width)) )  );  
     }
 
+	public boolean isAdjacent(int[] coord)	{
+		int width = world.getWidth();
+		int height = world.getHeight();
+		// Returns true if the coordinate is adjacent (von Neumann neighborhood) to or on the same spot as the current UniqueDynamicObject, otherwise false.
+		return (  coord[0] == x && ( (coord[1] == y) || (coord[1] == ((y + 1 + height)%height)) || (coord[1] == ((y - 1 + height)%height)) )  )  ||
+               (  coord[1] == y && ( ( (coord[0] == (x-1+width)%width))  ||  ( (coord[0] == (x+1+width)%width)) )  );  
+	}
+
 
 	public void spreadFire()	{
-		// Sets fire to adjacent UniqueDynamicObjects if the current udo's state is State.ON_FIRE
+		// Sets fire to adjacent UniqueDynamicObjects
 
 		// if the agent who is on fire touches a tree, it burns
 		if (world.getForest().getCellState(x,y) == 1)   {
@@ -91,7 +99,15 @@ abstract public class UniqueDynamicObject // UniqueObject are object defined wit
 				p3.catchFire();
 			}
 		}
-	}   
+	} 
+	
+	
+
+	//GETTER AND SETTERS
+
+	public void setState(State s)	{
+		state = s;
+	}
 
 
 }

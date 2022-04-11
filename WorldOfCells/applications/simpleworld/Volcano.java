@@ -102,7 +102,7 @@ public class Volcano {
         for (int xi = x - range; xi < x + range; xi++) {
             for (int yi = y - range; yi < y + range; yi++) {
                 if ((xi - x)*(xi - x) + (yi - y)*(yi - y) <= LAVA_RANGE*LAVA_RANGE) {
-                    world.getMap()[xi][yi] /= 0.95d; //tiny elevation for the lava to be able to flow
+                    world.getMap()[xi][yi] /= 0.93d; //tiny elevation for the lava to be able to flow
                     lava.setCellState(xi, yi, 1); //init lava
                 }
             }
@@ -116,6 +116,7 @@ public class Volcano {
      * It also checks each 5 seconds if there is an eruption and if yes if it's done to reset the volcano (=> setting the heights of its center cells at a lower value).
      * There is also a probability of ERUPTION_CHANCE for the volcano to erupt.
      */
+    private double initial_height;
     public void step() {
         if (erupted) {
             boolean done = true;

@@ -10,7 +10,7 @@ import java.util.*;
 public class PerlinNoiseLandscapeGenerator {
 	private static int[] p;
 	private static int[] permutation;
-	//private static double seed; //test
+	private static double seed = 1d; //test
 	private static int default_size;
 
     public static double[][] generatePerlinNoiseLandscape ( int dxView, int dyView, double scaling, double landscapeAltitudeRatio, int perlinLayerCount)

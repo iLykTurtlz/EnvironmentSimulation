@@ -11,7 +11,8 @@ public class Volcano {
     private LavaCA lava;
     private int x = 0, y = 0;
     private int range;
-    private int LAVA_RANGE = 4;
+    private static final int LAVA_RANGE = 4;
+    private static final double ERUPTION_CHANCE = .1d;
     private boolean erupted = false;
 
     public Volcano(WorldOfTrees world, int dxView, int dyView, int range) {
@@ -24,6 +25,13 @@ public class Volcano {
         this(world, dxView, dyView, 25);
     }
 
+    /*
+     * The function initVolcano() has been put to pause and is used at its very primal version because of the deadline.
+     * It only searches for the highest peak in the map in a square of size MAP_LENGTH-range considering a squared map.
+     * Then it defines the x and y values of the center of the volcano which is the base of everything,
+     * starting from the center it defines a disk of a radius of LAVA_RANGE where it lowers the heights values of the cells in this disk.
+     * This allows the lava to be put in those cells without directly flowing at the beginning.
+     */
     public void initVolcano() {
         double[][] landscape = world.getMap();
         double max = 0d;
@@ -82,7 +90,12 @@ public class Volcano {
         lava.init();
     }
 
-    private long eruption_time, elapsed_time;
+    /*
+     * The eruption itself is mainly raising the heights values of the cells at the center of the volcano (in a disk : circle equation).
+     * The lava is set for those cells and because of the lava being a cellular automata responding to height difference it will flow
+     * onto the map.
+     */
+    private long eruption_time;
     public void erupt() {
         if (erupted) return;
         eruption_time = System.currentTimeMillis();
@@ -98,6 +111,11 @@ public class Volcano {
         erupted = true;
     }
 
+    /*
+     * The step function updates the lava each 10 world iterations.
+     * It also checks each 5 seconds if there is an eruption and if yes if it's done to reset the volcano (=> setting the heights of its center cells at a lower value).
+     * There is also a probability of ERUPTION_CHANCE for the volcano to erupt.
+     */
     public void step() {
         if (erupted) {
             boolean done = true;
@@ -125,10 +143,20 @@ public class Volcano {
             }
         }
 
-        if (world.getIteration() % 10 == 0)
+        if (world.getIteration() % 10 == 0) {
+            if (Math.random() < ERUPTION_CHANCE)
+                erupt();
             lava.step();
+        }
     }
 
+    /*
+     *
+     * This function does not draw the lava but draws the volcano at its initial state.
+     * The volcano is not at eruption and the lava inside of it is at a height where it cannot flow.
+     * The volcano is drawn according to a disk on the 2d map.
+     *
+     */
     private float[] init_color = null;
     private boolean init = true;
     float color1[] = {0.1f, 0.1f, 0.1f};
@@ -142,14 +170,14 @@ public class Volcano {
                 int ym = (yi + landscape[0].length) % (landscape[0].length);
                 if ((xm - x)*(xm - x) + (ym - y)*(ym - y) <= range*range) {
                     float height = (float) world.getCellHeight(xm, ym);
-                    if (height >= WorldOfTrees.WATER_LEVEL) {
+                    if (height >= WorldOfTrees.WATER_LEVEL) { //if the cells where the volcano will spawn are not water
                         if (world.getIteration() % 10 == 0 && (xm - x)*(xm - x) + (ym - y)*(ym - y) <= LAVA_RANGE*LAVA_RANGE) {
                             float r = (float) Math.random();
                             color2[0] = (float) (0.8d * r);
                             color2[1] = (float) (0.3d * r);
                             color2[2] = 0f;
                             world.setCellState(xm, ym, color2);
-                        } else if (height >= WorldOfTrees.SNOW_LINE) {
+                        } else if (height >= WorldOfTrees.SNOW_LINE) { //if the cells are above the height SNOW_LINE then we take the initial color of the moutain and save it to draw a nice gradient according to the height
                             if (init_color == null) {
                                 init_color = world.getCellColorValue(xm, ym);
                             }

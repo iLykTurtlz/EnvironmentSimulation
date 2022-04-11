@@ -12,7 +12,7 @@ public class Volcano {
     private int x = 0, y = 0;
     private int range;
     private static final int LAVA_RANGE = 4;
-    private static final double ERUPTION_CHANCE = .1d;
+    private static final double ERUPTION_CHANCE = .001d;
     private boolean erupted = false;
 
     public Volcano(WorldOfTrees world, int dxView, int dyView, int range) {
@@ -102,7 +102,7 @@ public class Volcano {
         for (int xi = x - range; xi < x + range; xi++) {
             for (int yi = y - range; yi < y + range; yi++) {
                 if ((xi - x)*(xi - x) + (yi - y)*(yi - y) <= LAVA_RANGE*LAVA_RANGE) {
-                    world.getMap()[xi][yi] /= 0.93d; //tiny elevation for the lava to be able to flow
+                    world.getMap()[xi][yi] /= 0.95d; //tiny elevation for the lava to be able to flow
                     lava.setCellState(xi, yi, 1); //init lava
                 }
             }

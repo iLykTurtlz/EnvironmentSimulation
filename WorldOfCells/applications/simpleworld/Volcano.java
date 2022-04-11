@@ -4,7 +4,6 @@ import java.util.*;
 import applications.simpleworld.*;
 import worlds.*;
 import com.jogamp.opengl.*;
-import com.jogamp.opengl.util.gl2.GLUT;
 
 public class Volcano {
     private WorldOfTrees world;

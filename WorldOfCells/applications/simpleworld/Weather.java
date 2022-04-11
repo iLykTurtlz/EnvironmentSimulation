@@ -22,7 +22,7 @@ public class Weather {
     public Weather(WorldOfTrees world) {
         this.world = world;
         time = Time.DAY;
-        glut = new GLUT();
+        glut = new GLUT(); //glut is a tool in opengl used for some functions such as drawSolidSphere(...)
     }
 
     /*
@@ -121,7 +121,7 @@ public class Weather {
        gl.glPopMatrix();*/
     }
 
-
+    //test
     private static double nextGaussian(double x) {
         return Math.exp(-4d*x*x);
     }

@@ -10,12 +10,13 @@ import java.util.*;
 public class PerlinNoiseLandscapeGenerator {
 	private static int[] p;
 	private static int[] permutation;
-	private static double seed;
+	//private static double seed; //test
 	private static int default_size;
 
     public static double[][] generatePerlinNoiseLandscape ( int dxView, int dyView, double scaling, double landscapeAltitudeRatio, int perlinLayerCount)
     {
 
+		/* SECOND PERLIN NOISE VERSION AS TEST
 		seed = new Random().nextGaussian() * 255;
     //ANOTHER PERLIN
     // Initialize the permutation array.
@@ -45,7 +46,7 @@ public class PerlinNoiseLandscapeGenerator {
 		// Populate it
 		for (int i = 0; i < 256; i++) {
 			p[256 + i] = p[i] = permutation[i];
-		}
+		}*/
 
     //END
     	double landscape[][] = new double[dxView][dyView];
@@ -67,9 +68,9 @@ public class PerlinNoiseLandscapeGenerator {
     }
 
     /***
-    * Retourne l'interpolation cosinusoidale d'une valeur x comprise entre a et b (un flottant)
-    * L'interpolation cosinusoidale permet l'obtention d'une courbe plus lisse comparée à une courbe
-    * obtenue par interpolation linéaire, de plus elle est moins consommante que l'interpolation cubique
+    * Returns the cosinus interpolation of the x value between a and b (decimal value).
+    * The cosinus interpolation allows a smoother curve compared to the curve of a linear interpolation.
+    * Plus it's less consuming than the cubic interpolation.
     ***/
     private static double cosInterpolate(double a, double b, double x) {
         double ft = x * Math.PI;
@@ -78,10 +79,9 @@ public class PerlinNoiseLandscapeGenerator {
     }
 
     /***
-    * Retourne une valeur décimale aléatoire au dépend des valeurs x et y
-    * c'est une fonction de N*N dans R donc pour des memes x et y la valeur générée sera la meme.
-    * Cela permet la génération aléatoire des valeurs (amplitudes) des points de controle
-    * de la fonction du bruit de perlin.
+    * Returns a random decimal value based on the x and y values.
+    * This is a function from N*N to R so for the same x and y the given generated value will be the same..
+    * It allows a random generation of the values (amplitudes) of the control points of the function of the perlin noise.
     ***/
     private static double noise(int x, int y) {
         int n = x + y * 257;
@@ -90,9 +90,8 @@ public class PerlinNoiseLandscapeGenerator {
     }
 
     /***
-    * Reprend la meme définition plus haut du bruit mais retourne une valeur
-    * moyenne selon les voisins moyennés également, permet d'avoir une courbe de fonction du bruit de perlin
-    * plus uniforme pour la génération de terrain.
+    * Returns a noise value based on x and y but smoothed according to its neighbors' values in an average sense.
+    * It gives a more uniform function.
     ***/
     private static double smoothedNoise(int x, int y) {
         double corners = (noise(x-1, y-1) + noise(x+1, y-1) + noise(x-1, y+1) + noise(x+1, y+1) ) / 16;
@@ -107,8 +106,7 @@ public class PerlinNoiseLandscapeGenerator {
     }
 
     /***
-    * Retourne une valeur interpolée au dépend de x
-    * permet le lissage de la courbe de la fonction du bruit de perlin.
+    * Returns an interpolated value based on x, allows the curve of the perlin noise function to be smoother.
     ***/
     private static double interpolatedNoise(double x, double y) {
         int int_x = (int) x;
@@ -129,6 +127,13 @@ public class PerlinNoiseLandscapeGenerator {
         return cosInterpolate(i1, i2, ys);
     }
 
+    /***
+     * Returns the value of the perlin noise at the x and y coordinates according to the persistence and the number of octaves.
+     *      persistence - the perlin noise is a sum of numerous functions at different frequencies and amplitudes
+                          for each function the higher the persistence is the more the amplitude will be closer to the previous added function.
+                          It basically tells if the added functions should have a persisting (constant way) value of the initial amplitude.
+            nb_octaves - the number of functions to sum up.
+     */
     private static double perlinNoise2D(double x, double y, double persistence, int nb_octaves) {
       double total = 0d;
       int n = nb_octaves - 1;
@@ -152,7 +157,7 @@ public class PerlinNoiseLandscapeGenerator {
 
 
 
-    /* ANOTHER PERLIN */
+    /* ANOTHER PERLIN used as a TEST */
 
 	public static double noise3D(double x, double y, double z) {
 		double value = 0.0;

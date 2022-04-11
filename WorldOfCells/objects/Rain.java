@@ -18,6 +18,12 @@ public class Rain extends UniqueObject{
 		size = ((float) Math.random()) % .1f + 0.05f;
 	}
 
+    /*
+     * The Rain and Snow java classes are basically similar.
+     * It consists of a simple particle (line) drawn differently (rain blue, snow white) in different sizes (rain is long and snow short).
+     * The rain falls quickly along the z axis at a growing speed to simulate gravity, once it reaches the bottom of the map its altitude is reset to 100f + random_value
+     * (top of the map) to simulate raindrops at different heights.
+     */
     public void displayUniqueObject(World myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)
     {
  		//speed = myWorld.getLandscape().getWeather().getTimeSpeed()*((float) (Math.random() * 100f + 25f)); //update speed according to time speed

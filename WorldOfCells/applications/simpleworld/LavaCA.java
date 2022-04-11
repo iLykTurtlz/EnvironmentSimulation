@@ -32,7 +32,7 @@ public class LavaCA extends CellularAutomataInteger {
       * The Lava is guaranteed to flow on the cell at the lowest height among its neighbors and has a probability (SPREAD_CHANCE)
       * to flow onto other neighbors that are at a lower height.
       *
-      * States : 1 - lava
+      * States : 1 - lava (the states' choice is arbitrary)
       *          2 - stone
       *          between 3 and ROCK_TIME - lava at 2 nd state (increments until reaching ROCK_TIME)
       */
@@ -161,6 +161,10 @@ public class LavaCA extends CellularAutomataInteger {
     	this.swapBuffer();
 	}
 
+    /*
+     * If the time condition is favorable (not rainy) and according to the height of the cell where the lava would flow on (which defines the state of the cell)
+     * the lava will flow on it or not as lava or stone.
+     */
     private void flowLava(int x, int y, float height) {
         if (world.getLandscape().getWeather().getCondition() == Condition.RAINY) {
             if (Math.random() < .3d) {

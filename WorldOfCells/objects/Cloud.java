@@ -12,6 +12,7 @@ public class Cloud extends UniqueObject{
     private float color;
     private float speed;
 
+    //define attributes of the object
 	public Cloud ( float __x , float __y , World __world )
 	{
 		super(__x,__y,__world);
@@ -22,6 +23,11 @@ public class Cloud extends UniqueObject{
 		speed = __world.getLandscape().getWeather().getTimeSpeed()*((float) (Math.random() * 100f + 25f));
 	}
 
+    /*
+     * The cloud object is quite simple, it is only a big square with some transparency that is moving according to elapsed time along the x axis.
+     * The cloud is drawn using a gradient is its color depends on the time of the day, the night it becomes more yellow and the day it becomes more white.
+     * The size of the cloud and also the length are generated randomly through the constructor.
+     */
     public void displayUniqueObject(World myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight)
     {
 		speed = myWorld.getLandscape().getWeather().getTimeSpeed()*((float) (Math.random() * 100f + 25f)); //update speed according to time speed

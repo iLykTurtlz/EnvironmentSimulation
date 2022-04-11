@@ -26,7 +26,6 @@ public class Mushroom extends Plant {
     }
 
     public void step()  {
-        super.step();
         if ( world.getIteration() % (1000 - growth_rate) == 0) {
             //if the Mushroom is touched by fire or lava (and not already on fire) it catches fire.
             if ( state != State.ON_FIRE && (world.getLandscape().getVolcano().isLava(x,y) || world.getForest().getCellState(x,y) == 2) ) { 
@@ -39,6 +38,7 @@ public class Mushroom extends Plant {
             //if the mushroom is on fire, trees with same same position as well as adjacent UniqueDynamicObjects will catch fire too.
             if ( state == State.ON_FIRE )   {
                 spreadFire(); 
+                burnDown();
             }
 
             if (size < MAX_SIZE && state == State.ALIVE) {

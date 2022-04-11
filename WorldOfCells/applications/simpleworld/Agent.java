@@ -20,7 +20,7 @@ import worlds.World;
 
 public abstract class Agent extends UniqueDynamicObject{
 
-    public static final double P_DOUSE = 0.01;
+    public static final double P_DOUSE = 0.01;                              // Probability of an agent who is ON_FIRE of being extinguished by rain or snow
 
     
     protected int age;
@@ -55,7 +55,7 @@ public abstract class Agent extends UniqueDynamicObject{
         age = 0;
         orientation = (int)(4*Math.random());      //random orientation by default
         state = State.ALIVE;
-        remainingBurnTime = 50;
+        remainingBurnTime = 80;
         hunger = 0;
         fatigue = 0;
         
@@ -132,19 +132,19 @@ public abstract class Agent extends UniqueDynamicObject{
                 hThis  = this.world.getCellHeight(this.x,this.y);
 
             // Block off water and cliffs      
-            if ( (hAbove < WorldOfTrees.WATER_LEVEL) || (Math.abs(hAbove - hThis)) > 0.1 )    {
+            if ( (hAbove < WorldOfTrees.WATER_LEVEL) /*|| (Math.abs(hAbove - hThis)) > 0.01*/ )    {
                 directions[0] = false;
                 accessible--;
             }
-            if ( (hRight < WorldOfTrees.WATER_LEVEL) || (Math.abs(hRight - hThis) > 0.1) )   {
+            if ( (hRight < WorldOfTrees.WATER_LEVEL) /*|| (Math.abs(hRight - hThis) > 0.01)*/ )   {
                 directions[1] = false;
                 accessible--;
             }
-            if ( (hBelow < WorldOfTrees.WATER_LEVEL) || (Math.abs(hBelow - hThis) > 0.1) )    {
+            if ( (hBelow < WorldOfTrees.WATER_LEVEL) /*|| (Math.abs(hBelow - hThis) > 0.01)*/ )    {
                 directions[2] = false;
                 accessible--;
             }
-            if ( (hLeft < WorldOfTrees.WATER_LEVEL) || (Math.abs(hLeft - hThis) > 0.1) )      {
+            if ( (hLeft < WorldOfTrees.WATER_LEVEL) /*|| (Math.abs(hLeft - hThis) > 0.01)*/ )      {
                 directions[3] = false;
                 accessible--;
             }
@@ -157,14 +157,11 @@ public abstract class Agent extends UniqueDynamicObject{
 	
 
 
-
-    public void reinitialize()  {
-        this.age = 0;
-        this.state = State.ALIVE;
-        this.orientation = (int)(4*Math.random());
-        this.hunger = 0;
-        this.fatigue = 0;
-        this.scalingFactor = 4.f;
+    public void rampage()    {
+        speed = baseSpeed + 20;
+        int move = updatePosition(-1);
+        setOrientation(move);
+        reinitializeDirections();
     }
 
 
@@ -178,35 +175,16 @@ public abstract class Agent extends UniqueDynamicObject{
         this.hunger++;
     }
 
-    public void updateSpeed(double currentHeight, double nextHeight)    {
-        /* adjusts speed based on topography : uphill -> slower, downhill ->faster */
-        double diff = nextHeight - currentHeight;
-        if (diff > 0.03)   
-            speed = baseSpeed + 10;
-        else if (diff > 0.02)   
-            speed = baseSpeed + 5;
-        else if (diff > 0.01) 
-            speed = baseSpeed + 2;
-        else if (diff > 0.005) 
-            speed = baseSpeed + 1;
-        else if (diff > -0.005)   
-            speed = baseSpeed;
-        else if (diff > -0.01)   
-            speed = baseSpeed - 1;
-        else if (diff > -0.02)  
-            speed = baseSpeed - 2;
-        else if (diff > -0.03)   
-            speed = baseSpeed -5;
-        else 
-            speed = baseSpeed -10;
+    public void reinitialize()  {
+        this.age = 0;
+        this.state = State.ALIVE;
+        this.orientation = (int)(4*Math.random());
+        this.hunger = 0;
+        this.fatigue = 0;
+        this.scalingFactor = 4.f;
     }
 
-    public void rampage()    {
-        speed = baseSpeed + 20;
-        int move = updatePosition(-1);
-        setOrientation(move);
-        reinitializeDirections();
-    }
+
 
 
 
@@ -256,14 +234,14 @@ public abstract class Agent extends UniqueDynamicObject{
 
         }
 
+
         
-        /*
         if ( dice < 0.6 && !directions[orientation] && directions[(orientation + 2)%4]) {        //when an Agent hits an obstacle, they have a tendency to get stuck.  To avoid this nuisance, we send them in the opposite direction, if possible.
             if (directions[(orientation + 2)%4])    {
                 move = (orientation + 2)%4;
             }   
         }
-        */
+        
 
 
         //Having determined the direction we now set the agent's position

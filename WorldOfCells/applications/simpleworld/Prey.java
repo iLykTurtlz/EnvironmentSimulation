@@ -18,7 +18,7 @@ public class Prey extends Agent {
     public static final int MAX_HUNGER = 1000;
     public static final int MAX_FATIGUE = 1000;
 
-    public static final double P_REPRODUCTION = 0.0005;
+    public static final double P_REPRODUCTION = 0.01;
 
     protected final int maxColorChangePeriod = 30;
     protected int colorCounter;
@@ -40,7 +40,7 @@ public class Prey extends Agent {
         rangeOfVision = 4;
         vision = new PreyVision(__x,__y,rangeOfVision,__world);
         probablityChangeDirection = 0.1;
-        appetiteThreshold = 300;
+        appetiteThreshold = 200;
         food = null;
 
     }

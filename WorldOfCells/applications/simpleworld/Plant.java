@@ -20,13 +20,7 @@ public abstract class Plant extends UniqueDynamicObject {
         remainingBurnTime = 10;
     }
 
-    public void step() {
-        if ( world.getIteration() % (1000 - growth_rate) == 0)  {
-            if (state == State.ON_FIRE) {
-                burnDown();
-            }
-        }
-    }
+    public abstract void step();
 
     public abstract void displayUniqueObject(World myWorld, GL2 gl, int offsetCA_x, int offsetCA_y, float offset, float stepX, float stepY, float lenX, float lenY, float normalizeHeight );
 

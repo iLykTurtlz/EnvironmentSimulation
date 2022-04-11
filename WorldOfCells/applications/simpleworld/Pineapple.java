@@ -24,27 +24,31 @@ public class Pineapple extends Plant {
     }
 
     public void step()  {
-        super.step();
 
         if ( world.getIteration() % (1000 - growth_rate) == 0) {
 
 
             if (size < max_size) {
-                incrementFruitColor();
                 incrementSize();
             }
-
+            
+        
             //if the Pineapple is touched by fire or lava (and not already on fire) it catches fire.
-            if ( state != State.ON_FIRE && (world.getLandscape().getVolcano().isLava(x,y) || world.getForest().getCellState(x,y) == 2) ) { 
-                fruitColor[0] = 1.f;
-                fruitColor[1] = 0.5f;
-                fruitColor[2] = 0;
-                state = State.ON_FIRE;
+            if ( state != State.ON_FIRE )   {
+                if (world.getLandscape().getVolcano().isLava(x,y) || world.getForest().getCellState(x,y) == 2)  { 
+                    fruitColor[0] = 1.f;
+                    fruitColor[1] = 0.5f;
+                    fruitColor[2] = 0;
+                    state = State.ON_FIRE;
+                } else {
+                    setFruitColor();
+                }
             } 
 
             //if the Pineapple is on fire, trees with same same position as well as adjacent UniqueDynamicObjects will catch fire too.
             if ( state == State.ON_FIRE )   {
                 spreadFire(); 
+                burnDown();
             }
 
             if (size < max_size) {
@@ -171,15 +175,19 @@ public class Pineapple extends Plant {
     public void incrementFruitColor()  {
         // This function increments the red in the fruit color, which starts at (r,g,b) = (0,1,0), so that the fruit becomes more yellow as it grows and ripens.
         fruitColor[0] += 1.f/(float)max_size;       //we want the red value to max out when size == max_size
-        if (fruitColor[0] > 1.f)    {               //floating addition can be imprecise, so we really want to make it bounded above by 1.f exact!
-            fruitColor[0] = 1.f;
-        }
     }
 
     public float calculateRadius(float hNorm)    {
         //returns the value of a horizontal semi-ellipse scaled to the size of the fruit
         float r = (float)( (size*scalingFactor) * (Math.sqrt(0.125 - ((hNorm-0.5)*(hNorm-0.5))/2))  );
         return r;
+    }
+
+    public void setFruitColor() {
+        // Updates the fruit color based on the current size.
+        fruitColor[0] = 1.f/max_size*size;
+        fruitColor[1] = 1.f;
+        fruitColor[2] = 0;
     }
 
 }

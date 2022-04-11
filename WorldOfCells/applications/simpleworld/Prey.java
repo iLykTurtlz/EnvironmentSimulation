@@ -18,7 +18,7 @@ public class Prey extends Agent {
     public static final int MAX_HUNGER = 1000;
     public static final int MAX_FATIGUE = 1000;
 
-    public static final double P_REPRODUCTION = 0.001;
+    public static final double P_REPRODUCTION = 0.0005;
 
     protected final int maxColorChangePeriod = 30;
     protected int colorCounter;
@@ -40,7 +40,7 @@ public class Prey extends Agent {
         rangeOfVision = 4;
         vision = new PreyVision(__x,__y,rangeOfVision,__world);
         probablityChangeDirection = 0.1;
-        appetiteThreshold = 100;
+        appetiteThreshold = 300;
         food = null;
 
     }
@@ -53,6 +53,11 @@ public class Prey extends Agent {
 		if ( world.getIteration() % (100 - speed) == 0 )
 		{
             double dice = Math.random();
+
+            //If the Prey is no longer on fire
+            if (state == State.ALIVE)   {
+                resetColors();
+            }
 
              //If the Prey is too old or too hungry, it dies
              if (hunger >= MAX_HUNGER || age >= MAX_LIFESPAN)   {
@@ -207,16 +212,16 @@ public class Prey extends Agent {
         int[] coord = threat.getCoordinate();
         for (int i=0; i<rangeOfVision; i++) {                           //Tests of predator's location in counterclockwise sequence (to compensate for the prey's field of vision giving priority in CLOCKWISE direction)
             
-            if ( ((x-i+width)%width) == coord[0] && directions[1] )     //predator in direction 3 -> move in direction 1 (if possible)
+            if ( directions[1] && ((x-i+width)%width) == coord[0] )     //predator in direction 3 -> move in direction 1 (if possible)
                 return 1;
             
-            if ( ((y-i+height)%height) == coord[1] && directions[0] )   //predator in direction 2 -> direction 0
+            if ( directions[0] && ((y-i+height)%height) == coord[1] )   //predator in direction 2 -> direction 0
                 return 0;
             
-            if ( ((x+i+width)%width) == coord[0] && directions[3] )     //predator in direction 1 -> direction 3
+            if ( directions[3] && ((x+i+width)%width) == coord[0] )     //predator in direction 1 -> direction 3
                 return 3;
             
-            if ( ((y+i+height)%height) == coord[1] && directions[2] )   //predator in direction 0 -> direction 2
+            if ( directions[2] && ((y+i+height)%height) == coord[1] )   //predator in direction 0 -> direction 2
                 return 2; 
         }
         return -1;  //if the threat spotted earlier in this method has already left the prey's field of vision, return -1 to allow random displacement.
@@ -303,6 +308,10 @@ public class Prey extends Agent {
     public void reinitialize()  {
         super.reinitialize();
     }
+
+    public void resetColors()   {
+        bodyColor[0] = bodyColor[1] = bodyColor[2] = 1.f;
+     }
 
     
 

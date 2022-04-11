@@ -11,7 +11,7 @@ import applications.simpleworld.Predator;
 import applications.simpleworld.WorldOfTrees;
 
 public class PoolPredator extends Pool<Predator> {
-	public static final int MAX_NB_PREDATORS = 100;
+	public static final int MAX_NB_PREDATORS = 200;
 
 	public PoolPredator() {
 		super();
@@ -35,6 +35,9 @@ public class PoolPredator extends Pool<Predator> {
 	}
 	
 	public Predator add(int __x , int __y, WorldOfTrees __world) {
+		if (used.size() >= MAX_NB_PREDATORS)	{
+			return null;
+		}
 		if (queue.isEmpty()) {
 			Predator pred = new Predator(__x,__y,__world);	//call constructor with random characters
 			super.used.add(pred);

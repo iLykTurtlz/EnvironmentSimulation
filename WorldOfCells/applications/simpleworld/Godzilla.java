@@ -1,4 +1,5 @@
 package applications.simpleworld;
+import utils.DisplayToolbox;
 import utils.PredatorVision;
 import worlds.World;
 import com.jogamp.opengl.GL2;
@@ -42,6 +43,67 @@ public class Godzilla extends Agent {
 
     	float zoff = myWorld.getLandscape().getZOffset();
 
+        float altitude = height*normalizeHeight + zoff;
+
+        gl.glColor3f( bodyColor[0],bodyColor[1],bodyColor[2]);
+
+        //We draw a Queen chesspiece from bottom to top using just two mathematical functions
+        //lastR and lastH are used to pass the most recent radius and height values from one part of the drawing to the next.
+   
+        
+        /*
+        //THE BASE
+        float lastR = 2.f;
+        float lastH = 1.f;
+        DisplayToolbox.drawOctagonalPrism(lastR, lastR, 0, lastH , altitude, x2, y2, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+
+        int i;
+        float h1Norm ,h2Norm ,r1 ,r2, scale = 0.5f;
+        for (i=0; i<6; i++) {
+            h1Norm = 1.f/6 * i;
+            h2Norm = 1.f/6 * (i+1);
+            r1 = scale * calculateSphereRadius( h1Norm );
+            r2 = scale * calculateSphereRadius( h2Norm );
+            DisplayToolbox.drawOctagonalPrism(r1 + lastR, r2 + lastR, scale*h1Norm + lastH, scale*h2Norm + lastH, altitude, x2, y2, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+        }
+
+        //THE SHAFT
+        int j;
+        lastR = r2 + lastR;
+        lastH = scale*h2Norm + lastH;
+        scale = 1.f;
+        float additionalHeight = 5.f;
+        float verticalScalingFactor = additionalHeight/10;
+
+        for (j=0; j<10; j++)    {
+            h1Norm = 1.f/10 * j;
+            h2Norm = 1.f/10 * (j+1);
+            r1 = scale * calculateSlopeRadius(h1Norm, scale, lastR - 0.5f, false);
+            r2 = scale * calculateSlopeRadius(h2Norm, scale, lastR - 0.5f, false);
+            DisplayToolbox.drawOctagonalPrism(r1, r2, scale*h1Norm + lastH + verticalScalingFactor*j, scale*h2Norm + lastH + verticalScalingFactor*(j+1), altitude, x2, y2, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+        }
+
+        //THE TOP
+        lastR = r2;
+        lastH = scale*h2Norm + lastH + verticalScalingFactor*j;
+        
+        scale = 0.5f;
+        for (i=0; i<6; i++) {
+            h1Norm = 1.f/6 * i;
+            h2Norm = 1.f/6 * (i+1);
+            r1 = scale * calculateSphereRadius( h1Norm );
+            r2 = scale * calculateSphereRadius( h2Norm );
+            DisplayToolbox.drawOctagonalPrism(r1 + lastR, r2 + lastR, scale*h1Norm + lastH, scale*h2Norm + lastH, altitude, x2, y2, myWorld, gl, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+        }
+
+        lastR = 
+        lastH = 
+
+*/
+
+
+
+
         gl.glColor3f( bodyColor[0],bodyColor[1],bodyColor[2]);
         gl.glVertex3f( offset+x2*stepX-lenX*scalingFactor, offset+y2*stepY-lenY*scalingFactor, height*normalizeHeight + zoff);
         gl.glVertex3f( offset+x2*stepX-lenX*scalingFactor, offset+y2*stepY-lenY*scalingFactor, height*normalizeHeight + zoff + 4.f*scalingFactor);
@@ -77,12 +139,12 @@ public class Godzilla extends Agent {
 
     public float calculateSlopeRadius(float h, float scale, float minRadius, boolean increasing)    {
         // Calculates the radii needed to draw a gentle slope, whose values we will consider on the interval 0 <= h <= 1.
-        // Lower scale makes the slope less steep but also lowers the values overall; minRadius is a constant added to the output to prevent the slope from decreasing below a certain value (hence it should NOT be negative).
-        // If increasing is true, the slope is increasing; otherwise it is decreasing.
+        // Lower scale makes the slope less but also lowers the values overall; minRadius is a constant added to the output to prevent the slope from decreasing below a certain value (hence it should NOT be negative).
+        // If increasing is true, the slope is increasing and at h=0 its value is 0 and at h=1 its value is 0.5; otherwise it is decreasing and its value at h=1 is 0 and its value at h=0 = 0.5.
         if (increasing)
-            return scale * 1.f / (h + 1.f);
+            return scale * ( 1.f / -(h - 2.f) - 0.5f ) + minRadius;
         else
-            return scale * 1.f / -(h - 2.f);
+            return scale * ( 1.f / (h + 1.f) - 0.5f ) + minRadius;
     }
 
     public float calculateSphereRadius(float h) {

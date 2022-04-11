@@ -16,8 +16,8 @@ import utils.PredatorVision;
 public class Predator extends Agent {
 
     public static final int MAX_LIFESPAN = 1000;
-    public static final double P_REPRODUCTION = 0.001;
-    public static final int MAX_HUNGER = 1000;
+    public static final double P_REPRODUCTION = 0.5;
+    public static final int MAX_HUNGER = 10000;
     public static final int MAX_FATIGUE = 1000;
     
     protected enum Sex {MALE, FEMALE};
@@ -26,11 +26,11 @@ public class Predator extends Agent {
     private int rangeOfVision;
     protected Predator mate;         // food and mate serve as the Predator's memory.  Without storing the destination, the Predators would have looping behavior as they shift back and forth between two or more target destinations.
     protected Prey food;
-    protected int bloodlustThreshold;
+    protected int appetiteThreshold;
     private int gestationPeriod;
     private int gestationStage;
     private boolean pregnant;
-    private int offspringTraits[]; // (rangeOfVision, baseSpeed, bloodlustThreshold, gestationPeriod)
+    private int offspringTraits[]; // (rangeOfVision, baseSpeed, appetiteThreshold, gestationPeriod)
 
 
     public Predator( int __x , int __y, WorldOfTrees __world ) {
@@ -42,7 +42,7 @@ public class Predator extends Agent {
         speed = baseSpeed;
 
         vision = new PredatorVision(__x,__y,rangeOfVision,orientation,__world);
-        bloodlustThreshold = 10;
+        appetiteThreshold = 100;
         if (Math.random() < 0.5)    {
             sex = Sex.MALE;
         } else {
@@ -61,7 +61,7 @@ public class Predator extends Agent {
         this.rangeOfVision = offspringTraits[0];
         this.speed = offspringTraits[1];
         this.vision = new PredatorVision(__x,__y,rangeOfVision,orientation,__world);
-        this.bloodlustThreshold = offspringTraits[2];
+        this.appetiteThreshold = offspringTraits[2];
         if (Math.random() < 0.5)    {
             this.sex = Sex.MALE;
         } else {
@@ -82,6 +82,10 @@ public class Predator extends Agent {
         super.step();
 		if ( world.getIteration() % (100-speed) == 0 )
 		{
+            //If the Predator is no longer on fire
+            if (state == State.ALIVE)    {
+                resetColors();
+            }
 
             //If the predator is too old or too hungry, it dies
             if (hunger >= MAX_HUNGER || age >= MAX_LIFESPAN)   {
@@ -140,7 +144,7 @@ public class Predator extends Agent {
                 vision.updateField();
 
                 //if the predator is hungry ENOUGH, it must look for food; otherwise it can look for a mate
-                if (hunger >= bloodlustThreshold) {
+                if (hunger >= appetiteThreshold) {
 
                     findFood();    
                     if (food != null)   {
@@ -282,7 +286,7 @@ public class Predator extends Agent {
         f.pregnant = true;
         f.offspringTraits = new int[4];
         //  TO DO recombine characteristics of both parents
-        f.setOffspringTraits((m.getRangeOfVision() + f.getRangeOfVision())/2, (m.getSpeed() + f.getSpeed())/2, (m.getBloodlustThreshold() + f.getBloodlustThreshold())/2, (m.getGestationPeriod() + f.getGestationPeriod())/2);
+        f.setOffspringTraits((m.getRangeOfVision() + f.getRangeOfVision())/2, (m.getSpeed() + f.getSpeed())/2, (m.getAppetiteThreshold() + f.getAppetiteThreshold())/2, (m.getGestationPeriod() + f.getGestationPeriod())/2);
         //  TO DO mutation
 
 
@@ -572,7 +576,7 @@ public class Predator extends Agent {
         this.vision.setOrientation(this.orientation);
         this.vision.setPosition(this.x, this.y);
         this.vision.updateField();
-        this.bloodlustThreshold = 15;
+        this.appetiteThreshold = 15;
         if (Math.random() < 0.5)    {
             this.sex = Sex.MALE;
         } else {
@@ -592,7 +596,7 @@ public class Predator extends Agent {
         this.vision.setOrientation(this.orientation);
         this.vision.setPosition(this.x, this.y);
         this.vision.updateField();
-        this.bloodlustThreshold = offspringTraits[2];
+        this.appetiteThreshold = offspringTraits[2];
         if (Math.random() < 0.5)    {
             this.sex = Sex.MALE;
         } else {
@@ -605,6 +609,11 @@ public class Predator extends Agent {
 
 
     /* GETTERS AND SETTERS */
+    public void resetColors()   {
+        bodyColor[0] = 0.25f;
+        bodyColor[1] = 0.25f;
+        bodyColor[2] = 0.25f;
+    }
 
     public int getRangeOfVision()   {
         return rangeOfVision;
@@ -618,8 +627,8 @@ public class Predator extends Agent {
         return speed;
     }
 
-    public int getBloodlustThreshold()  {
-        return bloodlustThreshold;
+    public int getAppetiteThreshold()  {
+        return appetiteThreshold;
     }
 
     public int getGestationPeriod() {
@@ -635,18 +644,18 @@ public class Predator extends Agent {
         this.speed = speed;
     }
 
-    public void setBloodlustThreshold(int bloodlustThreshold)  {
-        this.bloodlustThreshold = bloodlustThreshold;
+    public void setAppetiteThreshold(int appetiteThreshold)  {
+        this.appetiteThreshold = appetiteThreshold;
     }
 
     public void setGestationPeriod(int gestationPeriod) {
         this.gestationPeriod = gestationPeriod;
     }
 
-    public void setOffspringTraits(int rangeOfVision, int speed, int bloodlustThreshold, int gestationPeriod)    {
+    public void setOffspringTraits(int rangeOfVision, int speed, int appetiteThreshold, int gestationPeriod)    {
         offspringTraits[0] = rangeOfVision;
         offspringTraits[1] = speed;
-        offspringTraits[2] = bloodlustThreshold;
+        offspringTraits[2] = appetiteThreshold;
         offspringTraits[3] = gestationPeriod;
     }
 

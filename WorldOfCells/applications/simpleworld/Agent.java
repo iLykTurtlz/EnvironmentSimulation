@@ -20,11 +20,14 @@ import worlds.World;
 
 public abstract class Agent extends UniqueDynamicObject{
 
+    public static final double P_DOUSE = 0.01;
+
     
     protected int age;
     protected int orientation;                                              // (0,1,2,3) = (N,E,S,W)
     protected int remainingBurnTime;
     protected int hunger;                                                   // This value increases to motivate the agent to look for food, but it rarely results in the death of the agent.  They usually die from old age or from being eaten.
+    protected int appetiteThreshold;
     protected int fatigue;                                                  // This motivates the agent to rest
     
 
@@ -92,9 +95,9 @@ public abstract class Agent extends UniqueDynamicObject{
                 //if the agent is on fire, trees with same same position as well as adjacent UniqueDynamicObjects will catch fire too.
                 spreadFire();   
 
-                //if it is raining or snowing, there's a good chance the agent will be doused
+                //if it is raining or snowing, there is a chance the agent will be doused
                 if (world.getLandscape().getWeather().getCondition() == Condition.RAINY || world.getLandscape().getWeather().getCondition() == Condition.SNOWING )  {
-                    if (Math.random() < 0.2)    {
+                    if (Math.random() < P_DOUSE)    {
                         state = State.ALIVE;
                     }
                 }
@@ -253,11 +256,15 @@ public abstract class Agent extends UniqueDynamicObject{
 
         }
 
+        
+        /*
         if ( dice < 0.6 && !directions[orientation] && directions[(orientation + 2)%4]) {        //when an Agent hits an obstacle, they have a tendency to get stuck.  To avoid this nuisance, we send them in the opposite direction, if possible.
             if (directions[(orientation + 2)%4])    {
                 move = (orientation + 2)%4;
             }   
         }
+        */
+
 
         //Having determined the direction we now set the agent's position
         switch (move)   {   

@@ -60,7 +60,7 @@ public abstract class Agent extends UniqueDynamicObject{
         fatigue = 0;
         
 
-        probablityChangeDirection = 0.25;
+        probablityChangeDirection = 1;
 
         directions = new boolean[4];    // indices (0,1,2,3) = (N,E,S,W)
         for (int i=0; i<directions.length; i++) {
@@ -132,19 +132,19 @@ public abstract class Agent extends UniqueDynamicObject{
                 hThis  = this.world.getCellHeight(this.x,this.y);
 
             // Block off water and cliffs      
-            if ( (hAbove < WorldOfTrees.WATER_LEVEL) /*|| (Math.abs(hAbove - hThis)) > 0.01*/ )    {
+            if ( (hAbove < WorldOfTrees.WATER_LEVEL) || (Math.abs(hAbove - hThis)) > 0.01 )    {
                 directions[0] = false;
                 accessible--;
             }
-            if ( (hRight < WorldOfTrees.WATER_LEVEL) /*|| (Math.abs(hRight - hThis) > 0.01)*/ )   {
+            if ( (hRight < WorldOfTrees.WATER_LEVEL) || (Math.abs(hRight - hThis) > 0.01) )   {
                 directions[1] = false;
                 accessible--;
             }
-            if ( (hBelow < WorldOfTrees.WATER_LEVEL) /*|| (Math.abs(hBelow - hThis) > 0.01)*/ )    {
+            if ( (hBelow < WorldOfTrees.WATER_LEVEL) || (Math.abs(hBelow - hThis) > 0.01) )    {
                 directions[2] = false;
                 accessible--;
             }
-            if ( (hLeft < WorldOfTrees.WATER_LEVEL) /*|| (Math.abs(hLeft - hThis) > 0.01)*/ )      {
+            if ( (hLeft < WorldOfTrees.WATER_LEVEL) || (Math.abs(hLeft - hThis) > 0.01) )      {
                 directions[3] = false;
                 accessible--;
             }

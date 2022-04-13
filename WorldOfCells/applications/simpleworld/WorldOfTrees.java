@@ -211,7 +211,7 @@ public class WorldOfTrees extends World {
 		case 3:
             Tree.displayObjectAt(_myWorld,gl,cellState, x, y, height, offset, stepX, stepY, lenX, lenY, normalizeHeight);
 		default:
-            if ((cellState >= 1 && cellState < ForestCA.BURNT_TIME) || cellState == ForestCA.BURNT_TREE) //burning
+            if ((cellState >= 1 && cellState < ForestCA.BURNT_TIME) || cellState == ForestCA.BURNT_TREE) //trees: burning or burnt
                 Tree.displayObjectAt(_myWorld,gl,cellState, x, y, height, offset, stepX, stepY, lenX, lenY, normalizeHeight);
 			// nothing to display at this location.
 		}

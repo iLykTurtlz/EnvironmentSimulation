@@ -54,6 +54,17 @@ public class ForestCA extends CellularAutomataInteger {
 
 	}
 
+    /***
+     *
+     * Change the state of the trees.
+     * We have several states :
+     *      1 - normal tree
+     *      2 and less than BURNT_TIME - burning tree
+     *      BURNT_TREE (default 100) - burnt tree
+     * The process of using states from 2 to BURNT_TIME (default 30) is used to extend the burning time of a tree since the state of a cell is incremented by 1 each x world iterations (x 10 by default)
+     * it simulates the burning time of a tree until it reaches 30 to be set to BURNT_TREE state, the state of a burnt tree. The process is also used in the lava cellular automata.
+     *
+     */
 	public void step()
 	{
     	for ( int i = 0 ; i != _dx ; i++ )
@@ -103,8 +114,12 @@ public class ForestCA extends CellularAutomataInteger {
                                 if (world.getLandscape().getWeather().getCondition() == Condition.RAINY) {
                                     if (Math.random() < .3d) // there is less than half a chance the tree stops burning
                                         this.setCellState(i,j,BURNT_TREE); //burnt tree
-                                    else
-                                        this.setCellState(i,j, this.getCellState(i,j) + 1); // increment time
+                                    else {
+                                        if (this.getCellState(i,j) + 1 >= 30)
+                                            this.setCellState(i,j, BURNT_TREE);
+                                        else
+                                            this.setCellState(i,j, this.getCellState(i,j) + 1); // increment time
+                                    }
                                 } else {
                                     if (this.getCellState(i,j) + 1 >= 30)
                                         this.setCellState(i,j,BURNT_TREE);

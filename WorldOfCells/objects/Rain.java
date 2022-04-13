@@ -15,7 +15,7 @@ public class Rain extends UniqueObject{
 	{
 		super(__x,__y,__world);
 		altitude = altitude + (float) Math.random() * 100f;
-		size = ((float) Math.random()) % .1f + 0.05f;
+		size = ((float) Math.random()) % .05f + 0.01f;
 	}
 
     /*
@@ -28,7 +28,7 @@ public class Rain extends UniqueObject{
     {
  		//speed = myWorld.getLandscape().getWeather().getTimeSpeed()*((float) (Math.random() * 100f + 25f)); //update speed according to time speed
         altitude = (altitude - speed*GRAVITY);
-        speed += .15f;
+        speed += .25f;
         if (altitude <= -25f) {
             altitude = (float) (Math.random() * 100f) + 100f; //if rain goes under the map put it back on top
             speed = 1f; //reinit speed

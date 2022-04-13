@@ -2,6 +2,8 @@ package utils;
 
 import com.jogamp.opengl.GL2;
 
+import graphics.Landscape;
+
 import worlds.World;
 
 /*  This class contains methods useful for display in various classes.
@@ -53,10 +55,18 @@ public final class DisplayToolbox {
             float x3 = (float)Math.cos(Math.PI/nbLeaves*i);
             float y3 = (float)Math.sin(Math.PI/nbLeaves*i);
 
-            gl.glVertex3f( offset+x2*stepX-lenY*width*x3, offset+y2*stepY+lenY*width*y3, altitude + h2);
-            gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + h1);
-            gl.glVertex3f( offset+x2*stepX+lenY*width*x3, offset+y2*stepY-lenY*width*y3, altitude + h2);
-            gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + h1);
+            if (Landscape.PPTI) {
+                gl.glVertex3f( offset+x2*stepX-lenY*width*x3, offset+y2*stepY+lenY*width*y3, altitude + h2);
+                gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + h1);
+                gl.glVertex3f( offset+x2*stepX+lenY*width*x3, offset+y2*stepY-lenY*width*y3, altitude + h2);
+                gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + h1);
+            } else {
+                gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + h1);
+                gl.glVertex3f( offset+x2*stepX-lenY*width*x3, offset+y2*stepY+lenY*width*y3, altitude + h2);
+                gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + h1);
+                gl.glVertex3f( offset+x2*stepX+lenY*width*x3, offset+y2*stepY-lenY*width*y3, altitude + h2);
+            }
+
         }
     }
 
@@ -68,10 +78,17 @@ public final class DisplayToolbox {
             float x3 = (float)Math.cos(Math.PI/nbLeaves*i);
             float y3 = (float)Math.sin(Math.PI/nbLeaves*i);
 
-            gl.glVertex3f( offset+x2*stepX-lenY*width*x3, offset+y2*stepY+lenY*width*y3, altitude + h1);
-            gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + h2);
-            gl.glVertex3f( offset+x2*stepX+lenY*width*x3, offset+y2*stepY-lenY*width*y3, altitude + h1);
-            gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + h2);
+            if (Landscape.PPTI) {
+                gl.glVertex3f( offset+x2*stepX-lenY*width*x3, offset+y2*stepY+lenY*width*y3, altitude + h1);
+                gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + h2);
+                gl.glVertex3f( offset+x2*stepX+lenY*width*x3, offset+y2*stepY-lenY*width*y3, altitude + h1);
+                gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + h2);
+            } else {
+                gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + h2);
+                gl.glVertex3f( offset+x2*stepX-lenY*width*x3, offset+y2*stepY+lenY*width*y3, altitude + h1);
+                gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + h2);
+                gl.glVertex3f( offset+x2*stepX+lenY*width*x3, offset+y2*stepY-lenY*width*y3, altitude + h1);
+            }
         }
     }
 

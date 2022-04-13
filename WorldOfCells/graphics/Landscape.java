@@ -83,6 +83,8 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 
 		static boolean DISPLAY_HELP = true; // on-screen display
 
+		public static boolean PPTI = false; // for the trees and pineapples to be shown according to the ppti or not
+
 		
 		/*
 		 * benchmarking 
@@ -360,7 +362,8 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
                         glut.glutBitmapString(GLUT.BITMAP_HELVETICA_10,
                             "           [y] set time raining\t" +
                             "           [t] set time snowy\n" +
-                            "           [j] set time sunny\n");
+                            "           [j] set time sunny\n" +
+                            "           [f] toggle on/off ppti mode\n");
                     }
 	                gl.glPopMatrix();
 	            }
@@ -783,6 +786,8 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 				break;
             case KeyEvent.VK_H:
                 DISPLAY_HELP = !DISPLAY_HELP;
+            case KeyEvent.VK_F:
+                PPTI = !PPTI;
 			/*case KeyEvent.VK_H:
 				System.out.println(
 						"Help:\n" +

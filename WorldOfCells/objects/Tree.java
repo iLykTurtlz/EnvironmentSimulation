@@ -8,6 +8,9 @@ import javax.swing.DefaultRowSorter;
 
 import com.jogamp.opengl.GL2;
 
+import applications.simpleworld.Weather.*;
+import applications.simpleworld.ForestCA;
+
 import utils.DisplayToolbox;
 import worlds.World;
 
@@ -24,14 +27,17 @@ public class Tree extends CommonObject {
         		gl.glColor3f(0.f,0.5f-(float)(0.1*Math.random()),0.f);                          //shimmer  
                 
         		break;
-        	case 2:
-        		gl.glColor3f(1.f-(float)(0.2*Math.random()),(float)(0.2*Math.random()),0.f);       //flaming trees can still shimmer, but we adjusted it for artistic reasons
-        		break;
-        	case 3:
+        	case ForestCA.BURNT_TREE:
         		gl.glColor3f(0.f+(float)(0.2*Math.random()),0.f+(float)(0.2*Math.random()),0.f+(float)(0.2*Math.random()));
         		break;
+            default: //because the burning states are between 2 and 99
+        		gl.glColor3f(1.f-(float)(0.2*Math.random()),(float)(0.2*Math.random()),0.f);       //flaming trees can still shimmer, but we adjusted it for artistic reasons
+        		break;
         }
-        
+
+        if (myWorld.getLandscape().getWeather().getCondition() == Condition.SNOWING && cellState == 1) //if it's snowing and the tree is not burning nor burnt
+            gl.glColor3f(1f, 1f, 1f);
+
         if ( cellState > 0 )
         {
     		float altitude = (float)height * normalizeHeight + myWorld.getLandscape().getZOffset();
@@ -51,7 +57,7 @@ public class Tree extends CommonObject {
             
 
             //Draw the trunk
-            if ( cellState == 3)    {
+            if ( cellState == ForestCA.BURNT_TREE )    { //if the tree is burnt
                 gl.glColor3f(0.2f,0.2f,0.2f);
             }
             else   {

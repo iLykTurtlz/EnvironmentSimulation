@@ -11,6 +11,7 @@ import objects.*;
 import worlds.World;
 import graphics.*;
 import applications.simpleworld.Weather.*;
+import applications.simpleworld.ForestCA;
 
 public class WorldOfTrees extends World {
 
@@ -206,12 +207,10 @@ public class WorldOfTrees extends World {
 		case 1: // trees: green, fire, burnt
 		case 2:
 		case 3:
-            if (getLandscape().getWeather().getCondition() == Condition.SNOWY)
-                gl.glColor3f(1f,1f,1f);
-            else
-                gl.glColor3f(
             Tree.displayObjectAt(_myWorld,gl,cellState, x, y, height, offset, stepX, stepY, lenX, lenY, normalizeHeight);
 		default:
+            if ((cellState >= 1 && cellState < ForestCA.BURNT_TIME) || cellState == ForestCA.BURNT_TREE) //burning
+                Tree.displayObjectAt(_myWorld,gl,cellState, x, y, height, offset, stepX, stepY, lenX, lenY, normalizeHeight);
 			// nothing to display at this location.
 		}
 	}

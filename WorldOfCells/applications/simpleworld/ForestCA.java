@@ -14,7 +14,8 @@ public class ForestCA extends CellularAutomataInteger {
     private static final float SPONTANEOUS_FIRE = 0.000001f;
     private static final float SPAWN_TREE = 0.4f;
     private static final double EXTENDED_RANGE = .5d;
-    private static final int BURNT_TIME = 30;
+    public static final int BURNT_TIME = 30;
+    public static final int BURNT_TREE = 100; //burnt tree state
 
 	CellularAutomataDouble _cellsHeightValuesCA;
 	
@@ -96,20 +97,24 @@ public class ForestCA extends CellularAutomataInteger {
 	    			}
 	    			else
 	    			{
-	        				if ( this.getCellState( i , j ) == 2 && this.getCellState(i,j) < BURNT_TIME ) // burning?
+	        				if ( this.getCellState( i , j ) >= 2 && this.getCellState(i,j) < BURNT_TIME ) // burning?
 	        				{
                                 // check if raining
                                 if (world.getLandscape().getWeather().getCondition() == Condition.RAINY) {
                                     if (Math.random() < .3d) // there is less than half a chance the tree stops burning
-                                        this.setCellState(i,j,100); //burnt tree
+                                        this.setCellState(i,j,BURNT_TREE); //burnt tree
                                     else
                                         this.setCellState(i,j, this.getCellState(i,j) + 1); // increment time
-                                } else
-                                    this.setCellState(i,j, this.getCellState(i,j) + 1); // increment time
+                                } else {
+                                    if (this.getCellState(i,j) + 1 >= 30)
+                                        this.setCellState(i,j,BURNT_TREE);
+                                    else
+                                        this.setCellState(i,j, this.getCellState(i,j) + 1); // increment time
+                                }
 	        				}
 	        				else
 	        				{
-	        					this.setCellState(i,j, 100 ); // burnt tree
+	        					this.setCellState(i,j, BURNT_TREE ); // burnt tree
 	        				}
 	    			}
 	    			
@@ -127,7 +132,7 @@ public class ForestCA extends CellularAutomataInteger {
                         color[2] = 0.f;
                         this.world.cellsColorValues.setCellState(i, j, color);
                     }
-                    else if (this.getCellState(i, j) == 100) { // burnt tree
+                    else if (this.getCellState(i, j) == BURNT_TREE) { // burnt tree
                         if (!world.getLandscape().getVolcano().isStone(i, j) && !world.getLandscape().getVolcano().isLava(i, j)) { //if there is already lava or stone here then don't draw over
                             color[0] = 0.f;
                             color[1] = 0.f;

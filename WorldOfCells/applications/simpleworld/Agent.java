@@ -24,6 +24,7 @@ public abstract class Agent extends UniqueDynamicObject{
     protected int age;
     protected int orientation;                                              // (0,1,2,3) = (N,E,S,W)
     protected int remainingBurnTime;
+    protected int remainingRadiationSicknessTime;
     protected int hunger;                                                   // This value increases to motivate the agent to look for food, but it rarely results in the death of the agent.  They usually die from old age or from being eaten.
     protected int appetiteThreshold;
     protected int fatigue;                                                  // This motivates the agent to rest
@@ -54,6 +55,7 @@ public abstract class Agent extends UniqueDynamicObject{
         orientation = (int)(4*Math.random());      //random orientation by default
         state = State.ALIVE;
         remainingBurnTime = 80;
+        remainingRadiationSicknessTime = 20;
         hunger = 0;
         fatigue = 0;
         

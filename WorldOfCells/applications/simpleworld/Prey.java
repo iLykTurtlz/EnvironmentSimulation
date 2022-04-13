@@ -152,6 +152,9 @@ public class Prey extends Agent {
             bodyColor[1] = 0.5f;
             bodyColor[2] = 0;
         }
+        else if (this.state == State.IRRADIATED)    {
+        
+        }
         // if the Prey psychedelic, its body changes color every turn for a while.
         else if (this.state == State.PSYCHEDELIC)   {
         

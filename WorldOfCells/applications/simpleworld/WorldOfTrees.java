@@ -173,6 +173,9 @@ public class WorldOfTrees extends World {
 			Plant p = this.plants.get(i);
 			p.step();
 		}
+
+		if (godzilla != null)
+			godzilla.step();
     }
 
     public int getCellValue(int x, int y) // used by the visualization code to call specific object display.
@@ -223,7 +226,10 @@ public class WorldOfTrees extends World {
 			predators.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);	
 		for ( int i = 0 ; i < prey.getSizeUsed(); i++ )
 			prey.get(i).displayUniqueObject(_myWorld,gl,offsetCA_x,offsetCA_y,offset,stepX,stepY,lenX,lenY,normalizeHeight);
-		
+			
+		if (godzilla != null)	{
+			godzilla.displayUniqueObject(_myWorld, gl, offsetCA_x, offsetCA_y, offset, stepX, stepY, lenX, lenY, normalizeHeight);
+		}
 	}
 
 		//change
@@ -274,7 +280,42 @@ public class WorldOfTrees extends World {
 		plants.remove(p);
 	}
 
+	public void spawnGodzilla()	{
+		//Spawns Godzilla on land
+		int[] coord = getRandomLandCoordinate();
+		godzilla = Godzilla.getInstance(coord[0],coord[1],this);
+	}
+
 	//public void displayObject(World _myWorld, GL2 gl, float offset,float stepX, float stepY, float lenX, float lenY, float heightFactor, double heightBooster) { ... } 
     
+
+	public int[] getRandomLandCoordinate()	{
+		// Returns a coordinate on land.
+		int[] coord = new int[2];
+		coord[0] = (int)(Math.random()*dxCA);
+		coord[1] = (int)(Math.random()*dyCA);
+		double height = cellsHeightValuesCA.getCellState(coord[0]%dxCA,coord[1]%dyCA);
+		while (height < WATER_LEVEL || height > SNOW_LINE)	{
+			coord[0] = (int)(Math.random()*dxCA);
+			coord[1] = (int)(Math.random()*dyCA);
+			height = cellsHeightValuesCA.getCellState(coord[0]%dxCA,coord[1]%dyCA);
+		}
+		return coord;
+	}
+
+	public int[] getRandomSeaCoordinate()	{
+		// Returns a coordinate at sea
+		int[] coord = new int[2];
+		coord[0] = (int)(Math.random()*dxCA);
+		coord[1] = (int)(Math.random()*dyCA);
+		double height = cellsHeightValuesCA.getCellState(coord[0]%dxCA,coord[1]%dyCA);
+		while (height > WATER_LEVEL)	{
+			coord[0] = (int)(Math.random()*dxCA);
+			coord[1] = (int)(Math.random()*dyCA);
+			height = cellsHeightValuesCA.getCellState(coord[0]%dxCA,coord[1]%dyCA);
+		}
+		return coord;
+
+	}
    
 }

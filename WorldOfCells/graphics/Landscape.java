@@ -61,8 +61,8 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 		private Volcano volcano;
 
 		private static final double INITIAL_PREDATOR_DENSITY = 0.001;
-		private static final double INITIAL_PREY_DENSITY = 0.001;
-		private static final double INITIAL_PLANT_DENSITY = 0.001;
+		private static final double INITIAL_PREY_DENSITY = 0.005;
+		private static final double INITIAL_PLANT_DENSITY = 0.005;
 	
 		private static GLCapabilities caps;  // GO FAST ???
 	
@@ -597,6 +597,8 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 					}
 				}
 			}
+			//_myWorld.spawnGodzilla();
+
 		}
         
         /**
@@ -759,6 +761,13 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
                 System.out.println("Sunny");
                 weather.setCondition(Condition.SUNNY);
                 break;
+			case KeyEvent.VK_G:
+				if (_myWorld.getGodzilla() == null)	{
+					_myWorld.spawnGodzilla();
+				} else	{
+					_myWorld.removeGodzilla();
+				}
+				break;
             case KeyEvent.VK_H:
                 DISPLAY_HELP = !DISPLAY_HELP;
 			/*case KeyEvent.VK_H:

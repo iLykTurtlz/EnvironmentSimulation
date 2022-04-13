@@ -1,6 +1,13 @@
 package utils;
+import java.util.ArrayList;
+
 import applications.simpleworld.Agent;
+import applications.simpleworld.Plant;
+import applications.simpleworld.Predator;
+import applications.simpleworld.Prey;
 import applications.simpleworld.WorldOfTrees;
+import objects.UniqueDynamicObject.State;
+import worlds.World;
 
 
 public class PredatorVision extends VisionField {
@@ -97,6 +104,53 @@ public class PredatorVision extends VisionField {
             default :
                 System.out.println("Erreur : calcul de champs de vision, predator orientation = "+orientation);
         }
+    }
+
+    public void irradiate(WorldOfTrees w)   {
+        // Godzilla uses this method to irradiate all UniqueDynamicObjects and Trees in range
+        ArrayList<Plant> plants = w.getPlants();
+        PoolPredator predators = w.getPredators();
+        PoolPrey prey = w.getPrey();
+        Plant p1;
+        Predator p2;
+        Prey p3;
+        int[] coord;
+
+        for (int i=0; i<plants.size(); i++) {
+            for (int j=0; j<field.length; j++)  {
+                //Kill Trees
+                if (w.getCellHeight(field[j][0], field[j][1]) > WorldOfTrees.WATER_LEVEL && w.getCellHeight(field[j][0], field[j][1]) < WorldOfTrees.TREE_LINE) {
+                    w.getForest().setCellState(field[j][0], field[j][1],3);
+                }
+
+                //Kill Plants
+                p1 = plants.get(i);
+                coord = p1.getCoordinate();
+                if (coord[0] == field[j][0] && coord[1] == field[j][1]) {
+                    p1.setState(State.IRRADIATED);
+                }
+            }
+        }
+
+        for (int i=0; i<predators.getSizeUsed(); i++) {
+            for (int j=0; j<field.length; j++)  {
+                p2 = predators.get(i);
+                coord = p2.getCoordinate();
+                if (coord[0] == field[j][0] && coord[1] == field[j][1]) {
+                    p2.setState(State.IRRADIATED);
+                }
+            }
+        }
+
+        for (int i=0; i<prey.getSizeUsed(); i++) {
+            for (int j=0; j<field.length; j++)  {
+                p3 = prey.get(i);
+                coord = p3.getCoordinate();
+                if (coord[0] == field[j][0] && coord[1] == field[j][1]) {
+                    p3.setState(State.IRRADIATED);
+                }
+            }
+        }        
     }
 
 

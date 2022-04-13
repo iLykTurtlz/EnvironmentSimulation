@@ -40,7 +40,7 @@ public class Prey extends Agent {
         rangeOfVision = 4;
         vision = new PreyVision(__x,__y,rangeOfVision,__world);
         probablityChangeDirection = 0.1;
-        appetiteThreshold = 200;
+        appetiteThreshold = 100;
         food = null;
 
     }

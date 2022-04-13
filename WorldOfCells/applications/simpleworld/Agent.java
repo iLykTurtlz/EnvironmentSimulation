@@ -87,7 +87,7 @@ public abstract class Agent extends UniqueDynamicObject{
                 bodyColor[1] = 0.5f;
                 bodyColor[2] = 0;
                 state = State.ON_FIRE;
-                speed = baseSpeed + 20;
+                speed = baseSpeed + 20; //Agents speed up after catching on fire, to encourage propagation.
             } 
 
 

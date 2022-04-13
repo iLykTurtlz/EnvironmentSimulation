@@ -4,6 +4,8 @@
 
 package applications.simpleworld;
 
+import java.util.ArrayList;
+
 import com.jogamp.opengl.GL2;
 
 import objects.UniqueDynamicObject.State;
@@ -279,6 +281,18 @@ public class WorldOfTrees extends World {
 		plants.remove(p);
 	}
 
+	public Predator spawnPredator()	{
+		//Spawns a Predator on land
+		int[] coord = getRandomLandCoordinate();
+		return predators.add(coord[0], coord[1], this);
+	}
+
+	public Prey spawnPrey()	{
+		//Spawns a Prey on land
+		int[] coord = getRandomLandCoordinate();
+		return prey.add(coord[0],coord[1],this);
+	}
+
 	public void spawnGodzilla()	{
 		//Spawns Godzilla on land
 		int[] coord = getRandomLandCoordinate();
@@ -290,31 +304,14 @@ public class WorldOfTrees extends World {
 
 	public int[] getRandomLandCoordinate()	{
 		// Returns a coordinate on land.
-		int[] coord = new int[2];
-		coord[0] = (int)(Math.random()*dxCA);
-		coord[1] = (int)(Math.random()*dyCA);
-		double height = cellsHeightValuesCA.getCellState(coord[0]%dxCA,coord[1]%dyCA);
-		while (height < WATER_LEVEL || height > SNOW_LINE)	{
-			coord[0] = (int)(Math.random()*dxCA);
-			coord[1] = (int)(Math.random()*dyCA);
-			height = cellsHeightValuesCA.getCellState(coord[0]%dxCA,coord[1]%dyCA);
-		}
-		return coord;
+		ArrayList<int[]> land = this.getLandscape().getLand();
+		return land.get( (int)(Math.random()*land.size()));
 	}
 
 	public int[] getRandomSeaCoordinate()	{
 		// Returns a coordinate at sea
-		int[] coord = new int[2];
-		coord[0] = (int)(Math.random()*dxCA);
-		coord[1] = (int)(Math.random()*dyCA);
-		double height = cellsHeightValuesCA.getCellState(coord[0]%dxCA,coord[1]%dyCA);
-		while (height > WATER_LEVEL)	{
-			coord[0] = (int)(Math.random()*dxCA);
-			coord[1] = (int)(Math.random()*dyCA);
-			height = cellsHeightValuesCA.getCellState(coord[0]%dxCA,coord[1]%dyCA);
-		}
-		return coord;
-
+		ArrayList<int[]> sea = this.getLandscape().getSea();
+		return sea.get((int)(Math.random()*sea.size()));
 	}
    
 }

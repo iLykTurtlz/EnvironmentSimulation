@@ -42,7 +42,7 @@ public class Predator extends Agent {
         speed = baseSpeed;
 
         vision = new PredatorVision(__x,__y,rangeOfVision,orientation,__world);
-        appetiteThreshold = 100;
+        appetiteThreshold = 50;
         if (Math.random() < 0.5)    {
             sex = Sex.MALE;
         } else {
@@ -271,7 +271,6 @@ public class Predator extends Agent {
             gestationStage = 0;
             pregnant = false;
             speed = baseSpeed;
-            System.out.println("A birth has occurred");
             return -2;
         }
         return -1;

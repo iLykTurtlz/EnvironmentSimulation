@@ -61,8 +61,11 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 		private Volcano volcano;
 
 		private static final double INITIAL_PREDATOR_DENSITY = 0.001;
-		private static final double INITIAL_PREY_DENSITY = 0.005;
+		private static final double INITIAL_PREY_DENSITY = 0.001;
 		private static final double INITIAL_PLANT_DENSITY = 0.005;
+
+		private ArrayList <int[]> land = new ArrayList<int[]>();
+		private ArrayList <int[]> sea = new ArrayList<int[]>();
 	
 		private static GLCapabilities caps;  // GO FAST ???
 	
@@ -151,7 +154,10 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 
     		landscape = PerlinNoiseLandscapeGenerator.generatePerlinNoiseLandscape(__dx,__dy,scaling,landscapeAltitudeRatio, 11); //last argument : how many noise functions we want to sum up in the perlin noise result 11 seems to be decent for details and smooth map
     		
+
     		initLandscape();
+
+			setLandAndSea();
 
 			initAgents();
 
@@ -168,7 +174,10 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 
     		landscape = LoadFromFileLandscape.load(__filename,scaling,landscapeAltitudeRatio);
 
+
     		initLandscape();
+
+			setLandAndSea();
 
 			initAgents();
         }
@@ -768,6 +777,12 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 					_myWorld.removeGodzilla();
 				}
 				break;
+			case KeyEvent.VK_P:
+				_myWorld.spawnPredator();
+				break;
+			case KeyEvent.VK_K:
+				_myWorld.spawnPrey();
+				break;
             case KeyEvent.VK_H:
                 DISPLAY_HELP = !DISPLAY_HELP;
 			/*case KeyEvent.VK_H:
@@ -802,4 +817,34 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 			// TODO Auto-generated method stub
 			
 		}
+
+		public void setLandAndSea()	{
+			//sets ArrayLists of land and sea tiles for later use.  Land is supposed to be below the snow line.
+			for (int x=0; x<_myWorld.getWidth(); x++)	{
+				for (int y=0; y<_myWorld.getHeight(); y++)	{
+					if (_myWorld.getCellHeight(x,y) < WorldOfTrees.WATER_LEVEL)	{
+						sea.add(new int[] {x,y});
+					}
+					if (_myWorld.getCellHeight(x,y) > WorldOfTrees.WATER_LEVEL && _myWorld.getCellHeight(x,y) < WorldOfTrees.SNOW_LINE)	{
+						land.add(new int[] {x,y});
+					}
+				}
+			}
+		}
+
+		public ArrayList<int[]> getLand()	{
+			return land;
+		}
+
+		public ArrayList<int[]> getSea()	{
+			return sea;
+		}
+
+
+
+
+
+
 }
+
+

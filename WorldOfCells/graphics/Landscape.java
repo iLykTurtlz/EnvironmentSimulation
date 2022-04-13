@@ -786,6 +786,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
 				break;
             case KeyEvent.VK_H:
                 DISPLAY_HELP = !DISPLAY_HELP;
+                break;
             case KeyEvent.VK_F:
                 PPTI = !PPTI;
 			/*case KeyEvent.VK_H:

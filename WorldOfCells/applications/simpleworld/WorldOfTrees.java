@@ -19,7 +19,7 @@ public class WorldOfTrees extends World {
 
     protected ForestCA forest;
     protected Landscape landscape;
-    private static final int NB_CLOUDS = 2;
+    private static final int NB_CLOUDS = 20;
     private static final int NB_RAIN = 100;
     private static final int NB_SNOW = 100;
     public static final float WATER_LEVEL = -0.05f;

@@ -44,7 +44,6 @@ public class Tree extends CommonObject {
 
 
             //Draw the leaves
-            
             DisplayToolbox.drawLeaves2(4, 1.5f, 0.4f,  3.5f, gl, x, y, offset, stepX, stepY, lenX, lenY, altitude);
 
             DisplayToolbox.drawLeaves2(3, 1.f, 2.f, 4.f, gl, x, y, offset, stepX, stepY, lenX, lenY, altitude);

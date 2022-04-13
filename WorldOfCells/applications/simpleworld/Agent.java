@@ -60,7 +60,7 @@ public abstract class Agent extends UniqueDynamicObject{
         fatigue = 0;
         
 
-        probablityChangeDirection = 0.25;
+        probablityChangeDirection = 1;
 
         directions = new boolean[4];    // indices (0,1,2,3) = (N,E,S,W)
         for (int i=0; i<directions.length; i++) {

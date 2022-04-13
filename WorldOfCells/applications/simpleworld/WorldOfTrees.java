@@ -10,6 +10,7 @@ import objects.UniqueDynamicObject.State;
 import objects.*;
 import worlds.World;
 import graphics.*;
+import applications.simpleworld.Weather.*;
 
 public class WorldOfTrees extends World {
 
@@ -202,6 +203,10 @@ public class WorldOfTrees extends World {
 		case 1: // trees: green, fire, burnt
 		case 2:
 		case 3:
+            if (getLandscape().getWeather().getCondition() == Condition.SNOWY)
+                gl.glColor3f(1f,1f,1f);
+            else
+                gl.glColor3f(
             Tree.displayObjectAt(_myWorld,gl,cellState, x, y, height, offset, stepX, stepY, lenX, lenY, normalizeHeight);
 		default:
 			// nothing to display at this location.

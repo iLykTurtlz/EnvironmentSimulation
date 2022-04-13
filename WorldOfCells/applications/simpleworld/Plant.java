@@ -1,7 +1,5 @@
 package applications.simpleworld;
 
-import javax.lang.model.util.ElementScanner14;
-
 import com.jogamp.opengl.GL2;
 
 import objects.UniqueDynamicObject;

@@ -52,10 +52,11 @@ public final class DisplayToolbox {
         for (int i=0; i<nbLeaves; i++)    {
             float x3 = (float)Math.cos(Math.PI/nbLeaves*i);
             float y3 = (float)Math.sin(Math.PI/nbLeaves*i);
-            gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + h1);
+
             gl.glVertex3f( offset+x2*stepX-lenY*width*x3, offset+y2*stepY+lenY*width*y3, altitude + h2);
             gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + h1);
             gl.glVertex3f( offset+x2*stepX+lenY*width*x3, offset+y2*stepY-lenY*width*y3, altitude + h2);
+            gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + h1);
         }
     }
 
@@ -66,10 +67,11 @@ public final class DisplayToolbox {
         for (int i=0; i<nbLeaves; i++)    {
             float x3 = (float)Math.cos(Math.PI/nbLeaves*i);
             float y3 = (float)Math.sin(Math.PI/nbLeaves*i);
-            gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + h2);
+
             gl.glVertex3f( offset+x2*stepX-lenY*width*x3, offset+y2*stepY+lenY*width*y3, altitude + h1);
             gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + h2);
             gl.glVertex3f( offset+x2*stepX+lenY*width*x3, offset+y2*stepY-lenY*width*y3, altitude + h1);
+            gl.glVertex3f( offset+x2*stepX, offset+y2*stepY, altitude + h2);
         }
     }
 

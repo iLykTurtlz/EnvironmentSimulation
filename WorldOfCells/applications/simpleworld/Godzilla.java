@@ -13,7 +13,7 @@ public class Godzilla extends Agent {
         this.breath = new PredatorVision(x, y, 20, orientation, world);
         this.scalingFactor = 2.f;
         this.bodyColor = new float[]{0.133f,0.545f,0.133f};
-        probablityChangeDirection = 0.2;
+        probablityChangeDirection = 0.05d;
     }
 
     public static Godzilla getInstance(int x, int y, WorldOfTrees world)    {

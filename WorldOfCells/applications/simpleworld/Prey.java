@@ -42,7 +42,6 @@ public class Prey extends Agent {
         probablityChangeDirection = 0.1;
         appetiteThreshold = 100;
         food = null;
-
     }
 
 

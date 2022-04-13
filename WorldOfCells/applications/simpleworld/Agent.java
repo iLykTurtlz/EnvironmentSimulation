@@ -6,8 +6,6 @@ package applications.simpleworld;
 
 import java.util.ArrayList;
 
-import javax.lang.model.util.ElementScanner14;
-
 import com.jogamp.opengl.GL2;
 
 import applications.simpleworld.Weather.Condition;
@@ -211,7 +209,7 @@ public abstract class Agent extends UniqueDynamicObject{
 
 
                 int j=0;                                                                //random displacement
-                double partition_size = 1/((double)accessible);
+                double partition_size = 1d/((double)accessible);
 
                 for (int i=0; i<directions.length; i++)    {
                     if ( directions[i] )    {

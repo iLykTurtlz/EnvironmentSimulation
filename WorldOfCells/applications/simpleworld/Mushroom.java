@@ -1,8 +1,6 @@
 package applications.simpleworld;
 import worlds.World;
 
-import javax.lang.model.util.ElementScanner14;
-
 import com.jogamp.opengl.GL2;
 
 import utils.DisplayToolbox;

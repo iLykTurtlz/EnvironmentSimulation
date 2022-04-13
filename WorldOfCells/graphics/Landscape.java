@@ -225,7 +225,7 @@ public class Landscape implements GLEventListener, KeyListener, MouseListener{
     		
     		final GLCanvas canvas = new GLCanvas(caps); // original
     		
-            final Frame frame = new Frame("WE SHOULD PUT A COOL TITLE RIGHT? - World Of Cells");
+            final Frame frame = new Frame("Wonderland");
             animator = new Animator(canvas);
             //Landscape myLandscape = new Landscape(dx,dy,myWorld);
             canvas.addGLEventListener(__landscape);

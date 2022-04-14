@@ -110,6 +110,9 @@ public abstract class Agent extends UniqueDynamicObject{
                 }
 
             }
+            if (state == State.IRRADIATED)   {
+                wasteAway();
+            }
             
             
             
@@ -281,6 +284,21 @@ public abstract class Agent extends UniqueDynamicObject{
         }    
     }
 
+    public void wasteAway() {
+        if (state == State.IRRADIATED)  {
+            if (remainingRadiationSicknessTime > 0) {
+                
+                bodyColor[0] = 0.529f;  //sickly green color
+                bodyColor[1] = 0.671f;
+                bodyColor[2] = 0.031f;
+                
+                remainingRadiationSicknessTime--;
+            } else {
+                state = State.DEAD;
+            }
+        }
+    }
+
     public void reinitializeDirections()    {
         //This function reinitializes the four directions to true, making them all accessible 
         for (int i=0; i<directions.length; i++)    {
@@ -289,7 +307,7 @@ public abstract class Agent extends UniqueDynamicObject{
     }
 
     public float calculateRadius(float h)    {
-        // takes in a float from the interval [0,1] and returns the value of sin(sqrt(3*pi*x))/10, multiplied by a scaling factor, which is used to draw the agent's body.
+        // takes in a float from the interval [0,1] and returns the value of 3*sin(sqrt(3*pi*x))/10, multiplied by a scaling factor, which is used to draw the agent's body.
         return (float)(scalingFactor * Math.sin(Math.sqrt(3*Math.PI*h))*0.3);
     }
 

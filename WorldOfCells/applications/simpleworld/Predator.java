@@ -42,7 +42,7 @@ public class Predator extends Agent {
         speed = baseSpeed;
 
         vision = new PredatorVision(__x,__y,rangeOfVision,orientation,__world);
-        appetiteThreshold = 50;
+        appetiteThreshold = 10;
         if (Math.random() < 0.5)    {
             sex = Sex.MALE;
         } else {

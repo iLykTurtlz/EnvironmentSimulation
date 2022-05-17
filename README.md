@@ -24,3 +24,6 @@ Exécution :
      
      
      java -classpath "./jogl/gluegen-rt.jar:./jogl/jogl-all.jar:." applications/simpleworld/MyEcosystem
+
+
+Regardez le rapport du projet pour un résumé complet.

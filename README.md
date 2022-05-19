@@ -1,4 +1,6 @@
-Projet basé sur WorldOfCells par les étudiants :
+#Wonderland
+
+Projet libre basé sur WorldOfCells par les étudiants :
 
 
      SOK Chanattan   28720887    Resp. environnement
@@ -26,4 +28,4 @@ Exécution :
      java -classpath "./jogl/gluegen-rt.jar:./jogl/jogl-all.jar:." applications/simpleworld/MyEcosystem
 
 
-Regardez le rapport du projet pour un résumé complet.
+Le rapport du projet dans le dossier Rapport contient un résumé complet.

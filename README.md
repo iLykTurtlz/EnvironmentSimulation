@@ -1,5 +1,3 @@
-#Wonderland
-
 Projet libre basé sur WorldOfCells par les étudiants :
 
 
